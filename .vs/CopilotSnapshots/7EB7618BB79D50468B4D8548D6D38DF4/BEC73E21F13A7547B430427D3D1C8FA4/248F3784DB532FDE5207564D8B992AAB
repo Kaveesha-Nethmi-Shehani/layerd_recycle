@@ -1,0 +1,87 @@
+﻿package lk.ijse.recycle.model;
+import lk.ijse.recycle.dto.RecycleItemDto;
+import lk.ijse.recycle.util.CrudUtil;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class RecycleItemModel  {
+
+    public boolean saveRecycleItems(RecycleItemDto dto) throws SQLException {
+        String sql = "INSERT INTO recycle_item(item_materials, item_kg, item_price, date) VALUES (?, ?, ?, ?)";
+        return CrudUtil.executeUpdate(
+                sql,
+                dto.getItemMaterials(),
+                dto.getItemKg(),
+                dto.getItemPrice(),
+                dto.getDate()
+        );
+    }
+
+    public boolean updateRecycleItems(RecycleItemDto dto) throws SQLException {
+        String sql = "UPDATE recycle_item SET item_materials = ?, item_kg = ?, item_price = ?, date = ? WHERE item_id = ?";
+        return CrudUtil.executeUpdate(
+                sql,
+                dto.getItemMaterials(),
+                dto.getItemKg(),
+                dto.getItemPrice(),
+                dto.getDate(),
+                dto.getItemId()
+        );
+    }
+
+    public boolean deleteRecycleItem(int id) throws SQLException {
+        String sql = "DELETE FROM recycle_item WHERE item_id = ?";
+        return CrudUtil.executeUpdate(sql, id);
+    }
+
+    public RecycleItemDto searchRecycleItems(int id) throws SQLException {
+        String sql = "SELECT * FROM recycle_item WHERE item_id = ?";
+        ResultSet rs = CrudUtil.executeQuery(sql, id);
+
+        if (rs.next()) {
+            return new RecycleItemDto(
+                    rs.getInt("item_id"),
+                    rs.getString("item_materials"),
+                    rs.getDouble("item_kg"),
+                    rs.getDouble("item_price"),
+                    rs.getString("date")
+            );
+        }
+        return null;
+    }
+
+    public List<RecycleItemDto> getAllItems() throws SQLException {
+        String sql = "SELECT * FROM recycle_item";
+        ResultSet rs = CrudUtil.executeQuery(sql);
+
+        List<RecycleItemDto> list = new ArrayList<>();
+
+        while (rs.next()) {
+            list.add(new RecycleItemDto(
+                    rs.getInt("item_id"),
+                    rs.getString("item_materials"),
+                    rs.getDouble("item_kg"),
+                    rs.getDouble("item_price"),
+                    rs.getString("date")
+            ));
+        }
+        return list;
+    }
+
+    public int getNextItemId() throws SQLException {
+        String sql = "SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'recycle_item'";
+        ResultSet rs = CrudUtil.executeQuery(sql);
+        if (rs.next()) {
+            return rs.getInt("AUTO_INCREMENT");
+        }
+        return 1;
+    }
+}
+
+
+
+
+

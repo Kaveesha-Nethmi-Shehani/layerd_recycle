@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jasperReport PUBLIC "-//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport name="Cus_report" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ecoplayer"/>
+	<queryString language="SQL"><![CDATA[SELECT * FROM customer]]></queryString>
+	<field name="customer_id" class="java.lang.Integer"/>
+	<field name="customer_name" class="java.lang.String"/>
+	<field name="customer_contact" class="java.lang.String"/>
+	<field name="customer_date" class="java.sql.Date"/>
+	<title>
+		<band height="50">
+			<staticText>
+				<reportElement x="180" y="10" width="200" height="30"/>
+				<textElement textAlignment="Center">
+					<font size="22" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CUSTOMER REPORT]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="40">
+			<staticText>
+				<reportElement x="200" y="5" width="160" height="30" forecolor="#195E1C"/>
+				<textElement textAlignment="Center">
+					<font size="18" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[ECOPLAYER]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="40">
+			<staticText>
+				<reportElement x="0" y="10" width="100" height="25"/>
+				<textElement><font size="12" isBold="true"/></textElement>
+				<text><![CDATA[Customer ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="120" y="10" width="140" height="25"/>
+				<textElement><font size="12" isBold="true"/></textElement>
+				<text><![CDATA[Customer Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="10" width="140" height="25"/>
+				<textElement><font size="12" isBold="true"/></textElement>
+				<text><![CDATA[Customer Contact]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="440" y="10" width="110" height="25"/>
+				<textElement><font size="12" isBold="true"/></textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30">
+			<textField>
+				<reportElement x="0" y="5" width="100" height="20"/>
+				<textElement><font size="11"/></textElement>
+				<textFieldExpression><![CDATA[$F{customer_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="5" width="140" height="20"/>
+				<textElement><font size="11"/></textElement>
+				<textFieldExpression><![CDATA[$F{customer_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="5" width="140" height="20"/>
+				<textElement><font size="11"/></textElement>
+				<textFieldExpression><![CDATA[$F{customer_contact}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="440" y="5" width="110" height="20"/>
+				<textElement><font size="11"/></textElement>
+				<textFieldExpression><![CDATA[$F{customer_date}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="50">
+			<staticText>
+				<reportElement x="0" y="10" width="555" height="30" forecolor="#1C3623"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[RECYCLE FOR A GREEN TOMORROW]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>
+

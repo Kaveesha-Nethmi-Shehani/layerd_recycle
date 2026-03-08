@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #013220;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.recycle.controller.PaymentController">
+   <children>
+      <VBox prefHeight="30.0" prefWidth="800.0">
+         <children>
+            <Text fill="#f4efef" strokeType="OUTSIDE" strokeWidth="0.0" text="                                                            PAYMENT MANAGEMENT" textAlignment="JUSTIFY" wrappingWidth="766.5347900390625">
+               <font>
+                  <Font name="System Bold Italic" size="18.0" />
+               </font>
+            </Text>
+         </children>
+      </VBox>
+      
+      <VBox layoutX="15.0" layoutY="45.0" prefHeight="45.0" prefWidth="380.0">
+         <children>
+            <Text fill="#f2ecec" strokeType="OUTSIDE" strokeWidth="0.0" text="Payment ID">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+            </Text>
+            <TextField fx:id="txtPayment_Id" editable="false" promptText="Auto Generated" style="-fx-background-radius: 30; -fx-border-radius: 40;" />
+         </children>
+      </VBox>
+      
+      <VBox layoutX="15.0" layoutY="95.0" prefHeight="45.0" prefWidth="380.0">
+         <children>
+            <Text fill="#faf3f3" strokeType="OUTSIDE" strokeWidth="0.0" text="Order Name">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+            </Text>
+            <TextField fx:id="txtOrder_Name" promptText="Enter Order Name" style="-fx-background-radius: 30; -fx-border-radius: 40;" />
+         </children>
+      </VBox>
+      
+      <VBox layoutX="15.0" layoutY="145.0" prefHeight="45.0" prefWidth="380.0">
+         <children>
+            <Text fill="#faf3f3" strokeType="OUTSIDE" strokeWidth="0.0" text="Order ID">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+            </Text>
+            <TextField fx:id="txtOrder_Id" promptText="Enter Order ID" style="-fx-background-radius: 30; -fx-border-radius: 40;" />
+         </children>
+      </VBox>
+      
+      <VBox layoutX="15.0" layoutY="195.0" prefHeight="45.0" prefWidth="380.0">
+         <children>
+            <Text fill="#efeaea" strokeType="OUTSIDE" strokeWidth="0.0" text="Invoice">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+            </Text>
+            <TextField fx:id="txtInvoice" promptText="Enter Invoice Number" style="-fx-background-radius: 30; -fx-border-radius: 40;" />
+         </children>
+      </VBox>
+      
+      <VBox layoutX="15.0" layoutY="245.0" prefHeight="45.0" prefWidth="380.0">
+         <children>
+            <Text fill="#efeaea" strokeType="OUTSIDE" strokeWidth="0.0" text="Payment Value">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+            </Text>
+            <TextField fx:id="txtPayment_Value" promptText="Enter Payment Value" style="-fx-background-radius: 30; -fx-border-radius: 40;" />
+         </children>
+      </VBox>
+      
+      <!-- Buttons -->
+      <Button layoutX="480.0" layoutY="60.0" mnemonicParsing="false" onAction="#btnSaveOnAction" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #0E5930;" text="Save" textFill="#efeded">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button layoutX="600.0" layoutY="60.0" mnemonicParsing="false" onAction="#btnUpdateOnAction" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #639354;" text="Update" textFill="#f4eeee">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button layoutX="480.0" layoutY="110.0" mnemonicParsing="false" onAction="#btnResetOnAction" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #356C08;" text="Reset" textFill="#f7f5f5">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button layoutX="600.0" layoutY="110.0" mnemonicParsing="false" onAction="#btnDeleteOnAction" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #7CFC00;" text="Delete">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button layoutX="540.0" layoutY="160.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #2E5B0C;" text="Report" textFill="#f4efef">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      
+      <!-- Table -->
+      <TableView fx:id="tblPayment" layoutX="15.0" layoutY="300.0" prefHeight="280.0" prefWidth="770.0">
+         <columns>
+            <TableColumn fx:id="colPayment_Id" prefWidth="140.0" text="Payment ID" />
+            <TableColumn fx:id="colOrder_Name" prefWidth="160.0" text="Order Name" />
+            <TableColumn fx:id="colOrder_Id" prefWidth="140.0" text="Order ID" />
+            <TableColumn fx:id="colInvoice" prefWidth="160.0" text="Invoice" />
+            <TableColumn fx:id="colPayment_Value" prefWidth="170.0" text="Payment Value" />
+         </columns>
+      </TableView>
+   </children>
+</AnchorPane>

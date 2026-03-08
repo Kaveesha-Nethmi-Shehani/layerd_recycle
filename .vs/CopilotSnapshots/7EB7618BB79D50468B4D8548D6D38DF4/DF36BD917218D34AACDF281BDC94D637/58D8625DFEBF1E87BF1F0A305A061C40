@@ -1,0 +1,197 @@
+﻿package lk.ijse.recycle.model;
+
+import lk.ijse.recycle.db.DBConnection;
+import lk.ijse.recycle.dto.ProductDto;
+import lk.ijse.recycle.dto.RecycleItemDto;
+import lk.ijse.recycle.util.CrudUtil;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ProductModel {
+
+    public boolean save(ProductDto dto) throws SQLException {
+        String sql = "INSERT INTO product (product_id, product_name, item_id, kg_per_unit, selling_price, stock_quantity) VALUES (?, ?, ?, ?, ?, ?)";
+        return CrudUtil.executeUpdate(sql, 
+            dto.getProductId(), 
+            dto.getProductName(), 
+            dto.getItemId(),
+            dto.getKgPerUnit(),
+            dto.getSellingPrice(),
+            dto.getStockQuantity()
+        );
+    }
+
+    public boolean update(ProductDto dto) throws SQLException {
+        String sql = "UPDATE product SET product_name = ?, item_id = ?, kg_per_unit = ?, selling_price = ? WHERE product_id = ?";
+        return CrudUtil.executeUpdate(sql, 
+            dto.getProductName(), 
+            dto.getItemId(),
+            dto.getKgPerUnit(),
+            dto.getSellingPrice(),
+            dto.getProductId()
+        );
+    }
+
+    public boolean delete(String productId) throws SQLException {
+        String sql = "DELETE FROM product WHERE product_id = ?";
+        return CrudUtil.executeUpdate(sql, productId);
+    }
+
+    public ProductDto search(String productId) throws SQLException {
+        String sql = "SELECT p.*, r.item_materials FROM product p LEFT JOIN recycle_item r ON p.item_id = r.item_id WHERE p.product_id = ?";
+        ResultSet rs = CrudUtil.executeQuery(sql, productId);
+
+        if (rs.next()) {
+            return new ProductDto(
+                rs.getString("product_id"),
+                rs.getString("product_name"),
+                rs.getObject("item_id") != null ? rs.getInt("item_id") : null,
+                rs.getString("item_materials"),
+                rs.getDouble("kg_per_unit"),
+                rs.getDouble("selling_price"),
+                rs.getInt("stock_quantity")
+            );
+        }
+        return null;
+    }
+
+    public List<ProductDto> getAllProduct() throws SQLException {
+        String sql = "SELECT p.*, r.item_materials FROM product p LEFT JOIN recycle_item r ON p.item_id = r.item_id";
+        ResultSet rs = CrudUtil.executeQuery(sql);
+
+        List<ProductDto> list = new ArrayList<>();
+
+        while (rs.next()) {
+            list.add(new ProductDto(
+                rs.getString("product_id"),
+                rs.getString("product_name"),
+                rs.getObject("item_id") != null ? rs.getInt("item_id") : null,
+                rs.getString("item_materials"),
+                rs.getDouble("kg_per_unit"),
+                rs.getDouble("selling_price"),
+                rs.getInt("stock_quantity")
+            ));
+        }
+        return list;
+    }
+
+    public List<RecycleItemDto> getAllRecycleItems() throws SQLException {
+        String sql = "SELECT * FROM recycle_item WHERE item_kg > 0";
+        ResultSet rs = CrudUtil.executeQuery(sql);
+
+        List<RecycleItemDto> list = new ArrayList<>();
+        while (rs.next()) {
+            list.add(new RecycleItemDto(
+                rs.getInt("item_id"),
+                rs.getString("item_materials"),
+                rs.getDouble("item_kg"),
+                rs.getDouble("item_price"),
+                rs.getString("date")
+            ));
+        }
+        return list;
+    }
+
+    /**
+     * Manufacture products with PROPER TRANSACTION handling
+     * - Deducts materials from recycle_item
+     * - Adds stock to product
+     * - Rolls back if any step fails
+     */
+    public boolean manufacture(String productId, int quantity) throws SQLException {
+        Connection connection = DBConnection.getInstance().getConnection();
+        
+        try {
+            // START TRANSACTION
+            connection.setAutoCommit(false);
+            
+            // Get product details
+            ProductDto product = search(productId);
+            if (product == null || product.getItemId() == null) {
+                connection.rollback();
+                return false;
+            }
+
+            double requiredKg = product.getKgPerUnit() * quantity;
+
+            // Check available recycle item weight
+            String checkSql = "SELECT item_kg FROM recycle_item WHERE item_id = ? FOR UPDATE";
+            ResultSet rs = CrudUtil.executeQuery(checkSql, product.getItemId());
+
+            if (rs.next()) {
+                double availableKg = rs.getDouble("item_kg");
+                
+                if (availableKg < requiredKg) {
+                    connection.rollback();
+                    return false; // Not enough materials
+                }
+
+                // Step 1: Deduct from recycle_item
+                String deductSql = "UPDATE recycle_item SET item_kg = item_kg - ? WHERE item_id = ?";
+                boolean deducted = CrudUtil.executeUpdate(deductSql, requiredKg, product.getItemId());
+
+                if (!deducted) {
+                    connection.rollback();
+                    return false;
+                }
+
+                // Step 2: Add to product stock
+                String addStockSql = "UPDATE product SET stock_quantity = stock_quantity + ? WHERE product_id = ?";
+                boolean stockAdded = CrudUtil.executeUpdate(addStockSql, quantity, productId);
+
+                if (!stockAdded) {
+                    connection.rollback();
+                    return false;
+                }
+
+                // COMMIT TRANSACTION
+                connection.commit();
+                return true;
+            } else {
+                connection.rollback();
+                return false;
+            }
+            
+        } catch (SQLException e) {
+            // ROLLBACK on error
+            connection.rollback();
+            throw e;
+        } finally {
+            // Reset auto-commit
+            connection.setAutoCommit(true);
+        }
+    }
+
+    public double getAvailableMaterialKg(Integer itemId) throws SQLException {
+        if (itemId == null) return 0;
+        
+        String sql = "SELECT item_kg FROM recycle_item WHERE item_id = ?";
+        ResultSet rs = CrudUtil.executeQuery(sql, itemId);
+
+        if (rs.next()) {
+            return rs.getDouble("item_kg");
+        }
+        return 0;
+    }
+
+    public boolean reduceStock(String productId, int quantity) throws SQLException {
+        String sql = "UPDATE product SET stock_quantity = stock_quantity - ? WHERE product_id = ? AND stock_quantity >= ?";
+        return CrudUtil.executeUpdate(sql, quantity, productId, quantity);
+    }
+
+    public boolean hasStock(String productId, int quantity) throws SQLException {
+        String sql = "SELECT stock_quantity FROM product WHERE product_id = ?";
+        ResultSet rs = CrudUtil.executeQuery(sql, productId);
+
+        if (rs.next()) {
+            return rs.getInt("stock_quantity") >= quantity;
+        }
+        return false;
+    }
+}
+
+

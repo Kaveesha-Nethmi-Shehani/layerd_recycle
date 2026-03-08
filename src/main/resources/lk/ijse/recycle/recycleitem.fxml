@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="650.0" prefWidth="800.0" style="-fx-background-color: #013220;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.recycle.controller.RecycleItemController">
+   <children>
+      <!-- Title -->
+      <Label layoutX="250.0" layoutY="10.0" text="RECYCLE ITEMS MANAGEMENT" textFill="white">
+         <font>
+            <Font name="System Bold Italic" size="20.0" />
+         </font>
+      </Label>
+      
+      <!-- Form Fields - Left Side -->
+      <Label layoutX="20.0" layoutY="50.0" text="Item ID" textFill="white">
+         <font><Font name="System Bold" size="12.0" /></font>
+      </Label>
+      <Label fx:id="lblItem_Id" layoutX="20.0" layoutY="68.0" prefHeight="25.0" prefWidth="280.0" style="-fx-background-color: #1a4a1a; -fx-background-radius: 5; -fx-padding: 5;" text="N/A" textFill="#7CFC00">
+         <font><Font name="System Bold" size="14.0" /></font>
+      </Label>
+      
+      <Label layoutX="20.0" layoutY="103.0" text="Select Material" textFill="white">
+         <font><Font name="System Bold" size="12.0" /></font>
+      </Label>
+      <HBox layoutX="20.0" layoutY="121.0" spacing="5">
+         <ComboBox fx:id="cmbMaterial" prefWidth="220.0" promptText="Select Material" style="-fx-background-radius: 5;" />
+      </HBox>
+      
+      <Label layoutX="20.0" layoutY="156.0" text="Price Per KG" textFill="white">
+         <font><Font name="System Bold" size="12.0" /></font>
+      </Label>
+      <Label fx:id="lblPrice_Per_Kg" layoutX="20.0" layoutY="174.0" prefHeight="25.0" prefWidth="280.0" style="-fx-background-color: #1a4a1a; -fx-background-radius: 5; -fx-padding: 5;" text="Select material" textFill="#FFD700">
+         <font><Font name="System Bold" size="12.0" /></font>
+      </Label>
+      
+      <Label layoutX="20.0" layoutY="209.0" text="Item Weight (KG)" textFill="white">
+         <font><Font name="System Bold" size="12.0" /></font>
+      </Label>
+      <TextField fx:id="txtItem_Kg" layoutX="20.0" layoutY="227.0" prefWidth="280.0" promptText="Enter Weight in KG" style="-fx-background-radius: 5;" />
+      
+      <Label layoutX="20.0" layoutY="262.0" text="Total Price (LKR) - Auto Calculated" textFill="white">
+         <font><Font name="System Bold" size="12.0" /></font>
+      </Label>
+      <Label fx:id="lblItem_Price" layoutX="20.0" layoutY="280.0" prefHeight="30.0" prefWidth="280.0" style="-fx-background-color: #1a4a1a; -fx-background-radius: 5; -fx-padding: 5;" text="LKR 0.00" textFill="#00FF00">
+         <font><Font name="System Bold" size="16.0" /></font>
+      </Label>
+      
+      <Label layoutX="20.0" layoutY="320.0" text="Collection Date" textFill="white">
+         <font><Font name="System Bold" size="12.0" /></font>
+      </Label>
+      <DatePicker fx:id="txtItem_Date" layoutX="20.0" layoutY="338.0" prefWidth="280.0" />
+      
+      <!-- Buttons - Right Side -->
+         <Button layoutX="340.0" layoutY="68.0" mnemonicParsing="false" onAction="#btnSaveOnAction" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #0E5930;" text="Save" textFill="white">
+         <font><Font name="System Bold" size="11.0" /></font>
+      </Button>
+      <Button layoutX="460.0" layoutY="68.0" mnemonicParsing="false" onAction="#btnUpdateOnAction" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #639354;" text="Update" textFill="white">
+         <font><Font name="System Bold" size="11.0" /></font>
+      </Button>
+      <Button layoutX="580.0" layoutY="68.0" mnemonicParsing="false" onAction="#btnDeleteOnAction" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #7CFC00;" text="Delete">
+         <font><Font name="System Bold" size="11.0" /></font>
+      </Button>
+
+         <!-- Analysis Report Button -->
+         <Button layoutX="700.0" layoutY="68.0" mnemonicParsing="false" onAction="#btnReportOnAction" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #72D472;" text="Report" textFill="#fafcfb">
+             <font><Font name="System Bold" size="10.0" /></font>
+         </Button>
+      
+      <Button layoutX="340.0" layoutY="113.0" mnemonicParsing="false" onAction="#btnResetOnAction" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #356C08;" text="Reset" textFill="white">
+         <font><Font name="System Bold" size="11.0" /></font>
+      </Button>
+      <Button layoutX="460.0" layoutY="113.0" mnemonicParsing="false" onAction="#btnSearchOnAction" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #2E5B0C;" text="Search" textFill="white">
+         <font><Font name="System Bold" size="11.0" /></font>
+      </Button>
+      
+      <!-- Separator -->
+      <Separator layoutX="20.0" layoutY="380.0" prefWidth="760.0" />
+      
+      <!-- Table -->
+      <TableView fx:id="tblRecycleItem" layoutX="20.0" layoutY="390.0" prefHeight="245.0" prefWidth="760.0">
+        <columns>
+          <TableColumn fx:id="colItem_Id" prefWidth="80.0" text="Item ID" />
+          <TableColumn fx:id="colItem_Materials" prefWidth="150.0" text="Material" />
+          <TableColumn fx:id="colItem_Kg" prefWidth="120.0" text="Weight (KG)" />
+          <TableColumn fx:id="colItem_Price" prefWidth="150.0" text="Price Paid (LKR)" />
+          <TableColumn fx:id="colItem_Date" prefWidth="260.0" text="Collection Date" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>

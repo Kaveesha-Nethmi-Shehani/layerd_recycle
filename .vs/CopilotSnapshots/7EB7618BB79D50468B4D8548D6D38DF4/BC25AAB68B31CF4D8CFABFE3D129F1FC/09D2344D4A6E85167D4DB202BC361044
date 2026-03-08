@@ -1,0 +1,87 @@
+﻿<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
+<jasperReport name="Cus_report" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d326db26-fbd4-4d8b-8afc-111b91e95a74">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ecoplayer"/>
+	<query language="SQL"><![CDATA[SELECT * FROM customer;]]></query>
+	<field name="customer_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="customer_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="customer_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="customer"/>
+	</field>
+	<field name="customer_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="customer_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="customer_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="customer"/>
+	</field>
+	<field name="customer_contact" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="customer_contact"/>
+		<property name="com.jaspersoft.studio.field.label" value="customer_contact"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="customer"/>
+	</field>
+	<field name="customer_date" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="customer_date"/>
+		<property name="com.jaspersoft.studio.field.label" value="customer_date"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="customer"/>
+	</field>
+	<group name="customer_id">
+		<expression><![CDATA[$F{customer_id}]]></expression>
+	</group>
+	<group name="customer_name">
+		<expression><![CDATA[$F{customer_name}]]></expression>
+	</group>
+	<group name="customer_contact">
+		<expression><![CDATA[$F{customer_contact}]]></expression>
+	</group>
+	<group name="customer_date">
+		<expression><![CDATA[$F{customer_date}]]></expression>
+	</group>
+	<background splitType="Stretch"/>
+	<title height="52" splitType="Stretch">
+		<element kind="staticText" uuid="beee65dc-a2b5-4173-86e1-a2ee2d460f34" x="210" y="10" width="200" height="30" forecolor="#BDBDBD" fontSize="22.0" bold="true" hTextAlign="Justified">
+			<text><![CDATA[CUSTOMER]]></text>
+		</element>
+	</title>
+	<pageHeader height="46" splitType="Stretch">
+		<element kind="staticText" uuid="f8ac891e-ba23-449b-941d-b4a2e8a28366" x="220" y="8" width="140" height="30" forecolor="#195E1C" fontSize="19.0" italic="true" bold="true">
+			<text><![CDATA[ECOPLAYER]]></text>
+		</element>
+	</pageHeader>
+	<columnHeader height="61" splitType="Stretch">
+		<element kind="staticText" uuid="c9923d94-1751-4153-a684-ba849b33de40" x="0" y="20" width="120" height="30" fontSize="16.0">
+			<text><![CDATA[Customer Name]]></text>
+		</element>
+		<element kind="staticText" uuid="c42c9752-a3c7-449a-b9c5-234c5170e700" x="150" y="20" width="100" height="30" fontSize="16.0">
+			<text><![CDATA[Customer ID]]></text>
+		</element>
+		<element kind="staticText" uuid="07153bb8-63b2-4e9a-821f-18a89ee0c593" x="280" y="20" width="140" height="30" fontSize="16.0">
+			<text><![CDATA[Customer Contact]]></text>
+		</element>
+		<element kind="staticText" uuid="fe92fabb-59ce-46d6-8be4-77d239f370e4" x="450" y="20" width="124" height="30" fontSize="16.0">
+			<text><![CDATA[Registration Date]]></text>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="81" splitType="Stretch">
+			<element kind="textField" uuid="dd855ed3-5d10-4cce-803c-96c02b4d534e" x="0" y="10" width="100" height="30">
+				<expression><![CDATA[$F{customer_name}]]></expression>
+			</element>
+			<element kind="textField" uuid="110602ec-126e-4206-a54d-00a8d109e16c" x="150" y="10" width="100" height="30">
+				<expression><![CDATA[$F{customer_id}]]></expression>
+			</element>
+			<element kind="textField" uuid="02b105d2-aa9a-4102-b421-3d416b6c804c" x="280" y="11" width="100" height="30">
+				<expression><![CDATA[$F{customer_contact}]]></expression>
+			</element>
+			<element kind="textField" uuid="37e4fe4b-1bed-4d48-ba21-4792d382b3dd" x="451" y="11" width="100" height="30">
+				<expression><![CDATA[$F{customer_date}]]></expression>
+			</element>
+		</band>
+	</detail>
+	<columnFooter height="90" splitType="Stretch">
+		<element kind="staticText" uuid="a1cb999a-7f47-4f57-98fc-7a73a83d7bb6" x="10" y="20" width="524" height="70" forecolor="#1C3623" fontSize="25.0" italic="true" bold="true" hTextAlign="Center">
+			<text><![CDATA[RECYCLE FOR A GREEN TOMORROW]]></text>
+		</element>
+	</columnFooter>
+	<pageFooter height="54" splitType="Stretch"/>
+	<summary height="42" splitType="Stretch"/>
+</jasperReport>
+

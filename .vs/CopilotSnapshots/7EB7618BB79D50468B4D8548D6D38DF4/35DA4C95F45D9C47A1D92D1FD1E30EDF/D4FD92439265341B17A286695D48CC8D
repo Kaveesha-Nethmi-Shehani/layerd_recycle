@@ -1,0 +1,223 @@
+﻿package lk.ijse.recycle.controller;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import lk.ijse.recycle.dto.CustomerDto;
+import lk.ijse.recycle.model.CustomerModel;
+
+import java.net.URL;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.ResourceBundle;
+
+public class CustomerController implements Initializable {
+
+    @FXML private TextField txtCustomer_Id;
+    @FXML private TextField txtCustomer_Name;
+    @FXML private TextField txtCustomer_Contact;
+    @FXML private DatePicker txtCustomer_Date;
+
+    @FXML private TableView<CustomerDto> tblCustomer;
+    @FXML private TableColumn<CustomerDto, Integer> colCustomer_Id;
+    @FXML private TableColumn<CustomerDto, String> colCustomer_Name;
+    @FXML private TableColumn<CustomerDto, String> colCustomer_Contact;
+    @FXML private TableColumn<CustomerDto, String> colCustomer_Date;
+
+    private final CustomerModel customerModel = new CustomerModel();
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        setCellValueFactory();
+        loadAllCustomers();
+
+        tblCustomer.getSelectionModel().selectedItemProperty().addListener((obs, old, newVal) -> {
+            if (newVal != null) {
+                txtCustomer_Id.setText(String.valueOf(newVal.getCustomerId()));
+                txtCustomer_Name.setText(newVal.getCustomerName());
+                txtCustomer_Contact.setText(newVal.getCustomerContact());
+                txtCustomer_Date.setValue(parseDateSafely(newVal.getCustomerDate()));
+            }
+        });
+
+        txtCustomer_Contact.setOnKeyPressed(this::handleContactFieldKeyPress);
+    }
+
+    private void setCellValueFactory() {
+        if (colCustomer_Id == null || colCustomer_Name == null || colCustomer_Contact == null || colCustomer_Date == null) {
+            return;
+        }
+        colCustomer_Id.setCellValueFactory(new PropertyValueFactory<>("customerId"));
+        colCustomer_Name.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+        colCustomer_Contact.setCellValueFactory(new PropertyValueFactory<>("customerContact"));
+        colCustomer_Date.setCellValueFactory(new PropertyValueFactory<>("customerDate"));
+    }
+
+    private void handleContactFieldKeyPress(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            handleSearchCustomer();
+        }
+    }
+
+    private void loadAllCustomers() {
+        if (tblCustomer == null) {
+            return;
+        }
+        try {
+            tblCustomer.setItems(FXCollections.observableArrayList(customerModel.getAllCustomers()));
+        } catch (SQLException e) {
+            String errorMsg = "Failed to load customers: " + e.getMessage();
+            System.err.println(errorMsg);
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, errorMsg).show();
+        }
+    }
+
+    private CustomerDto getCustomerFromFields() {
+        String idText = txtCustomer_Id.getText().trim();
+        String name = txtCustomer_Name.getText().trim();
+        String contact = txtCustomer_Contact.getText().trim();
+        LocalDate date = txtCustomer_Date.getValue();
+
+        if (name.isEmpty() || contact.isEmpty() || date == null) {
+            new Alert(Alert.AlertType.WARNING, "All fields are required!").show();
+            return null;
+        }
+
+        int id = idText.isEmpty() ? 0 : Integer.parseInt(idText);
+        String formattedDate = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        return new CustomerDto(id, name, contact, formattedDate);
+    }
+
+    private void handleSearchCustomer() {
+        String contact = txtCustomer_Contact.getText().trim();
+
+        if (contact.isEmpty()) {
+            new Alert(Alert.AlertType.WARNING, "Please enter a contact number!").show();
+            return;
+        }
+
+        try {
+            CustomerDto found = customerModel.searchCustomer(contact);
+            if (found != null) {
+                txtCustomer_Id.setText(String.valueOf(found.getCustomerId()));
+                txtCustomer_Name.setText(found.getCustomerName());
+                txtCustomer_Contact.setText(found.getCustomerContact());
+                txtCustomer_Date.setValue(parseDateSafely(found.getCustomerDate()));
+                tblCustomer.getSelectionModel().select(found);
+            } else {
+                new Alert(Alert.AlertType.INFORMATION, "Customer Not Found").show();
+            }
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, "Search failed: " + e.getMessage()).show();
+        }
+    }
+
+    private LocalDate parseDateSafely(String dateStr) {
+        if (dateStr == null || dateStr.trim().isEmpty()) {
+            return null;
+        }
+        if (dateStr.contains(" ")) {
+            dateStr = dateStr.split(" ")[0];
+        }
+        String[] formats = {"yyyy-MM-dd", "dd/MM/yyyy", "MM/dd/yyyy", "yyyy/MM/dd"};
+        for (String format : formats) {
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+                return LocalDate.parse(dateStr, formatter);
+            } catch (DateTimeParseException e) {
+                // Try next format
+            }
+        }
+        System.err.println("Could not parse date: " + dateStr);
+        return null;
+    }
+
+    @FXML
+    private void btnSaveOnAction(ActionEvent event) {
+        CustomerDto customer = getCustomerFromFields();
+        if (customer != null) {
+            try {
+                boolean saved = customerModel.saveCustomer(customer);
+                if (saved) {
+                    new Alert(Alert.AlertType.INFORMATION, "Customer saved successfully!").show();
+                    loadAllCustomers();
+                    clearFields();
+                }
+            } catch (SQLException e) {
+                new Alert(Alert.AlertType.ERROR, "Failed to save customer: " + e.getMessage()).show();
+            }
+        }
+    }
+
+    @FXML
+    private void btnUpdateOnAction(ActionEvent event) {
+        if (txtCustomer_Id.getText().isEmpty()) {
+            new Alert(Alert.AlertType.WARNING, "Please select a customer to update!").show();
+            return;
+        }
+        CustomerDto customer = getCustomerFromFields();
+        if (customer != null) {
+            try {
+                boolean updated = customerModel.updateCustomer(customer);
+                if (updated) {
+                    new Alert(Alert.AlertType.INFORMATION, "Customer updated successfully!").show();
+                    loadAllCustomers();
+                    clearFields();
+                }
+            } catch (SQLException e) {
+                new Alert(Alert.AlertType.ERROR, "Failed to update customer: " + e.getMessage()).show();
+            }
+        }
+    }
+
+    @FXML
+    private void btnDeleteOnAction(ActionEvent event) {
+        String idText = txtCustomer_Id.getText().trim();
+        if (idText.isEmpty()) {
+            new Alert(Alert.AlertType.WARNING, "Please select a customer to delete!").show();
+            return;
+        }
+
+        try {
+            int id = Integer.parseInt(idText);
+            boolean deleted = customerModel.deleteCustomer(id);
+            if (deleted) {
+                new Alert(Alert.AlertType.INFORMATION, "Customer deleted successfully!").show();
+                loadAllCustomers();
+                clearFields();
+            }
+        } catch (NumberFormatException e) {
+            new Alert(Alert.AlertType.ERROR, "Invalid ID format!").show();
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, "Failed to delete customer: " + e.getMessage()).show();
+        }
+    }
+
+    @FXML
+    private void btnResetOnAction(ActionEvent event) {
+        clearFields();
+    }
+
+    @FXML
+    private void btnSearchOnAction(ActionEvent event) {
+        handleSearchCustomer();
+    }
+
+    private void clearFields() {
+        if (txtCustomer_Id != null) txtCustomer_Id.clear();
+        if (txtCustomer_Name != null) txtCustomer_Name.clear();
+        if (txtCustomer_Contact != null) txtCustomer_Contact.clear();
+        if (txtCustomer_Date != null) txtCustomer_Date.setValue(null);
+        tblCustomer.getSelectionModel().clearSelection();
+    }
+}
+

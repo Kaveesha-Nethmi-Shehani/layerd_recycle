@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: gray; -fx-background-color: #013220;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.recycle.controller.RecycleItemController">
+   <children>
+      <VBox layoutX="18.0" prefHeight="44.0" prefWidth="566.0">
+         <children>
+            <Text fill="#fffafa" strokeType="OUTSIDE" strokeWidth="0.0" text="                                                             RECYCLE  ITEMS MANAGEMENT" wrappingWidth="775.1788635253906">
+               <font>
+                  <Font name="System Bold Italic" size="18.0" />
+               </font>
+            </Text>
+         </children>
+      </VBox>
+      <VBox layoutX="6.0" layoutY="44.0" prefHeight="62.0" prefWidth="384.0">
+         <children>
+            <Text fill="#f4f4f4" strokeType="OUTSIDE" strokeWidth="0.0" text="Item ID" wrappingWidth="72.45159912109375">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+            </Text>
+            <TextField fx:id="txtId" style="-fx-background-radius: 30; -fx-border-radius: 40;" />
+         </children>
+      </VBox>
+      <VBox layoutX="6.0" layoutY="100.0" prefHeight="54.0" prefWidth="384.0">
+         <children>
+            <Text fill="#f7f7f7" strokeType="OUTSIDE" strokeWidth="0.0" text="Item Materials">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+            </Text>
+            <TextField fx:id="txtMaterials" style="-fx-background-radius: 30; -fx-border-radius: 40;" />
+         </children>
+      </VBox>
+      <VBox layoutX="4.0" layoutY="157.0" prefHeight="44.0" prefWidth="384.0">
+         <children>
+            <Text fill="#f4f4f4" strokeType="OUTSIDE" strokeWidth="0.0" text="Item Price">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+            </Text>
+            <TextField fx:id="txtPrice" style="-fx-background-radius: 30; -fx-border-radius: 40;" />
+            <VBox prefHeight="200.0" prefWidth="100.0" />
+         </children>
+      </VBox>
+      <VBox layoutX="6.0" layoutY="216.0" prefHeight="45.0" prefWidth="378.0">
+         <children>
+            <Text fill="#f4eded" strokeType="OUTSIDE" strokeWidth="0.0" text="Item KG">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+            </Text>
+            <TextField fx:id="txtKg" style="-fx-background-radius: 30; -fx-border-radius: 40;" />
+         </children>
+      </VBox>
+      <VBox layoutX="5.0" layoutY="272.0" prefHeight="44.0" prefWidth="372.0">
+         <children>
+            <Text fill="#faf3f3" strokeType="OUTSIDE" strokeWidth="0.0" text="Item Date" wrappingWidth="74.4195556640625">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+            </Text>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <DatePicker fx:id="txtDate" prefHeight="26.0" prefWidth="376.0" />
+               </children></HBox>
+         </children>
+      </VBox>
+      <HBox layoutX="478.0" layoutY="67.0" prefHeight="38.0" prefWidth="107.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#btnSaveOnAction" prefHeight="26.0" prefWidth="102.0" style="-fx-background-color: #2E5B0C;" text="Save" textFill="#f7f2f2">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+               <HBox.margin>
+                  <Insets bottom="8.0" left="1.0" right="1.0" top="8.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+      <HBox layoutX="476.0" layoutY="107.0" prefHeight="44.0" prefWidth="107.0" />
+      <HBox layoutX="476.0" layoutY="153.0" prefHeight="26.0" prefWidth="102.0" />
+      <TableView fx:id="tableRecycle" layoutX="9.0" layoutY="330.0" prefHeight="238.0" prefWidth="775.0">
+        <columns>
+          <TableColumn fx:id="colId" prefWidth="112.800048828125" text="Item ID" />
+          <TableColumn fx:id="colMaterials" prefWidth="196.19996643066406" text="Item Materials" />
+            <TableColumn fx:id="colPrice" prefWidth="170.00003051757812" text="Item Price" />
+            <TableColumn fx:id="colKg" prefWidth="143.5999755859375" text="Item KG" />
+            <TableColumn fx:id="colDate" prefWidth="154.199951171875" text="Item Date" />
+        </columns>
+      </TableView>
+      <Button layoutX="480.0" layoutY="202.0" mnemonicParsing="false" onAction="#btnUpdateOnAction" prefHeight="26.0" prefWidth="102.0" style="-fx-background-color: #639354;" text="Update" textFill="#faf7f7">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button layoutX="480.0" layoutY="138.0" mnemonicParsing="false" onAction="#btnResetOnAction" prefHeight="26.0" prefWidth="102.0" style="-fx-background-color: #356C08;" text="Reset" textFill="#fcf5f5">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <HBox layoutX="610.0" layoutY="138.0" prefHeight="26.0" prefWidth="107.0" />
+      <Button layoutX="480.0" layoutY="262.0" mnemonicParsing="false" onAction="#btnDeleteOnAction" prefHeight="26.0" prefWidth="102.0" style="-fx-background-color: #7CFC00;" text="Delete">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

@@ -1,0 +1,86 @@
+﻿package lk.ijse.recycle.controller;
+
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.layout.AnchorPane;
+import lk.ijse.recycle.util.Navigation;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class DashbordController implements Initializable {
+
+    @FXML
+    private AnchorPane mainContent;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        try {
+            Navigation.navigateToPane(mainContent, "welcome");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void btnCustomer(ActionEvent event) {
+        try {
+            Navigation.navigateToPane(mainContent, "customer");
+        } catch (Exception e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Error loading Customer: " + e.getMessage()).show();
+        }
+    }
+
+    @FXML
+    void btnOrder(ActionEvent event) {
+        try {
+            Navigation.navigateToPane(mainContent, "order");
+        } catch (Exception e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Error loading Order: " + e.getMessage()).show();
+        }
+    }
+
+    @FXML
+    void btnProduct(ActionEvent event) {
+        try {
+            Navigation.navigateToPane(mainContent, "product");
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "Error loading Product: " + e.getMessage()).show();
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void btnPayement(ActionEvent event) {
+        try {
+            Navigation.navigateToPane(mainContent, "payement");
+        } catch (Exception e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Error loading Payment: " + e.getMessage()).show();
+        }
+    }
+
+    @FXML
+    void btnDelivery(ActionEvent event) {
+        try {
+            Navigation.navigateToPane(mainContent, "Delivery");
+        } catch (Exception e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Error loading Delivery: " + e.getMessage()).show();
+        }
+    }
+
+    @FXML
+    void btnRecycle(ActionEvent event) {
+        try {
+            Navigation.navigateToPane(mainContent, "recycleitem");
+        } catch (Exception e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Error loading Recycle Items: " + e.getMessage()).show();
+        }
+    }
+}

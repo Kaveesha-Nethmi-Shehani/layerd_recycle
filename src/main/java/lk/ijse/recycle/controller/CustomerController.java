@@ -1,0 +1,250 @@
+package lk.ijse.recycle.controller;
+
+import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import lk.ijse.recycle.bo.BOFactory;
+import lk.ijse.recycle.bo.custom.CustomerBO;
+import lk.ijse.recycle.dao.custom.impl.CustomerDAOImpl;
+import lk.ijse.recycle.dto.CustomerDto;
+import lk.ijse.recycle.util.ReportUtil;
+
+import java.net.URL;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.ResourceBundle;
+
+public class CustomerController implements Initializable {
+
+    @FXML private Label lblCustomer_Id;
+    @FXML private TextField txtCustomer_Name;
+    @FXML private TextField txtCustomer_Contact;
+    @FXML private DatePicker txtCustomer_Date;
+
+    @FXML private TableView<CustomerDto> tblCustomer;
+    @FXML private TableColumn<CustomerDto, Integer> colCustomer_Id;
+    @FXML private TableColumn<CustomerDto, String> colCustomer_Name;
+    @FXML private TableColumn<CustomerDto, String> colCustomer_Contact;
+    @FXML private TableColumn<CustomerDto, String> colCustomer_Date;
+
+
+    private int selectedCustomerId = -1;
+
+    //private final CustomerDAOImpl customerDAO = new CustomerDAOImpl();
+
+    CustomerBO customerBO = (CustomerBO) BOFactory.getInstance().getBOFactory(BOFactory.BOTypes.Customer);
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        setCellValueFactory();
+        loadAllCustomers();
+        loadNextCustomerId();
+
+        tblCustomer.getSelectionModel().selectedItemProperty().addListener((obs, old, newVal) -> {
+            if (newVal != null) {
+                selectedCustomerId = newVal.getCustomerId();
+                lblCustomer_Id.setText(String.valueOf(newVal.getCustomerId()));
+                txtCustomer_Name.setText(newVal.getCustomerName());
+                txtCustomer_Contact.setText(newVal.getCustomerContact());
+                txtCustomer_Date.setValue(parseDateSafely(newVal.getCustomerDate()));
+            }
+        });
+    }
+
+    private void setCellValueFactory() {
+        if (colCustomer_Id == null || colCustomer_Name == null || colCustomer_Contact == null || colCustomer_Date == null) {
+            return;
+        }
+        colCustomer_Id.setCellValueFactory(new PropertyValueFactory<>("customerId"));
+        colCustomer_Name.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+        colCustomer_Contact.setCellValueFactory(new PropertyValueFactory<>("customerContact"));
+        colCustomer_Date.setCellValueFactory(new PropertyValueFactory<>("customerDate"));
+    }
+
+    private void loadNextCustomerId() {
+        try {
+            int nextId = customerBO.getNextCustomerId();
+            lblCustomer_Id.setText(String.valueOf(nextId));
+            selectedCustomerId = -1;
+        } catch (SQLException e) {
+            lblCustomer_Id.setText("N/A");
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void loadAllCustomers() {
+        if (tblCustomer == null) {
+            return;
+        }
+        try {
+            tblCustomer.setItems(FXCollections.observableArrayList(customerBO.getAllCustomer()));
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, "Failed to load customers: " + e.getMessage()).show();
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private LocalDate parseDateSafely(String dateStr) {
+        if (dateStr == null || dateStr.trim().isEmpty()) {
+            return null;
+        }
+        if (dateStr.contains(" ")) {
+            dateStr = dateStr.split(" ")[0];
+        }
+        String[] formats = {"yyyy-MM-dd", "dd/MM/yyyy", "MM/dd/yyyy", "yyyy/MM/dd"};
+        for (String format : formats) {
+            try {
+                return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern(format));
+            } catch (DateTimeParseException e) {
+
+            }
+        }
+        return null;
+    }
+
+    @FXML
+    private void btnSaveOnAction(ActionEvent event) {
+        String name = txtCustomer_Name.getText().trim();
+        String contact = txtCustomer_Contact.getText().trim();
+        LocalDate date = txtCustomer_Date.getValue();
+
+        if (name.isEmpty() || contact.isEmpty() || date == null) {
+            new Alert(Alert.AlertType.WARNING, "All fields are required!").show();
+            return;
+        }
+
+        try {
+            String formattedDate = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            CustomerDto dto = new CustomerDto(0, name, contact, formattedDate);
+            
+            boolean saved = customerBO.saveCustomer(dto);
+            if (saved) {
+                new Alert(Alert.AlertType.INFORMATION, "Customer saved successfully!").show();
+                loadAllCustomers();
+                clearFields();
+                loadNextCustomerId();
+            } else {
+                new Alert(Alert.AlertType.ERROR, "Save failed!").show();
+            }
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, "Failed to save: " + e.getMessage()).show();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @FXML
+    private void btnUpdateOnAction(ActionEvent event) {
+        if (selectedCustomerId <= 0) {
+            new Alert(Alert.AlertType.WARNING, "Please select a customer from the table to update!").show();
+            return;
+        }
+
+        String name = txtCustomer_Name.getText().trim();
+        String contact = txtCustomer_Contact.getText().trim();
+        LocalDate date = txtCustomer_Date.getValue();
+
+        if (name.isEmpty() || contact.isEmpty() || date == null) {
+            new Alert(Alert.AlertType.WARNING, "All fields are required!").show();
+            return;
+        }
+
+        try {
+            String formattedDate = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            CustomerDto dto = new CustomerDto(selectedCustomerId, name, contact, formattedDate);
+            
+            boolean updated = customerBO.updateCustomer(dto);
+            if (updated) {
+                new Alert(Alert.AlertType.INFORMATION, "Customer updated successfully!").show();
+                loadAllCustomers();
+                clearFields();
+                loadNextCustomerId();
+            } else {
+                new Alert(Alert.AlertType.ERROR, "Update failed! Customer may not exist.").show();
+            }
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, "Failed to update: " + e.getMessage()).show();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @FXML
+    private void btnDeleteOnAction(ActionEvent event) {
+        if (selectedCustomerId <= 0) {
+            new Alert(Alert.AlertType.WARNING, "Please select a customer from the table to delete!").show();
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this customer?");
+        confirm.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                try {
+                    boolean deleted = customerBO.deleteCustomer(selectedCustomerId);
+                    if (deleted) {
+                        new Alert(Alert.AlertType.INFORMATION, "Customer deleted successfully!").show();
+                        loadAllCustomers();
+                        clearFields();
+                        loadNextCustomerId();
+                    } else {
+                        new Alert(Alert.AlertType.ERROR, "Delete failed!").show();
+                    }
+                } catch (SQLException e) {
+                    new Alert(Alert.AlertType.ERROR, "Failed to delete: " + e.getMessage()).show();
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+    }
+
+    @FXML
+    private void btnSearchOnAction(ActionEvent event) {
+        String contact = txtCustomer_Contact.getText().trim();
+        if (contact.isEmpty()) {
+            new Alert(Alert.AlertType.WARNING, "Please enter a contact number to search!").show();
+            return;
+        }
+
+        for (CustomerDto dto : tblCustomer.getItems()) {
+            if (dto.getCustomerContact().contains(contact)) {
+                tblCustomer.getSelectionModel().select(dto);
+                selectedCustomerId = dto.getCustomerId();
+                lblCustomer_Id.setText(String.valueOf(dto.getCustomerId()));
+                txtCustomer_Name.setText(dto.getCustomerName());
+                txtCustomer_Date.setValue(parseDateSafely(dto.getCustomerDate()));
+                return;
+            }
+        }
+        new Alert(Alert.AlertType.INFORMATION, "Customer not found with contact: " + contact).show();
+    }
+
+    @FXML
+    private void btnResetOnAction(ActionEvent event) {
+        clearFields();
+        loadNextCustomerId();
+    }
+
+    @FXML
+    private void btnReportOnAction(ActionEvent event) {
+        ReportUtil.generateCustomerReport();
+    }
+
+    private void clearFields() {
+        if (txtCustomer_Name != null) txtCustomer_Name.clear();
+        if (txtCustomer_Contact != null) txtCustomer_Contact.clear();
+        if (txtCustomer_Date != null) txtCustomer_Date.setValue(null);
+        if (tblCustomer != null) tblCustomer.getSelectionModel().clearSelection();
+        selectedCustomerId = -1;
+    }
+}
+

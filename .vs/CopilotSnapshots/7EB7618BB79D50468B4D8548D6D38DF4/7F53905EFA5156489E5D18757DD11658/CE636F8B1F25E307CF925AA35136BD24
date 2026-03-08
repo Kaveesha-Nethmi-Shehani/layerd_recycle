@@ -1,0 +1,199 @@
+﻿package lk.ijse.recycle.controller;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+
+import lk.ijse.recycle.dto.PaymentDto;
+import lk.ijse.recycle.dto.ProductDto;
+import lk.ijse.recycle.model.PaymentModel;
+import lk.ijse.recycle.model.ProductModel;
+
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.ResourceBundle;
+
+public class ProductController implements Initializable {
+
+    @FXML
+    private TextField txtPro_name;
+    @FXML
+    private TextField txtPro_id;
+    @FXML
+    private TextField txtPro_materials;
+
+    @FXML
+    private TableView<ProductDto> tblProduct;
+
+    @FXML
+    private TableColumn<ProductDto, String> colPro_name;
+    @FXML
+    private TableColumn<ProductDto, Integer> colPro_id;
+    @FXML
+    private TableColumn<ProductDto, String> colPro_materials;
+
+
+    @FXML
+    private Button btnSave;
+    @FXML
+    private Button btnUpdate;
+    @FXML
+    private Button btnDelete;
+    @FXML
+    private Button btnClear;
+
+    private final String PRO_NAME_REGEX = "^[A-Za-z]{3,}$";
+    private final String PRO_ID_REGEX = "^[0-9]+$";
+    private final String PRO_MATERIALS_REGEX = "^[0-9]+$";
+
+    ProductModel productModel = new ProductModel();
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        setCellValueFactory();
+        loadTable();
+    }
+
+    private void setCellValueFactory() {
+        if (colPro_name == null || colPro_id == null || colPro_materials == null) {
+            return;
+        }
+
+        colPro_name.setCellValueFactory(new PropertyValueFactory<>("pro_name"));
+        colPro_id.setCellValueFactory(new PropertyValueFactory<>("pro_id"));
+        colPro_materials.setCellValueFactory(new PropertyValueFactory<>("pro_materials"));
+    }
+
+    private void loadTable() {
+        if (tblProduct == null) {
+            return;
+        }
+        
+        try {
+            List<ProductDto> list = productModel.getAllProduct();
+            ObservableList<ProductDto> obList = FXCollections.observableArrayList(list);
+            tblProduct.setItems(obList);
+
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, "Table Load Error: " + e).show();
+        }
+    }
+
+
+    @FXML
+    void btnSaveOnAction(ActionEvent actionEvent) {
+
+        String pro_name = txtPro_name.getText();
+        String pro_id = txtPro_id.getText();
+        String pro_materials = txtPro_materials.getText();
+
+        ProductDto dto = new ProductDto(pro_id, pro_name, pro_materials);
+
+        try {
+            boolean saved = productModel.save(dto);
+
+            if (saved) {
+                new Alert(Alert.AlertType.INFORMATION, "Product Saved!").show();
+                loadTable();
+                clearFields();
+            } else {
+                new Alert(Alert.AlertType.WARNING, "Save Failed!").show();
+            }
+
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, "Save Error: " + e).show();
+        }
+    }
+
+
+    @FXML
+    void btnUpdateOnAction(ActionEvent actionEvent) {
+
+        String pro_name = txtPro_name.getText();
+        String pro_id = txtPro_id.getText();
+        String pro_materials = txtPro_materials.getText();
+
+
+        ProductDto dto = new ProductDto(pro_id, pro_name, pro_materials);
+
+        try {
+            boolean updated = productModel.update(dto);
+
+            if (updated) {
+                new Alert(Alert.AlertType.INFORMATION, "Product Updated!").show();
+                loadTable();
+                clearFields();
+            } else {
+                new Alert(Alert.AlertType.WARNING, "Update Failed!").show();
+            }
+
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, "Update Error: " + e).show();
+        }
+    }
+
+
+    @FXML
+    void btnDeleteOnAction(ActionEvent actionEvent) {
+
+        String pro_id = txtPro_id.getText();
+
+        try {
+            boolean deleted = productModel.delete(pro_id);
+
+            if (deleted) {
+                new Alert(Alert.AlertType.INFORMATION, "Product Deleted!").show();
+                loadTable();
+                clearFields();
+            } else {
+                new Alert(Alert.AlertType.WARNING, "Delete Failed!").show();
+            }
+
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, "Delete Error: " + e).show();
+        }
+    }
+
+
+    @FXML
+    void btnClearOnAction(ActionEvent actionEvent) {
+        clearFields();
+    }
+
+    private void clearFields() {
+        txtPro_materials.clear();
+        txtPro_name.clear();
+        txtPro_id.clear();
+
+    }
+
+    public void btnProductName(ActionEvent actionEvent) {
+        btnSaveOnAction(actionEvent);
+    }
+
+    public void btnProductId(ActionEvent actionEvent) {
+        btnUpdateOnAction(actionEvent);
+    }
+
+    public void btnProductMaterials(ActionEvent actionEvent) {
+        btnDeleteOnAction(actionEvent);
+    }
+
+    public void btnproductId(ActionEvent actionEvent) {
+        btnUpdateOnAction(actionEvent);
+    }
+}
+
+
+
+
+
+
+
+
+

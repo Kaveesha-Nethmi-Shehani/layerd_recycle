@@ -1,0 +1,137 @@
+﻿/*package lk.ijse.recycle.model;
+
+import lk.ijse.recycle.dto.DeliveryDto;
+import lk.ijse.recycle.util.CrudUtil;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+
+public class DeliveryModel {
+
+    public boolean saveDelivery(DeliveryDto dto) throws SQLException {
+        String sql = "INSERT INTO delivery(order_id ,delivery_location) VALUES(?,?)";
+        return CrudUtil.execute(
+                sql,
+                dto.getOrder_id(),
+                dto.getDelivery_location()
+        );
+    }
+
+    public boolean updateDelivery(DeliveryDto dto) throws SQLException {
+        String sql = "UPDATE delivery SET delivery_location = ? WHERE order_id = ?";
+        return CrudUtil.execute(
+                sql,
+                dto.getOrder_id(),
+                dto.getdDelivery_location()
+        );
+    }
+
+    public boolean deleteDelivery(DeliveryDto dto) throws SQLException {
+        String sql = "DELETE FROM delivery WHERE order_id = ?";
+        return CrudUtil.execute(sql,delivery_id, delivery_location);
+    }
+
+    public DeliveryDto serchDelivery(String delivery_location) throws SQLException {
+        String sql = "SELECT * FROM delivery WHERE order_id = ?";
+        ResultSet rs = CrudUtil.execute(sql,delivery_id, delivery_location);
+
+        if (rs.next()) {
+            return new DeliveryDto(
+                    rs.getInt(1),
+                    rs.getString(2)
+                    );
+        }
+        return null;
+    }
+
+    public List<DeliveryDto> getAll() throws SQLException {
+        String sql = "SELECT * FROM delivery";
+        ResultSet rs = CrudUtil.execute(sql);
+
+        List<DeliveryDto> list = new ArrayList<>();
+
+        while (rs.next()) {
+            list.add(new DeliveryDto(
+                    rs.getInt(1),
+                    rs.getString(2)
+            ));
+        }
+        return list;
+    }
+}
+*/
+
+
+package lk.ijse.recycle.model;
+
+import lk.ijse.recycle.dto.DeliveryDto;
+import lk.ijse.recycle.util.CrudUtil;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class DeliveryModel {
+
+    public boolean saveDelivery(DeliveryDto dto) throws SQLException {
+        String sql = "INSERT INTO delivery (order_id, delivery_location) VALUES (?, ?)";
+        return CrudUtil.executeUpdate(
+                sql,
+                dto.getOrderId(),
+                dto.getDeliveryLocation()
+        );
+    }
+
+    public boolean updateDelivery(DeliveryDto dto) throws SQLException {
+        String sql = "UPDATE delivery SET delivery_location=? WHERE order_id=?";
+        return CrudUtil.executeUpdate(
+                sql,
+                dto.getDeliveryLocation(),
+                dto.getOrderId()
+        );
+    }
+
+    public boolean deleteDelivery(int orderId) throws SQLException {
+        String sql = "DELETE FROM delivery WHERE order_id=?";
+        return CrudUtil.executeUpdate(sql, orderId);
+    }
+
+    public DeliveryDto searchDelivery(int orderId) throws SQLException {
+        String sql = "SELECT * FROM delivery WHERE order_id=?";
+        ResultSet rs = CrudUtil.executeQuery(sql, orderId);
+
+        if (rs.next()) {
+            return new DeliveryDto(
+                    rs.getInt("delivery_id"),
+                    rs.getInt("order_id"),
+                    rs.getString("delivery_location")
+            );
+        }
+        return null;
+    }
+
+    public List<DeliveryDto> getAll() throws SQLException {
+        String sql = "SELECT * FROM delivery";
+        ResultSet rs = CrudUtil.executeQuery(sql);
+
+        List<DeliveryDto> list = new ArrayList<>();
+
+        while (rs.next()) {
+            list.add(new DeliveryDto(
+                    rs.getInt("delivery_id"),
+                    rs.getInt("order_id"),
+                    rs.getString("delivery_location")
+            ));
+        }
+        return list;
+
+
+    }
+}
+
+
+

@@ -1,0 +1,131 @@
+﻿/*package lk.ijse.recycle.model;
+
+import lk.ijse.recycle.dto.PaymentDto;
+import lk.ijse.recycle.util.CrudUtil;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class PaymentModel {
+
+    public boolean savePayment(PaymentDto dto) throws SQLException {
+        return CrudUtil.executeUpdate(   //Transaction 01
+                "INSERT INTO payment(order_id ,pay_id , pay_value)VALUES (?,?,?)",
+                dto.getOrderId(),
+                dto.getPayValue(),
+                dto.getPayId()
+
+        );
+        /*String sql = "INSERT INTO payment (order_id, pay_value) VALUES (?, ?)";
+        return CrudUtil.executeUpdate(
+                sql,
+                dto.getOrderId(),
+                dto.getPayValue()
+        );*/
+  /*  }
+
+    public boolean updatePayment(PaymentDto dto) throws SQLException {
+        String sql = "UPDATE payment SET pay_value=? WHERE order_id=?";
+        return CrudUtil.executeUpdate(
+                sql,
+                dto.getPayValue(),
+                dto.getOrderId()
+        );
+    }
+
+    public boolean deletePayment(int orderId) throws SQLException {
+        String sql = "DELETE FROM payment WHERE order_id=?";
+        return CrudUtil.executeUpdate(sql, orderId);
+    }
+
+    public PaymentDto searchPayment(int orderId) throws SQLException {
+        String sql = "SELECT * FROM payment WHERE order_id=?";
+        ResultSet rs = CrudUtil.executeQuery(sql ,orderId);
+
+        if (rs.next()) {
+            return new PaymentDto(
+                    rs.getInt("pay_id"),
+                    rs.getInt("order_id"),
+                    rs.getDouble("pay_value")
+            );
+        }
+        return null;
+    }
+
+    public List<PaymentDto> getAllPayments() throws SQLException {
+        String sql = "SELECT * FROM payment";
+        ResultSet rs = CrudUtil.executeQuery(sql);
+
+        List<PaymentDto> list = new ArrayList<>();
+
+        while (rs.next()) {
+            list.add(new PaymentDto(
+                    rs.getInt("pay_id"),
+                    rs.getInt("order_id"),
+                    rs.getDouble("pay_value")
+            ));
+        }
+        return list;
+    }
+}*/
+
+
+
+package lk.ijse.recycle.model;
+
+import lk.ijse.recycle.dto.PaymentDto;
+import lk.ijse.recycle.util.CrudUtil;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class PaymentModel {
+
+    public boolean savePayement(PaymentDto dto) throws SQLException {
+        return CrudUtil.executeUpdate(
+                "INSERT INTO payement(pay_id, order_id, pay_value) VALUES (?,?,?)",
+                dto.getPayId(),
+                dto.getOrderId(),    // 2nd parameter must be pay_id
+                dto.getPayValue()  // 3rd parameter must be pay_value
+        );
+    }
+
+    public boolean updatePayement(PaymentDto dto) throws SQLException {
+        String sql = "UPDATE payement SET pay_value=? WHERE order_id=?";
+        return CrudUtil.executeUpdate(sql, dto.getPayValue(), dto.getOrderId());
+    }
+
+    public boolean deletePayement(int orderId) throws SQLException {
+        String sql = "DELETE FROM payement WHERE order_id=?";
+        return CrudUtil.executeUpdate(sql, orderId);
+    }
+
+    public PaymentDto searchPayement(int orderId) throws SQLException {
+        String sql = "SELECT * FROM payement WHERE order_id=?";
+        ResultSet rs = CrudUtil.executeQuery(sql, orderId);
+        if (rs.next()) {
+            return new PaymentDto(rs.getInt("pay_id"), rs.getInt("order_id"), rs.getDouble("pay_value"));
+        }
+        return null;
+    }
+
+    public List<PaymentDto> getAllPayements() throws SQLException {
+        String sql = "SELECT * FROM payement";
+        ResultSet rs = CrudUtil.executeQuery(sql);
+        List<PaymentDto> list = new ArrayList<>();
+        while (rs.next()) {
+            list.add(new PaymentDto(rs.getInt("pay_id"), rs.getInt("order_id"), rs.getDouble("pay_value")));
+        }
+        return list;
+    }
+
+}
+
+
+
+
+
+

@@ -1,0 +1,73 @@
+﻿package lk.ijse.recycle.model;
+
+import lk.ijse.recycle.dto.OrderDto;
+import lk.ijse.recycle.util.CrudUtil;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+
+public class OrderModel {
+
+    public boolean saveOrders(OrderDto dto) throws SQLException {
+        return CrudUtil.executeUpdate(
+                "INSERT INTO orders(bile_id, product_name, customer_id) VALUES (?, ?, ?)",
+
+                dto.getBileId(),
+                dto.getProductName(),
+                dto.getCustomerId()
+        );
+    }
+
+    public boolean updateOrders(OrderDto dto) throws SQLException {
+        String sql = "UPDATE orders SET bile_id = ?, product_name = ?, customer_id = ? WHERE order_id = ?";
+        return CrudUtil.executeUpdate(sql, 
+                dto.getBileId(),
+                dto.getProductName(),
+                dto.getCustomerId(),
+                dto.getOrderId()
+        );
+    }
+
+    public boolean deleteOrders(int orderId) throws SQLException {
+        String sql = "DELETE FROM orders WHERE order_id = ?";
+        return CrudUtil.executeUpdate(sql, orderId);
+    }
+
+    public OrderDto searchOrders(int orderId) throws SQLException {
+        String sql = "SELECT * FROM orders WHERE order_id = ?";
+        ResultSet rs = CrudUtil.executeQuery(sql, orderId);
+
+        if (rs.next()) {
+            return new OrderDto(
+                    rs.getInt("order_id"),
+                    rs.getString("bile_id"),
+                    rs.getString("product_name"),
+                    rs.getInt("customer_id")
+            );
+        }
+        return null;
+    }
+
+    public List<OrderDto> getAllOrders() throws SQLException {
+        String sql = "SELECT * FROM orders";
+        ResultSet rs = CrudUtil.executeQuery(sql);
+
+        List<OrderDto> list = new ArrayList<>();
+
+        while (rs.next()) {
+            list.add(new OrderDto(
+                    rs.getInt("order_id"),
+                    rs.getString("bile_id"),
+                    rs.getString("product_name"),
+                    rs.getInt("customer_id")
+            ));
+        }
+        return list;
+    }
+}
+
+
+

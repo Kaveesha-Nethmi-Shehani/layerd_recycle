@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="847.0" style="-fx-background-color: #013220;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.recycle.controller.ProductController">
+   <children>
+      <VBox prefHeight="35.0" prefWidth="847.0">
+         <children>
+            <Text fill="#f7f3f3" strokeType="OUTSIDE" strokeWidth="0.0" text="                                                            PRODUCT MANAGEMENT" wrappingWidth="769.4017333984375">
+               <font>
+                  <Font name="System Bold Italic" size="18.0" />
+               </font>
+            </Text>
+         </children>
+      </VBox>
+      
+      <VBox layoutX="15.0" layoutY="50.0" prefHeight="50.0" prefWidth="400.0">
+         <children>
+            <Text fill="#fff9f9" strokeType="OUTSIDE" strokeWidth="0.0" text="Product ID">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+            </Text>
+            <TextField fx:id="txtProduct_Id" promptText="Enter Product ID" style="-fx-background-radius: 30; -fx-border-radius: 40;" />
+         </children>
+      </VBox>
+      
+      <VBox layoutX="15.0" layoutY="105.0" prefHeight="50.0" prefWidth="400.0">
+         <children>
+            <Text fill="#f4f1f1" strokeType="OUTSIDE" strokeWidth="0.0" text="Product Name">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+            </Text>
+            <TextField fx:id="txtProduct_Name" promptText="Enter Product Name" style="-fx-background-radius: 30; -fx-border-radius: 40;" />
+         </children>
+      </VBox>
+      
+      <VBox layoutX="15.0" layoutY="160.0" prefHeight="50.0" prefWidth="400.0">
+         <children>
+            <Text fill="#fff9f9" strokeType="OUTSIDE" strokeWidth="0.0" text="Product Materials">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+            </Text>
+            <TextField fx:id="txtProduct_Materials" promptText="Enter Product Materials" style="-fx-background-radius: 30; -fx-border-radius: 40;" />
+         </children>
+      </VBox>
+      
+      <!-- Buttons -->
+      <Button layoutX="480.0" layoutY="70.0" mnemonicParsing="false" onAction="#btnSaveOnAction" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #0E5930;" text="Save" textFill="#f7f4f4">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button layoutX="600.0" layoutY="70.0" mnemonicParsing="false" onAction="#btnUpdateOnAction" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #639354;" text="Update" textFill="#fcf7f7">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button layoutX="480.0" layoutY="120.0" mnemonicParsing="false" onAction="#btnResetOnAction" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #356C08;" text="Reset" textFill="#faf2f2">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button layoutX="600.0" layoutY="120.0" mnemonicParsing="false" onAction="#btnDeleteOnAction" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #7CFC00;" text="Delete">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button layoutX="540.0" layoutY="170.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #2E5B0C;" text="Report" textFill="#f7f1f1">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      
+      <!-- Table -->
+      <TableView fx:id="tblProduct" layoutX="15.0" layoutY="230.0" prefHeight="350.0" prefWidth="817.0">
+        <columns>
+          <TableColumn fx:id="colProduct_Id" prefWidth="270.0" text="Product ID" />
+          <TableColumn fx:id="colProduct_Name" prefWidth="273.0" text="Product Name" />
+          <TableColumn fx:id="colProduct_Materials" prefWidth="274.0" text="Product Materials" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>

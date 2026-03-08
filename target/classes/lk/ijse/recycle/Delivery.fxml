@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="750.0" style="-fx-background-color: #013220;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.recycle.controller.DeliveryController">
+   <children>
+      <!-- Title -->
+      <Label layoutX="250.0" layoutY="10.0" text="DELIVERY MANAGEMENT" textFill="white">
+         <font>
+            <Font name="System Bold Italic" size="18.0" />
+         </font>
+      </Label>
+      
+      <!-- Form Fields - Left Side -->
+      <Label layoutX="20.0" layoutY="45.0" text="Delivery ID" textFill="white">
+         <font><Font name="System Bold" size="12.0" /></font>
+      </Label>
+      <Label fx:id="lblDelivery_Id" layoutX="20.0" layoutY="63.0" prefWidth="280.0" prefHeight="25.0" text="N/A" textFill="#7CFC00" style="-fx-background-color: #1a4a1a; -fx-background-radius: 5; -fx-padding: 5;">
+         <font><Font name="System Bold" size="14.0" /></font>
+      </Label>
+      
+      <Label layoutX="20.0" layoutY="98.0" text="Order ID" textFill="white">
+         <font><Font name="System Bold" size="12.0" /></font>
+      </Label>
+      <TextField fx:id="txtOrder_Id" layoutX="20.0" layoutY="116.0" prefWidth="280.0" promptText="Enter Order ID" style="-fx-background-radius: 5;" />
+      
+      <Label layoutX="20.0" layoutY="151.0" text="Details Location" textFill="white">
+         <font><Font name="System Bold" size="12.0" /></font>
+      </Label>
+      <TextField fx:id="txtDetails_Location" layoutX="20.0" layoutY="169.0" prefWidth="280.0" promptText="Enter Delivery Location" style="-fx-background-radius: 5;" />
+      
+      <!-- Buttons - Right Side -->
+      <Button layoutX="340.0" layoutY="63.0" mnemonicParsing="false" onAction="#btnSaveOnAction" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #0E5930;" text="Save" textFill="white">
+         <font><Font name="System Bold" size="11.0" /></font>
+      </Button>
+      <Button layoutX="440.0" layoutY="63.0" mnemonicParsing="false" onAction="#btnUpdateOnAction" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #639354;" text="Update" textFill="white">
+         <font><Font name="System Bold" size="11.0" /></font>
+      </Button>
+      <Button layoutX="540.0" layoutY="63.0" mnemonicParsing="false" onAction="#btnDeleteOnAction" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #7CFC00;" text="Delete">
+         <font><Font name="System Bold" size="11.0" /></font>
+      </Button>
+      <Button layoutX="340.0" layoutY="108.0" mnemonicParsing="false" onAction="#btnResetOnAction" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #356C08;" text="Reset" textFill="white">
+         <font><Font name="System Bold" size="11.0" /></font>
+      </Button>
+      <Button layoutX="440.0" layoutY="108.0" mnemonicParsing="false" onAction="#btnSearchOnAction" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #2E5B0C;" text="Search" textFill="white">
+         <font><Font name="System Bold" size="11.0" /></font>
+      </Button>
+      
+      <!-- Table - Bottom -->
+      <TableView fx:id="tblDelivery" layoutX="20.0" layoutY="210.0" prefHeight="375.0" prefWidth="710.0">
+        <columns>
+          <TableColumn fx:id="colDelivery_Id" prefWidth="230.0" text="Delivery ID" />
+          <TableColumn fx:id="colOrder_Id" prefWidth="230.0" text="Order ID" />
+          <TableColumn fx:id="colDetails_Location" prefWidth="250.0" text="Details Location" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>

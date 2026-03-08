@@ -1,0 +1,63 @@
+﻿package lk.ijse.recycle.dto;
+
+public class ProductDto {
+
+    private String productId;
+    private String productName;
+    private Integer materialId;      // FK to materials table
+    private String materialName;     // For display purposes
+    private double kgPerUnit;        // KG needed to manufacture 1 unit
+    private double sellingPrice;     // Selling price per unit
+    private int stockQuantity;       // Available stock
+
+    public ProductDto() {}
+
+    // Constructor for basic info
+    public ProductDto(String productId, String productName, Integer materialId, double kgPerUnit, double sellingPrice, int stockQuantity) {
+        this.productId = productId;
+        this.productName = productName;
+        this.materialId = materialId;
+        this.kgPerUnit = kgPerUnit;
+        this.sellingPrice = sellingPrice;
+        this.stockQuantity = stockQuantity;
+    }
+
+    // Full constructor with material name
+    public ProductDto(String productId, String productName, Integer materialId, String materialName, double kgPerUnit, double sellingPrice, int stockQuantity) {
+        this.productId = productId;
+        this.productName = productName;
+        this.materialId = materialId;
+        this.materialName = materialName;
+        this.kgPerUnit = kgPerUnit;
+        this.sellingPrice = sellingPrice;
+        this.stockQuantity = stockQuantity;
+    }
+
+    // Getters
+    public String getProductId() { return productId; }
+    public String getProductName() { return productName; }
+    public Integer getMaterialId() { return materialId; }
+    public String getMaterialName() { return materialName; }
+    public double getKgPerUnit() { return kgPerUnit; }
+    public double getSellingPrice() { return sellingPrice; }
+    public int getStockQuantity() { return stockQuantity; }
+
+    // Setters
+    public void setProductId(String productId) { this.productId = productId; }
+    public void setProductName(String productName) { this.productName = productName; }
+    public void setMaterialId(Integer materialId) { this.materialId = materialId; }
+    public void setMaterialName(String materialName) { this.materialName = materialName; }
+    public void setKgPerUnit(double kgPerUnit) { this.kgPerUnit = kgPerUnit; }
+    public void setSellingPrice(double sellingPrice) { this.sellingPrice = sellingPrice; }
+    public void setStockQuantity(int stockQuantity) { this.stockQuantity = stockQuantity; }
+
+    @Override
+    public String toString() {
+        return productName + " (Stock: " + stockQuantity + ")";
+    }
+}
+
+
+
+
+

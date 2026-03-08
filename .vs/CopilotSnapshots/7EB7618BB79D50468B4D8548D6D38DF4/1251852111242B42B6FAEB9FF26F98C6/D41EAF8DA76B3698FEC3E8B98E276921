@@ -1,0 +1,44 @@
+﻿package lk.ijse.recycle.dto;
+
+public class PaymentDto {
+    private int paymentId;
+    private String orderName;
+    private int orderId;
+    private String invoice;
+    private double paymentValue;
+
+    public PaymentDto() {}
+
+    public PaymentDto(int paymentId, String orderName, int orderId, String invoice, double paymentValue) {
+        this.paymentId = paymentId;
+        this.orderName = orderName;
+        this.orderId = orderId;
+        this.invoice = invoice;
+        this.paymentValue = paymentValue;
+    }
+
+    public int getPaymentId() { return paymentId; }
+    public String getOrderName() { return orderName; }
+    public int getOrderId() { return orderId; }
+    public String getInvoice() { return invoice; }
+    public double getPaymentValue() { return paymentValue; }
+
+    public void setPaymentId(int paymentId) { this.paymentId = paymentId; }
+    public void setOrderName(String orderName) { this.orderName = orderName; }
+    public void setOrderId(int orderId) { this.orderId = orderId; }
+    public void setInvoice(String invoice) { this.invoice = invoice; }
+    public void setPaymentValue(double paymentValue) { this.paymentValue = paymentValue; }
+
+    @Override
+    public String toString() {
+        return "PaymentDto{" +
+                "paymentId=" + paymentId +
+                ", orderName='" + orderName + '\'' +
+                ", orderId=" + orderId +
+                ", invoice='" + invoice + '\'' +
+                ", paymentValue=" + paymentValue +
+                '}';
+    }
+}
+
+

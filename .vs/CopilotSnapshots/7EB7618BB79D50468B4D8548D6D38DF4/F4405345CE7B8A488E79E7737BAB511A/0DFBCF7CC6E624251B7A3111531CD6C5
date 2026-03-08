@@ -1,0 +1,38 @@
+﻿package lk.ijse.recycle.dto;
+
+public class ProductDto {
+
+    private String productId;
+    private String productName;
+    private String productMaterials;
+
+    public ProductDto() {}
+
+    public ProductDto(String productId, String productName, String productMaterials) {
+        this.productId = productId;
+        this.productName = productName;
+        this.productMaterials = productMaterials;
+    }
+
+    public String getProductId() { return productId; }
+    public String getProductName() { return productName; }
+    public String getProductMaterials() { return productMaterials; }
+
+    public void setProductId(String productId) { this.productId = productId; }
+    public void setProductName(String productName) { this.productName = productName; }
+    public void setProductMaterials(String productMaterials) { this.productMaterials = productMaterials; }
+
+    @Override
+    public String toString() {
+        return "ProductDto{" +
+                "productId='" + productId + '\'' +
+                ", productName='" + productName + '\'' +
+                ", productMaterials='" + productMaterials + '\'' +
+                '}';
+    }
+}
+
+
+
+
+

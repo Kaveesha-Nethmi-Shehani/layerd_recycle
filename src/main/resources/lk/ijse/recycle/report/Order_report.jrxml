@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE jasperReport PUBLIC "-//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport name="Order_report" language="java" pageWidth="1100" pageHeight="842" columnWidth="1060" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ecoplayer"/>
+	<queryString language="SQL"><![CDATA[
+SELECT o.order_id, o.product_id, p.product_name, o.customer_id, o.quantity, o.total_price, o.order_date
+FROM orders o
+JOIN product p ON o.product_id = p.product_id
+]]></queryString>
+	<field name="order_id" class="java.lang.Integer"/>
+	<field name="product_id" class="java.lang.String"/>
+	<field name="product_name" class="java.lang.String"/>
+	<field name="customer_id" class="java.lang.Integer"/>
+	<field name="quantity" class="java.lang.Integer"/>
+	<field name="total_price" class="java.lang.Double"/>
+	<field name="order_date" class="java.sql.Date"/>
+	<variable name="ORDER_COUNT" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{order_id}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_REVENUE" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_price}]]></variableExpression>
+	</variable>
+	   <title>
+		   <band height="60">
+			   <staticText>
+				   <reportElement x="0" y="10" width="1060" height="40"/>
+				   <textElement textAlignment="Center">
+					   <font size="28" isBold="true"/>
+				   </textElement>
+				   <text><![CDATA[ORDER REPORT]]></text>
+			   </staticText>
+		   </band>
+	   </title>
+	   <pageHeader>
+		   <band height="35">
+			   <staticText>
+				   <reportElement x="0" y="0" width="1060" height="30" forecolor="#195E1C"/>
+				   <textElement textAlignment="Center">
+					   <font size="20" isBold="true" isItalic="true"/>
+				   </textElement>
+				   <text><![CDATA[ECOPLAYER]]></text>
+			   </staticText>
+		   </band>
+	   </pageHeader>
+	   <columnHeader>
+		   <band height="35">
+			   <staticText><reportElement x="0" y="5" width="90" height="25"/><textElement textAlignment="Center"><font size="13" isBold="true"/></textElement><text><![CDATA[Order ID]]></text></staticText>
+			   <staticText><reportElement x="90" y="5" width="120" height="25"/><textElement textAlignment="Center"><font size="13" isBold="true"/></textElement><text><![CDATA[Product ID]]></text></staticText>
+			   <staticText><reportElement x="210" y="5" width="180" height="25"/><textElement textAlignment="Center"><font size="13" isBold="true"/></textElement><text><![CDATA[Product Name]]></text></staticText>
+			   <staticText><reportElement x="390" y="5" width="120" height="25"/><textElement textAlignment="Center"><font size="13" isBold="true"/></textElement><text><![CDATA[Customer ID]]></text></staticText>
+			   <staticText><reportElement x="510" y="5" width="100" height="25"/><textElement textAlignment="Center"><font size="13" isBold="true"/></textElement><text><![CDATA[Quantity]]></text></staticText>
+			   <staticText><reportElement x="610" y="5" width="140" height="25"/><textElement textAlignment="Center"><font size="13" isBold="true"/></textElement><text><![CDATA[Total Price]]></text></staticText>
+			   <staticText><reportElement x="750" y="5" width="180" height="25"/><textElement textAlignment="Center"><font size="13" isBold="true"/></textElement><text><![CDATA[Order Date]]></text></staticText>
+		   </band>
+	   </columnHeader>
+	   <detail>
+		   <band height="25">
+			   <textField><reportElement x="0" y="0" width="90" height="20"/><textElement textAlignment="Center"><font size="12"/></textElement><textFieldExpression><![CDATA[$F{order_id}]]></textFieldExpression></textField>
+			   <textField><reportElement x="90" y="0" width="120" height="20"/><textElement textAlignment="Center"><font size="12"/></textElement><textFieldExpression><![CDATA[$F{product_id}]]></textFieldExpression></textField>
+			   <textField><reportElement x="210" y="0" width="180" height="20"/><textElement textAlignment="Left"><font size="12"/></textElement><textFieldExpression><![CDATA[$F{product_name}]]></textFieldExpression></textField>
+			   <textField><reportElement x="390" y="0" width="120" height="20"/><textElement textAlignment="Center"><font size="12"/></textElement><textFieldExpression><![CDATA[$F{customer_id}]]></textFieldExpression></textField>
+			   <textField><reportElement x="510" y="0" width="100" height="20"/><textElement textAlignment="Center"><font size="12"/></textElement><textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression></textField>
+			   <textField><reportElement x="610" y="0" width="140" height="20"/><textElement textAlignment="Right"><font size="12"/></textElement><textFieldExpression><![CDATA[$F{total_price}]]></textFieldExpression></textField>
+			   <textField><reportElement x="750" y="0" width="180" height="20"/><textElement textAlignment="Center"><font size="12"/></textElement><textFieldExpression><![CDATA[$F{order_date}]]></textFieldExpression></textField>
+		   </band>
+	   </detail>
+	   <summary>
+		   <band height="100">
+			   <staticText>
+				   <reportElement x="0" y="0" width="1060" height="20"/>
+				   <textElement textAlignment="Left"><font size="14" isBold="true"/></textElement>
+				   <text><![CDATA[Advanced Order Analysis]]></text>
+			   </staticText>
+			   <textField>
+				   <reportElement x="0" y="25" width="400" height="20"/>
+				   <textElement textAlignment="Left"><font size="12"/></textElement>
+				   <textFieldExpression><![CDATA["Total Orders: " + $V{ORDER_COUNT}]]></textFieldExpression>
+			   </textField>
+			   <textField>
+				   <reportElement x="0" y="50" width="400" height="20"/>
+				   <textElement textAlignment="Left"><font size="12"/></textElement>
+				   <textFieldExpression><![CDATA["Total Revenue: Rs. " + $V{TOTAL_REVENUE}]]></textFieldExpression>
+			   </textField>
+			   <textField>
+				   <reportElement x="0" y="75" width="400" height="20"/>
+				   <textElement textAlignment="Left"><font size="12"/></textElement>
+				   <textFieldExpression><![CDATA["Average Order Value: Rs. " + ($V{TOTAL_REVENUE}.doubleValue() / $V{ORDER_COUNT}.intValue())]]></textFieldExpression>
+			   </textField>
+		   </band>
+	   </summary>
+
+</jasperReport>

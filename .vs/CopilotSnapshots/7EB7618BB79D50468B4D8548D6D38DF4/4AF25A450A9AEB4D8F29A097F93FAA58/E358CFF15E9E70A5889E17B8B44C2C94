@@ -1,0 +1,24 @@
+﻿module lk.ijse.recycle {
+    requires javafx.controls;
+    requires javafx.fxml;
+    requires javafx.graphics;
+    requires javafx.base;
+    requires java.sql;
+    requires java.desktop;
+    
+    // MySQL connector
+    requires mysql.connector.j;
+    
+    // JasperReports (non-modular, use automatic module name)
+    requires jasperreports;
+
+    opens lk.ijse.recycle to javafx.fxml;
+    opens lk.ijse.recycle.controller to javafx.fxml;
+    opens lk.ijse.recycle.dto to javafx.base;
+    opens lk.ijse.recycle.model to javafx.base;
+    
+    exports lk.ijse.recycle;
+    exports lk.ijse.recycle.controller;
+    exports lk.ijse.recycle.dto;
+    exports lk.ijse.recycle.model;
+}

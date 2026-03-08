@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.recycle.controller.DashbordController">
+   <left>
+      <VBox prefHeight="0.0" prefWidth="250.0" style="-fx-background-color: black;" BorderPane.alignment="CENTER">
+         <children>
+            <AnchorPane prefHeight="94.0" prefWidth="228.0" style="-fx-background-color: black;">
+               <children>
+                  <ImageView fitHeight="106.0" fitWidth="200.0" layoutX="22.0" layoutY="44.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@image/OrginalLogo.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </AnchorPane>
+            <Button fx:id="customerField" mnemonicParsing="false" onAction="#btnCustomer" prefHeight="26.0" prefWidth="242.0" style="-fx-background-color: #B0CFA6; -fx-background-radius: 30; -fx-border-radius: 40;" text="CUSTOMER MANAGEMENT" textFill="#2e302c">
+               <font>
+                  <Font name="System Bold Italic" size="12.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="5.0" left="2.0" right="2.0" top="5.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="orderField" mnemonicParsing="false" onAction="#btnOrder" prefHeight="26.0" prefWidth="242.0" style="-fx-background-radius: 30; -fx-border-radius: 40; -fx-background-color: #B0CFA6;" text="ORDER MANAGEMENT">
+               <font>
+                  <Font name="System Bold Italic" size="13.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="6.0" left="2.0" right="2.0" top="6.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="productField" mnemonicParsing="false" onAction="#btnProduct" prefHeight="26.0" prefWidth="243.0" style="-fx-background-radius: 30; -fx-border-radius: 40; -fx-background-color: #B0CFA6;" text="PRODUCT MANAGEMENT">
+               <VBox.margin>
+                  <Insets bottom="6.0" left="2.0" right="2.0" top="6.0" />
+               </VBox.margin>
+               <font>
+                  <Font name="System Bold Italic" size="13.0" />
+               </font>
+            </Button>
+            <Button fx:id="payementField" mnemonicParsing="false" onAction="#btnPayement" prefHeight="26.0" prefWidth="244.0" style="-fx-background-radius: 30; -fx-border-radius: 40; -fx-background-color: #B0CFA6;" text="PAYEMENT MANAGEMENT">
+               <font>
+                  <Font name="System Bold Italic" size="13.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="6.0" left="2.0" right="2.0" top="6.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="deliveryField" mnemonicParsing="false" onAction="#btnDelivery" prefHeight="26.0" prefWidth="245.0" style="-fx-background-radius: 30; -fx-border-radius: 40; -fx-background-color: #B0CFA6;" text="DELIVERY MANAGEMENT">
+               <VBox.margin>
+                  <Insets bottom="6.0" left="2.0" right="2.0" top="6.0" />
+               </VBox.margin>
+               <font>
+                  <Font name="System Bold Italic" size="13.0" />
+               </font>
+            </Button>
+            <Button fx:id="recycleField" mnemonicParsing="false" onAction="#btnRecycle" prefHeight="26.0" prefWidth="246.0" style="-fx-background-radius: 30; -fx-border-radius: 40; -fx-background-color: #B0CFA6;" text="RECYCLE ITEM MANAGEMENT">
+               <font>
+                  <Font name="System Bold Italic" size="13.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="6.0" left="2.0" right="2.0" top="6.0" />
+               </VBox.margin>
+            </Button>
+         </children>
+      </VBox>
+   </left>
+   <center>
+      <AnchorPane fx:id="mainContent" prefHeight="600.0" prefWidth="750.0" style="-fx-background-color: #013220;" BorderPane.alignment="CENTER" />
+   </center>
+</BorderPane>

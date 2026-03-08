@@ -1,0 +1,61 @@
+package lk.ijse.recycle.entity;
+
+public class Customer  {
+        private int customerId;
+        private String customerName;
+        private String customerContact;
+        private String customerDate;
+
+        public Customer () {
+        }
+
+        public Customer(int customerId, String customerName, String customerContact, String customerDate) {
+            this.customerId = customerId;
+            this.customerName = customerName;
+            this.customerContact = customerContact;
+            this.customerDate = customerDate;
+        }
+
+    public Customer(  String customerName, String customerContact, String customerDate) {
+            this.customerName = customerName;
+            this.customerContact = customerContact;
+            this.customerDate = customerDate;
+    }
+
+
+        public int getCustomerId() {
+            return customerId;
+        }
+
+        public String getCustomerName() {
+            return customerName;
+        }
+
+        public String getCustomerContact() {
+            return customerContact;
+        }
+
+        public String getCustomerDate() {
+            return customerDate;
+        }
+
+        public void setCustomerId(int customerId) {
+            this.customerId = customerId;
+        }
+
+        public void setCustomerName(String customerName) {
+            this.customerName = customerName;
+        }
+
+        public void setCustomerContact(String customerContact) {
+            this.customerContact = customerContact;
+        }
+
+        public void setCustomerDate(String customerDate) {
+            this.customerDate = customerDate;
+        }
+    }
+
+
+
+

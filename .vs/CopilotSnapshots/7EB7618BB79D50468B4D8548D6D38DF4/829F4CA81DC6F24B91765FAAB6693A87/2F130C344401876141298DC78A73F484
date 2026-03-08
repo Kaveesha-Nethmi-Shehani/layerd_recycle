@@ -1,0 +1,182 @@
+﻿package lk.ijse.recycle.model;
+
+import lk.ijse.recycle.db.DBConnection;
+import lk.ijse.recycle.dto.OrderDto;
+import lk.ijse.recycle.dto.ProductDto;
+import lk.ijse.recycle.dto.CustomerDto;
+import lk.ijse.recycle.util.CrudUtil;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class OrderModel {
+
+    private final ProductModel productModel = new ProductModel();
+
+
+    public boolean saveOrder(OrderDto dto) throws SQLException {
+        Connection connection = DBConnection.getInstance().getConnection();
+        
+        try {
+              connection.setAutoCommit(false);
+            
+            String checkSql = "SELECT stock_quantity FROM product WHERE product_id = ? FOR UPDATE";
+            ResultSet rs = CrudUtil.executeQuery(checkSql, dto.getProductId());
+            
+            if (!rs.next()) {
+                connection.rollback();
+                return false; 
+            }
+            
+            int availableStock = rs.getInt("stock_quantity");
+            if (availableStock < dto.getQuantity()) {
+                connection.rollback();
+                return false;
+            }
+
+            String insertSql = "INSERT INTO orders(product_id, customer_id, quantity, total_price, order_date) VALUES (?, ?, ?, ?, ?)";
+            boolean saved = CrudUtil.executeUpdate(insertSql,
+                dto.getProductId(),
+                dto.getCustomerId(),
+                dto.getQuantity(),
+                dto.getTotalPrice(),
+                dto.getOrderDate()
+            );
+
+            if (!saved) {
+                connection.rollback();
+                return false;
+            }
+
+            String reduceSql = "UPDATE product SET stock_quantity = stock_quantity - ? WHERE product_id = ?";
+            boolean reduced = CrudUtil.executeUpdate(reduceSql, dto.getQuantity(), dto.getProductId());
+
+            if (!reduced) {
+                connection.rollback();
+                return false;
+            }
+
+            connection.commit();
+            return true;
+            
+        } catch (SQLException e) {
+            connection.rollback();
+            throw e;
+        } finally {
+            connection.setAutoCommit(true);
+        }
+    }
+
+    public boolean updateOrder(OrderDto dto) throws SQLException {
+        String sql = "UPDATE orders SET product_id = ?, customer_id = ?, quantity = ?, total_price = ?, order_date = ? WHERE order_id = ?";
+        return CrudUtil.executeUpdate(sql,
+            dto.getProductId(),
+            dto.getCustomerId(),
+            dto.getQuantity(),
+            dto.getTotalPrice(),
+            dto.getOrderDate(),
+            dto.getOrderId()
+        );
+    }
+
+    public boolean deleteOrder(int orderId) throws SQLException {
+        String sql = "DELETE FROM orders WHERE order_id = ?";
+        return CrudUtil.executeUpdate(sql, orderId);
+    }
+
+    public OrderDto searchOrder(int orderId) throws SQLException {
+        String sql = "SELECT o.*, p.product_name, c.customer_name FROM orders o " +
+                     "LEFT JOIN product p ON o.product_id = p.product_id " +
+                     "LEFT JOIN customer c ON o.customer_id = c.customer_id " +
+                     "WHERE o.order_id = ?";
+        ResultSet rs = CrudUtil.executeQuery(sql, orderId);
+
+        if (rs.next()) {
+            return new OrderDto(
+                rs.getInt("order_id"),
+                rs.getString("product_id"),
+                rs.getString("product_name"),
+                rs.getInt("customer_id"),
+                rs.getString("customer_name"),
+                rs.getInt("quantity"),
+                rs.getDouble("total_price"),
+                rs.getString("order_date")
+            );
+        }
+        return null;
+    }
+
+    public List<OrderDto> getAllOrders() throws SQLException {
+        String sql = "SELECT o.*, p.product_name, c.customer_name FROM orders o " +
+                     "LEFT JOIN product p ON o.product_id = p.product_id " +
+                     "LEFT JOIN customer c ON o.customer_id = c.customer_id " +
+                     "ORDER BY o.order_id DESC";
+        ResultSet rs = CrudUtil.executeQuery(sql);
+
+        List<OrderDto> list = new ArrayList<>();
+
+        while (rs.next()) {
+            list.add(new OrderDto(
+                rs.getInt("order_id"),
+                rs.getString("product_id"),
+                rs.getString("product_name"),
+                rs.getInt("customer_id"),
+                rs.getString("customer_name"),
+                rs.getInt("quantity"),
+                rs.getDouble("total_price"),
+                rs.getString("order_date")
+            ));
+        }
+        return list;
+    }
+
+    public int getNextOrderId() throws SQLException {
+        String sql = "SELECT COALESCE(MAX(order_id), 0) + 1 AS next_id FROM orders";
+        ResultSet rs = CrudUtil.executeQuery(sql);
+        if (rs.next()) {
+            return rs.getInt("next_id");
+        }
+        return 1;
+    }
+
+    public List<ProductDto> getAvailableProducts() throws SQLException {
+        String sql = "SELECT * FROM product WHERE stock_quantity > 0";
+        ResultSet rs = CrudUtil.executeQuery(sql);
+
+        List<ProductDto> list = new ArrayList<>();
+        while (rs.next()) {
+            list.add(new ProductDto(
+                rs.getString("product_id"),
+                rs.getString("product_name"),
+                rs.getObject("item_id") != null ? rs.getInt("item_id") : null,
+                rs.getDouble("kg_per_unit"),
+                rs.getDouble("selling_price"),
+                rs.getInt("stock_quantity")
+            ));
+        }
+        return list;
+    }
+
+    public List<CustomerDto> getAllCustomers() throws SQLException {
+        String sql = "SELECT * FROM customer";
+        ResultSet rs = CrudUtil.executeQuery(sql);
+
+        List<CustomerDto> list = new ArrayList<>();
+        while (rs.next()) {
+            list.add(new CustomerDto(
+                rs.getInt("customer_id"),
+                rs.getString("customer_name"),
+                rs.getString("customer_contact"),
+                rs.getString("customer_date")
+            ));
+        }
+        return list;
+    }
+}
+
+
+
+

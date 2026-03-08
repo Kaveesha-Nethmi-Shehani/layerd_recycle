@@ -1,0 +1,197 @@
+﻿package lk.ijse.recycle.controller;
+
+import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import lk.ijse.recycle.dto.OrderDto;
+import lk.ijse.recycle.model.OrderModel;
+import lk.ijse.recycle.util.ReportUtil;
+
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.ResourceBundle;
+
+public class OrderController implements Initializable {
+
+    @FXML private Label lblOrder_Id;
+    @FXML private TextField txtBile_Id;
+    @FXML private TextField txtProduct_Name;
+    @FXML private TextField txtCustomer_Id;
+
+    @FXML private TableView<OrderDto> tblOrder;
+    @FXML private TableColumn<OrderDto, Integer> colOrder_Id;
+    @FXML private TableColumn<OrderDto, String> colBile_Id;
+    @FXML private TableColumn<OrderDto, String> colProduct_Name;
+    @FXML private TableColumn<OrderDto, Integer> colCustomer_Id;
+
+    private final OrderModel orderModel = new OrderModel();
+    private int selectedOrderId = -1;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        setCellValueFactory();
+        loadAllOrders();
+        loadNextOrderId();
+        
+        tblOrder.getSelectionModel().selectedItemProperty().addListener((obs, old, newVal) -> {
+            if (newVal != null) {
+                selectedOrderId = newVal.getOrderId();
+                lblOrder_Id.setText(String.valueOf(newVal.getOrderId()));
+                txtBile_Id.setText(newVal.getBileId());
+                txtProduct_Name.setText(newVal.getProductName());
+                txtCustomer_Id.setText(String.valueOf(newVal.getCustomerId()));
+            }
+        });
+    }
+
+    private void setCellValueFactory() {
+        if (colOrder_Id == null || colBile_Id == null || colProduct_Name == null || colCustomer_Id == null) {
+            return;
+        }
+        colOrder_Id.setCellValueFactory(new PropertyValueFactory<>("orderId"));
+        colBile_Id.setCellValueFactory(new PropertyValueFactory<>("bileId"));
+        colProduct_Name.setCellValueFactory(new PropertyValueFactory<>("productName"));
+        colCustomer_Id.setCellValueFactory(new PropertyValueFactory<>("customerId"));
+    }
+
+    private void loadNextOrderId() {
+        try {
+            int nextId = orderModel.getNextOrderId();
+            lblOrder_Id.setText(String.valueOf(nextId));
+            selectedOrderId = -1;
+        } catch (SQLException e) {
+            lblOrder_Id.setText("N/A");
+            e.printStackTrace();
+        }
+    }
+
+    private void loadAllOrders() {
+        if (tblOrder == null) {
+            return;
+        }
+        try {
+            tblOrder.setItems(FXCollections.observableArrayList(orderModel.getAllOrders()));
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, "Failed to load orders: " + e.getMessage()).show();
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void btnSaveOnAction(ActionEvent event) {
+        String bileId = txtBile_Id.getText().trim();
+        String productName = txtProduct_Name.getText().trim();
+        String customerIdText = txtCustomer_Id.getText().trim();
+
+        if (bileId.isEmpty() || productName.isEmpty() || customerIdText.isEmpty()) {
+            new Alert(Alert.AlertType.WARNING, "All fields are required!").show();
+            return;
+        }
+
+        try {
+            int customerId = Integer.parseInt(customerIdText);
+            OrderDto dto = new OrderDto(0, bileId, productName, customerId);
+
+            boolean saved = orderModel.saveOrders(dto);
+            if (saved) {
+                new Alert(Alert.AlertType.INFORMATION, "Order saved successfully!").show();
+                loadAllOrders();
+                clearFields();
+                loadNextOrderId();
+            } else {
+                new Alert(Alert.AlertType.ERROR, "Save failed!").show();
+            }
+        } catch (NumberFormatException e) {
+            new Alert(Alert.AlertType.ERROR, "Customer ID must be a number!").show();
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, "Failed to save: " + e.getMessage()).show();
+        }
+    }
+
+    @FXML
+    public void btnUpdateOnAction(ActionEvent event) {
+        if (selectedOrderId <= 0) {
+            new Alert(Alert.AlertType.WARNING, "Please select an order from the table to update!").show();
+            return;
+        }
+
+        String bileId = txtBile_Id.getText().trim();
+        String productName = txtProduct_Name.getText().trim();
+        String customerIdText = txtCustomer_Id.getText().trim();
+
+        if (bileId.isEmpty() || productName.isEmpty() || customerIdText.isEmpty()) {
+            new Alert(Alert.AlertType.WARNING, "All fields are required!").show();
+            return;
+        }
+
+        try {
+            int customerId = Integer.parseInt(customerIdText);
+            OrderDto dto = new OrderDto(selectedOrderId, bileId, productName, customerId);
+
+            boolean updated = orderModel.updateOrders(dto);
+            if (updated) {
+                new Alert(Alert.AlertType.INFORMATION, "Order updated successfully!").show();
+                loadAllOrders();
+                clearFields();
+                loadNextOrderId();
+            } else {
+                new Alert(Alert.AlertType.ERROR, "Update failed!").show();
+            }
+        } catch (NumberFormatException e) {
+            new Alert(Alert.AlertType.ERROR, "Customer ID must be a number!").show();
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, "Failed to update: " + e.getMessage()).show();
+        }
+    }
+
+    @FXML
+    public void btnDeleteOnAction(ActionEvent event) {
+        if (selectedOrderId <= 0) {
+            new Alert(Alert.AlertType.WARNING, "Please select an order from the table to delete!").show();
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this order?");
+        confirm.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                try {
+                    boolean deleted = orderModel.deleteOrders(selectedOrderId);
+                    if (deleted) {
+                        new Alert(Alert.AlertType.INFORMATION, "Order deleted successfully!").show();
+                        loadAllOrders();
+                        clearFields();
+                        loadNextOrderId();
+                    } else {
+                        new Alert(Alert.AlertType.ERROR, "Delete failed!").show();
+                    }
+                } catch (SQLException e) {
+                    new Alert(Alert.AlertType.ERROR, "Failed to delete: " + e.getMessage()).show();
+                }
+            }
+        });
+    }
+
+    @FXML
+    public void btnResetOnAction(ActionEvent event) {
+        clearFields();
+        loadNextOrderId();
+    }
+
+    @FXML
+    public void btnReportOnAction(ActionEvent event) {
+        ReportUtil.generateOrderReport();
+    }
+
+    private void clearFields() {
+        if (txtBile_Id != null) txtBile_Id.clear();
+        if (txtProduct_Name != null) txtProduct_Name.clear();
+        if (txtCustomer_Id != null) txtCustomer_Id.clear();
+        if (tblOrder != null) tblOrder.getSelectionModel().clearSelection();
+        selectedOrderId = -1;
+    }
+}
+
+

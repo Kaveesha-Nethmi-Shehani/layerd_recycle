@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.recycle.controller.CustomerController">
+   <center>
+      <AnchorPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #013220;" BorderPane.alignment="CENTER">
+         <children>
+            <Text fill="#f2eeee" layoutX="250.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="CUSTOMER MANAGEMENT" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Text>
+            
+            <VBox layoutX="15.0" layoutY="50.0" prefHeight="50.0" prefWidth="380.0">
+               <children>
+                  <Text fill="#fcf2f2" strokeType="OUTSIDE" strokeWidth="0.0" text="Customer ID">
+                     <font>
+                        <Font name="System Bold Italic" size="14.0" />
+                     </font>
+                  </Text>
+                  <TextField fx:id="txtCustomer_Id" editable="false" promptText="Auto Generated" style="-fx-background-radius: 30; -fx-border-radius: 40;" />
+               </children>
+            </VBox>
+            
+            <VBox layoutX="15.0" layoutY="105.0" prefHeight="50.0" prefWidth="380.0">
+               <children>
+                  <Text fill="#fcf2f2" strokeType="OUTSIDE" strokeWidth="0.0" text="Customer Name">
+                     <font>
+                        <Font name="System Bold Italic" size="14.0" />
+                     </font>
+                  </Text>
+                  <TextField fx:id="txtCustomer_Name" promptText="Enter Customer Name" style="-fx-background-radius: 30; -fx-border-radius: 40;" />
+               </children>
+            </VBox>
+            
+            <VBox layoutX="15.0" layoutY="160.0" prefHeight="50.0" prefWidth="380.0">
+               <children>
+                  <Text fill="#faeeee" strokeType="OUTSIDE" strokeWidth="0.0" text="Customer Contact">
+                     <font>
+                        <Font name="System Bold Italic" size="14.0" />
+                     </font>
+                  </Text>
+                  <TextField fx:id="txtCustomer_Contact" promptText="Enter Contact Number" style="-fx-background-radius: 30; -fx-border-radius: 40;" />
+               </children>
+            </VBox>
+            
+            <VBox layoutX="15.0" layoutY="215.0" prefHeight="50.0" prefWidth="380.0">
+               <children>
+                  <Text fill="#e1dcdc" strokeType="OUTSIDE" strokeWidth="0.0" text="Customer Date">
+                     <font>
+                        <Font name="System Bold Italic" size="14.0" />
+                     </font>
+                  </Text>
+                  <DatePicker fx:id="txtCustomer_Date" prefHeight="26.0" prefWidth="380.0" />
+               </children>
+            </VBox>
+            
+            <!-- Buttons -->
+            <Button layoutX="480.0" layoutY="70.0" mnemonicParsing="false" onAction="#btnSaveOnAction" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #0E5930;" text="Save" textFill="#f2eded">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+            <Button layoutX="580.0" layoutY="70.0" mnemonicParsing="false" onAction="#btnUpdateOnAction" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #639354;" text="Update" textFill="#f7f1f1">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+            <Button layoutX="680.0" layoutY="70.0" mnemonicParsing="false" onAction="#btnResetOnAction" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #356C08;" text="Reset" textFill="#eae0e0">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+            <Button layoutX="480.0" layoutY="120.0" mnemonicParsing="false" onAction="#btnDeleteOnAction" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #7CFC00;" text="Delete" textFill="#0d0d0d">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+            <Button layoutX="580.0" layoutY="120.0" mnemonicParsing="false" onAction="#btnSearchOnAction" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #2E5B0C;" text="Search" textFill="#eae4e4">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+            <Button layoutX="680.0" layoutY="120.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #2E5B0C;" text="Report" textFill="#eae4e4">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+            
+            <!-- Table -->
+            <TableView fx:id="tblCustomer" layoutX="15.0" layoutY="280.0" prefHeight="300.0" prefWidth="770.0">
+              <columns>
+                <TableColumn fx:id="colCustomer_Id" prefWidth="180.0" text="Customer ID" />
+                <TableColumn fx:id="colCustomer_Name" prefWidth="200.0" text="Customer Name" />
+                <TableColumn fx:id="colCustomer_Contact" prefWidth="200.0" text="Customer Contact" />
+                <TableColumn fx:id="colCustomer_Date" prefWidth="190.0" text="Customer Date" />
+              </columns>
+            </TableView>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>

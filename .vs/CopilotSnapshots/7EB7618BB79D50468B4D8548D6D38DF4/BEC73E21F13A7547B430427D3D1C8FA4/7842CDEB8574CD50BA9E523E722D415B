@@ -1,0 +1,335 @@
+﻿package lk.ijse.recycle.controller;
+
+import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import lk.ijse.recycle.dto.RecycleItemDto;
+import lk.ijse.recycle.model.RecycleItemModel;
+
+import java.net.URL;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
+
+public class RecycleItemController implements Initializable {
+
+    @FXML private Label lblItem_Id;
+    @FXML private ComboBox<String> cmbItem_Materials;
+    @FXML private TextField txtItem_Kg;
+    @FXML private Label lblItem_Price;
+    @FXML private Label lblPrice_Per_Kg;
+    @FXML private DatePicker txtItem_Date;
+
+    @FXML private TableView<RecycleItemDto> tblRecycleItem;
+
+    @FXML private TableColumn<RecycleItemDto, Integer> colItem_Id;
+    @FXML private TableColumn<RecycleItemDto, String> colItem_Materials;
+    @FXML private TableColumn<RecycleItemDto, Double> colItem_Kg;
+    @FXML private TableColumn<RecycleItemDto, Double> colItem_Price;
+    @FXML private TableColumn<RecycleItemDto, String> colItem_Date;
+
+    private final RecycleItemModel model = new RecycleItemModel();
+    private int selectedItemId = -1;
+
+    // Price per KG in LKR for different materials
+    private static final Map<String, Double> MATERIAL_PRICES = new HashMap<>();
+    static {
+        MATERIAL_PRICES.put("Plastic", 50.00);
+        MATERIAL_PRICES.put("Paper", 30.00);
+        MATERIAL_PRICES.put("Glass", 25.00);
+        MATERIAL_PRICES.put("Metal", 150.00);
+        MATERIAL_PRICES.put("Aluminum", 200.00);
+        MATERIAL_PRICES.put("Copper", 800.00);
+        MATERIAL_PRICES.put("Cardboard", 20.00);
+        MATERIAL_PRICES.put("E-Waste", 100.00);
+        MATERIAL_PRICES.put("Rubber", 40.00);
+        MATERIAL_PRICES.put("Textile", 35.00);
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        setCellValueFactory();
+        loadTable();
+        loadNextItemId();
+        loadMaterialsComboBox();
+        setupAutoCalculation();
+        
+        tblRecycleItem.getSelectionModel().selectedItemProperty().addListener((obs, old, newVal) -> {
+            if (newVal != null) {
+                selectedItemId = newVal.getItemId();
+                lblItem_Id.setText(String.valueOf(newVal.getItemId()));
+                cmbItem_Materials.setValue(newVal.getItemMaterials());
+                txtItem_Kg.setText(String.valueOf(newVal.getItemKg()));
+                lblItem_Price.setText(String.format("LKR %.2f", newVal.getItemPrice()));
+                if (newVal.getDate() != null && !newVal.getDate().isEmpty()) {
+                    try {
+                        txtItem_Date.setValue(LocalDate.parse(newVal.getDate().split(" ")[0]));
+                    } catch (Exception e) {
+                        txtItem_Date.setValue(null);
+                    }
+                }
+                updatePricePerKgLabel();
+            }
+        });
+    }
+
+    private void loadMaterialsComboBox() {
+        if (cmbItem_Materials != null) {
+            cmbItem_Materials.getItems().addAll(MATERIAL_PRICES.keySet());
+            cmbItem_Materials.setPromptText("Select Material");
+        }
+    }
+
+    private void setupAutoCalculation() {
+        // Auto-calculate when KG changes
+        if (txtItem_Kg != null) {
+            txtItem_Kg.textProperty().addListener((obs, oldVal, newVal) -> {
+                calculatePrice();
+            });
+        }
+        
+        // Auto-calculate when material changes
+        if (cmbItem_Materials != null) {
+            cmbItem_Materials.valueProperty().addListener((obs, oldVal, newVal) -> {
+                updatePricePerKgLabel();
+                calculatePrice();
+            });
+        }
+    }
+
+    private void updatePricePerKgLabel() {
+        if (lblPrice_Per_Kg != null && cmbItem_Materials != null) {
+            String material = cmbItem_Materials.getValue();
+            if (material != null && MATERIAL_PRICES.containsKey(material)) {
+                double pricePerKg = MATERIAL_PRICES.get(material);
+                lblPrice_Per_Kg.setText(String.format("LKR %.2f/kg", pricePerKg));
+            } else {
+                lblPrice_Per_Kg.setText("Select material");
+            }
+        }
+    }
+
+    private void calculatePrice() {
+        if (cmbItem_Materials == null || txtItem_Kg == null || lblItem_Price == null) {
+            return;
+        }
+        
+        String material = cmbItem_Materials.getValue();
+        String kgText = txtItem_Kg.getText().trim();
+        
+        if (material == null || material.isEmpty() || kgText.isEmpty()) {
+            lblItem_Price.setText("LKR 0.00");
+            return;
+        }
+        
+        try {
+            double kg = Double.parseDouble(kgText);
+            double pricePerKg = MATERIAL_PRICES.getOrDefault(material, 0.0);
+            double totalPrice = kg * pricePerKg;
+            lblItem_Price.setText(String.format("LKR %.2f", totalPrice));
+        } catch (NumberFormatException e) {
+            lblItem_Price.setText("Invalid KG");
+        }
+    }
+
+    private double getCalculatedPrice() {
+        String material = cmbItem_Materials.getValue();
+        String kgText = txtItem_Kg.getText().trim();
+        
+        if (material == null || kgText.isEmpty()) {
+            return 0.0;
+        }
+        
+        try {
+            double kg = Double.parseDouble(kgText);
+            double pricePerKg = MATERIAL_PRICES.getOrDefault(material, 0.0);
+            return kg * pricePerKg;
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
+    }
+
+    private void setCellValueFactory() {
+        if (colItem_Id == null || colItem_Materials == null || colItem_Kg == null || colItem_Price == null || colItem_Date == null) {
+            return;
+        }
+        colItem_Id.setCellValueFactory(new PropertyValueFactory<>("itemId"));
+        colItem_Materials.setCellValueFactory(new PropertyValueFactory<>("itemMaterials"));
+        colItem_Kg.setCellValueFactory(new PropertyValueFactory<>("itemKg"));
+        colItem_Price.setCellValueFactory(new PropertyValueFactory<>("itemPrice"));
+        colItem_Date.setCellValueFactory(new PropertyValueFactory<>("date"));
+    }
+
+    private void loadNextItemId() {
+        try {
+            int nextId = model.getNextItemId();
+            lblItem_Id.setText(String.valueOf(nextId));
+            selectedItemId = -1;
+        } catch (SQLException e) {
+            lblItem_Id.setText("N/A");
+            e.printStackTrace();
+        }
+    }
+
+    private void loadTable() {
+        if (tblRecycleItem == null) {
+            return;
+        }
+        try {
+            tblRecycleItem.setItems(FXCollections.observableArrayList(model.getAllItems()));
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, "Failed to load recycle items: " + e.getMessage()).show();
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void btnSaveOnAction(ActionEvent event) {
+        try {
+            if (cmbItem_Materials.getValue() == null || txtItem_Kg.getText().isEmpty() || txtItem_Date.getValue() == null) {
+                new Alert(Alert.AlertType.WARNING, "Please fill in all fields!").show();
+                return;
+            }
+
+            String dateStr = txtItem_Date.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            double calculatedPrice = getCalculatedPrice();
+            
+            RecycleItemDto dto = new RecycleItemDto(
+                    0,
+                    cmbItem_Materials.getValue(),
+                    Double.parseDouble(txtItem_Kg.getText()),
+                    calculatedPrice,
+                    dateStr
+            );
+
+            if (model.saveRecycleItems(dto)) {
+                new Alert(Alert.AlertType.INFORMATION, "Item Saved!\nTotal Price: LKR " + String.format("%.2f", calculatedPrice)).show();
+                loadTable();
+                clearFields();
+                loadNextItemId();
+            } else {
+                new Alert(Alert.AlertType.ERROR, "Save Failed!").show();
+            }
+        } catch (NumberFormatException e) {
+            new Alert(Alert.AlertType.ERROR, "Invalid input! KG must be a number!").show();
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+        }
+    }
+
+    @FXML
+    void btnUpdateOnAction(ActionEvent event) {
+        if (selectedItemId <= 0) {
+            new Alert(Alert.AlertType.WARNING, "Please select an item from the table to update!").show();
+            return;
+        }
+
+        try {
+            String dateStr = txtItem_Date.getValue() != null ? 
+                    txtItem_Date.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : null;
+            double calculatedPrice = getCalculatedPrice();
+
+            RecycleItemDto dto = new RecycleItemDto(
+                    selectedItemId,
+                    cmbItem_Materials.getValue(),
+                    Double.parseDouble(txtItem_Kg.getText()),
+                    calculatedPrice,
+                    dateStr
+            );
+
+            if (model.updateRecycleItems(dto)) {
+                new Alert(Alert.AlertType.INFORMATION, "Item Updated!\nTotal Price: LKR " + String.format("%.2f", calculatedPrice)).show();
+                loadTable();
+                clearFields();
+                loadNextItemId();
+            } else {
+                new Alert(Alert.AlertType.ERROR, "Update Failed!").show();
+            }
+        } catch (NumberFormatException e) {
+            new Alert(Alert.AlertType.ERROR, "Invalid input! KG must be a number!").show();
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+        }
+    }
+
+    @FXML
+    void btnDeleteOnAction(ActionEvent event) {
+        if (selectedItemId <= 0) {
+            new Alert(Alert.AlertType.WARNING, "Please select an item from the table to delete!").show();
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this item?");
+        confirm.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                try {
+                    if (model.deleteRecycleItem(selectedItemId)) {
+                        new Alert(Alert.AlertType.INFORMATION, "Item Deleted!").show();
+                        loadTable();
+                        clearFields();
+                        loadNextItemId();
+                    } else {
+                        new Alert(Alert.AlertType.ERROR, "Delete Failed!").show();
+                    }
+                } catch (SQLException e) {
+                    new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+                }
+            }
+        });
+    }
+
+    @FXML
+    void btnSearchOnAction(ActionEvent event) {
+        String material = cmbItem_Materials.getValue();
+        if (material == null || material.isEmpty()) {
+            new Alert(Alert.AlertType.WARNING, "Please select a material to search!").show();
+            return;
+        }
+        
+        for (RecycleItemDto dto : tblRecycleItem.getItems()) {
+            if (dto.getItemMaterials().equalsIgnoreCase(material)) {
+                tblRecycleItem.getSelectionModel().select(dto);
+                selectedItemId = dto.getItemId();
+                lblItem_Id.setText(String.valueOf(dto.getItemId()));
+                txtItem_Kg.setText(String.valueOf(dto.getItemKg()));
+                lblItem_Price.setText(String.format("LKR %.2f", dto.getItemPrice()));
+                if (dto.getDate() != null && !dto.getDate().isEmpty()) {
+                    try {
+                        txtItem_Date.setValue(LocalDate.parse(dto.getDate().split(" ")[0]));
+                    } catch (Exception e) {
+                        txtItem_Date.setValue(null);
+                    }
+                }
+                return;
+            }
+        }
+        new Alert(Alert.AlertType.INFORMATION, "Item not found with material: " + material).show();
+    }
+
+    @FXML
+    void btnResetOnAction(ActionEvent event) {
+        clearFields();
+        loadNextItemId();
+    }
+
+    private void clearFields() {
+        if (cmbItem_Materials != null) cmbItem_Materials.setValue(null);
+        if (txtItem_Kg != null) txtItem_Kg.clear();
+        if (lblItem_Price != null) lblItem_Price.setText("LKR 0.00");
+        if (lblPrice_Per_Kg != null) lblPrice_Per_Kg.setText("Select material");
+        if (txtItem_Date != null) txtItem_Date.setValue(null);
+        if (tblRecycleItem != null) tblRecycleItem.getSelectionModel().clearSelection();
+        selectedItemId = -1;
+    }
+}
+
+
+
+
+

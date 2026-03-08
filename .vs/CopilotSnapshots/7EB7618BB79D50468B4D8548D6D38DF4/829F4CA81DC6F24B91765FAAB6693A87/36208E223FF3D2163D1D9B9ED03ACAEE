@@ -1,0 +1,484 @@
+﻿package lk.ijse.recycle.controller;
+
+import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
+import lk.ijse.recycle.dto.MaterialDto;
+import lk.ijse.recycle.dto.RecycleItemDto;
+import lk.ijse.recycle.model.MaterialModel;
+import lk.ijse.recycle.model.RecycleItemModel;
+
+import java.net.URL;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
+import java.util.ResourceBundle;
+
+public class RecycleItemController implements Initializable {
+
+    @FXML private Label lblItem_Id;
+    @FXML private ComboBox<MaterialDto> cmbMaterial;
+    @FXML private TextField txtItem_Kg;
+    @FXML private Label lblItem_Price;
+    @FXML private Label lblPrice_Per_Kg;
+    @FXML private DatePicker txtItem_Date;
+
+    @FXML private TableView<RecycleItemDto> tblRecycleItem;
+    @FXML private TableColumn<RecycleItemDto, Integer> colItem_Id;
+    @FXML private TableColumn<RecycleItemDto, String> colItem_Materials;
+    @FXML private TableColumn<RecycleItemDto, Double> colItem_Kg;
+    @FXML private TableColumn<RecycleItemDto, Double> colItem_Price;
+    @FXML private TableColumn<RecycleItemDto, String> colItem_Date;
+
+    private final RecycleItemModel model = new RecycleItemModel();
+    private final MaterialModel materialModel = new MaterialModel();
+    private int selectedItemId = -1;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        setCellValueFactory();
+        loadTable();
+        loadNextItemId();
+        loadMaterialsComboBox();
+        setupAutoCalculation();
+
+        tblRecycleItem.getSelectionModel().selectedItemProperty().addListener((obs, old, newVal) -> {
+            if (newVal != null) {
+                selectedItemId = newVal.getItemId();
+                lblItem_Id.setText(String.valueOf(newVal.getItemId()));
+                txtItem_Kg.setText(String.valueOf(newVal.getItemKg()));
+                lblItem_Price.setText(String.format("LKR %.2f", newVal.getItemPrice()));
+
+                // Select material in ComboBox
+                for (MaterialDto m : cmbMaterial.getItems()) {
+                    if (m.getMaterialId() == newVal.getMaterialId()) {
+                        cmbMaterial.setValue(m);
+                        break;
+                    }
+                }
+
+                if (newVal.getDate() != null && !newVal.getDate().isEmpty()) {
+                    try {
+                        txtItem_Date.setValue(LocalDate.parse(newVal.getDate().split(" ")[0]));
+                    } catch (Exception e) {
+                        txtItem_Date.setValue(null);
+                    }
+                }
+            }
+        });
+    }
+
+    private void loadMaterialsComboBox() {
+        if (cmbMaterial == null) return;
+
+        try {
+            cmbMaterial.setItems(FXCollections.observableArrayList(model.getAllMaterials()));
+
+            cmbMaterial.setConverter(new StringConverter<MaterialDto>() {
+                @Override
+                public String toString(MaterialDto m) {
+                    if (m == null) return "";
+                    return m.getMaterialName() + " (LKR " + m.getPricePerKg() + "/kg)";
+                }
+
+                @Override
+                public MaterialDto fromString(String string) {
+                    return null;
+                }
+            });
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, "Failed to load materials: " + e.getMessage()).show();
+        }
+    }
+
+    private void setupAutoCalculation() {
+        // Auto-calculate when KG changes
+        if (txtItem_Kg != null) {
+            txtItem_Kg.textProperty().addListener((obs, oldVal, newVal) -> calculatePrice());
+        }
+
+        // Auto-calculate when material changes
+        if (cmbMaterial != null) {
+            cmbMaterial.valueProperty().addListener((obs, oldVal, newVal) -> {
+                updatePricePerKgLabel();
+                calculatePrice();
+            });
+        }
+    }
+
+    private void updatePricePerKgLabel() {
+        if (lblPrice_Per_Kg == null) return;
+
+        MaterialDto selected = cmbMaterial.getValue();
+        if (selected != null) {
+            lblPrice_Per_Kg.setText(String.format("LKR %.2f/kg", selected.getPricePerKg()));
+        } else {
+            lblPrice_Per_Kg.setText("Select material");
+        }
+    }
+
+    private void calculatePrice() {
+        if (cmbMaterial == null || txtItem_Kg == null || lblItem_Price == null) return;
+
+        MaterialDto material = cmbMaterial.getValue();
+        String kgText = txtItem_Kg.getText().trim();
+
+        if (material == null || kgText.isEmpty()) {
+            lblItem_Price.setText("LKR 0.00");
+            return;
+        }
+
+        try {
+            double kg = Double.parseDouble(kgText);
+            double totalPrice = kg * material.getPricePerKg();
+            lblItem_Price.setText(String.format("LKR %.2f", totalPrice));
+        } catch (NumberFormatException e) {
+            lblItem_Price.setText("Invalid KG");
+        }
+    }
+
+    private double getCalculatedPrice() {
+        MaterialDto material = cmbMaterial.getValue();
+        String kgText = txtItem_Kg.getText().trim();
+
+        if (material == null || kgText.isEmpty()) return 0.0;
+
+        try {
+            double kg = Double.parseDouble(kgText);
+            return kg * material.getPricePerKg();
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
+    }
+
+    private void setCellValueFactory() {
+        if (colItem_Id == null) return;
+        colItem_Id.setCellValueFactory(new PropertyValueFactory<>("itemId"));
+        colItem_Materials.setCellValueFactory(new PropertyValueFactory<>("materialName"));
+        colItem_Kg.setCellValueFactory(new PropertyValueFactory<>("itemKg"));
+        colItem_Price.setCellValueFactory(new PropertyValueFactory<>("itemPrice"));
+        colItem_Date.setCellValueFactory(new PropertyValueFactory<>("date"));
+    }
+
+    private void loadNextItemId() {
+        try {
+            int nextId = model.getNextItemId();
+            lblItem_Id.setText(String.valueOf(nextId));
+            selectedItemId = -1;
+        } catch (SQLException e) {
+            lblItem_Id.setText("N/A");
+            e.printStackTrace();
+        }
+    }
+
+    private void loadTable() {
+        if (tblRecycleItem == null) return;
+        try {
+            tblRecycleItem.setItems(FXCollections.observableArrayList(model.getAllItems()));
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, "Failed to load recycle items: " + e.getMessage()).show();
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void btnSaveOnAction(ActionEvent event) {
+        try {
+            if (cmbMaterial.getValue() == null || txtItem_Kg.getText().isEmpty() || txtItem_Date.getValue() == null) {
+                new Alert(Alert.AlertType.WARNING, "Please fill in all fields!").show();
+                return;
+            }
+
+            String dateStr = txtItem_Date.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            MaterialDto material = cmbMaterial.getValue();
+            double kg = Double.parseDouble(txtItem_Kg.getText());
+            double calculatedPrice = getCalculatedPrice();
+
+            RecycleItemDto dto = new RecycleItemDto(
+                    0,
+                    material.getMaterialId(),
+                    kg,
+                    calculatedPrice,
+                    dateStr
+            );
+
+            if (model.saveRecycleItems(dto)) {
+                new Alert(Alert.AlertType.INFORMATION,
+                        String.format("Item Saved!\nMaterial: %s\nWeight: %.2f kg\nPrice Paid: LKR %.2f",
+                                material.getMaterialName(), kg, calculatedPrice)).show();
+                loadTable();
+                clearFields();
+                loadNextItemId();
+            } else {
+                new Alert(Alert.AlertType.ERROR, "Save Failed!").show();
+            }
+        } catch (NumberFormatException e) {
+            new Alert(Alert.AlertType.ERROR, "Invalid input! KG must be a number!").show();
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+        }
+    }
+
+    @FXML
+    void btnUpdateOnAction(ActionEvent event) {
+        if (selectedItemId <= 0) {
+            new Alert(Alert.AlertType.WARNING, "Please select an item from the table to update!").show();
+            return;
+        }
+
+        try {
+            String dateStr = txtItem_Date.getValue() != null ?
+                    txtItem_Date.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : null;
+            MaterialDto material = cmbMaterial.getValue();
+            double kg = Double.parseDouble(txtItem_Kg.getText());
+            double calculatedPrice = getCalculatedPrice();
+
+            RecycleItemDto dto = new RecycleItemDto(
+                    selectedItemId,
+                    material.getMaterialId(),
+                    kg,
+                    calculatedPrice,
+                    dateStr
+            );
+
+            if (model.updateRecycleItems(dto)) {
+                new Alert(Alert.AlertType.INFORMATION, "Item Updated!").show();
+                loadTable();
+                clearFields();
+                loadNextItemId();
+            } else {
+                new Alert(Alert.AlertType.ERROR, "Update Failed!").show();
+            }
+        } catch (NumberFormatException e) {
+            new Alert(Alert.AlertType.ERROR, "Invalid input! KG must be a number!").show();
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+        }
+    }
+
+    @FXML
+    void btnDeleteOnAction(ActionEvent event) {
+        if (selectedItemId <= 0) {
+            new Alert(Alert.AlertType.WARNING, "Please select an item from the table to delete!").show();
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this item?");
+        confirm.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                try {
+                    if (model.deleteRecycleItem(selectedItemId)) {
+                        new Alert(Alert.AlertType.INFORMATION, "Item Deleted!").show();
+                        loadTable();
+                        clearFields();
+                        loadNextItemId();
+                    } else {
+                        new Alert(Alert.AlertType.ERROR, "Delete Failed!").show();
+                    }
+                } catch (SQLException e) {
+                    new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+                }
+            }
+        });
+    }
+
+    @FXML
+    void btnSearchOnAction(ActionEvent event) {
+        MaterialDto material = cmbMaterial.getValue();
+        if (material == null) {
+            new Alert(Alert.AlertType.WARNING, "Please select a material to search!").show();
+            return;
+        }
+
+        for (RecycleItemDto dto : tblRecycleItem.getItems()) {
+            if (dto.getMaterialId() == material.getMaterialId()) {
+                tblRecycleItem.getSelectionModel().select(dto);
+                return;
+            }
+        }
+        new Alert(Alert.AlertType.INFORMATION, "No items found for material: " + material.getMaterialName()).show();
+    }
+
+    @FXML
+    void btnResetOnAction(ActionEvent event) {
+        clearFields();
+        loadNextItemId();
+    }
+
+    @FXML
+    void btnAddMaterialOnAction(ActionEvent event) {
+        showMaterialManagementDialog();
+    }
+
+    /**
+     * Shows a popup dialog to manage materials (Add, Edit, Delete)
+     */
+    private void showMaterialManagementDialog() {
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle("Material Management");
+        dialog.setHeaderText("Add, Edit, or Delete Materials");
+
+        // Create content
+        VBox content = new VBox(10);
+        content.setPadding(new Insets(20));
+
+        // Material list
+        ListView<MaterialDto> listView = new ListView<>();
+        listView.setPrefHeight(200);
+        refreshMaterialList(listView);
+
+        // Input fields
+        GridPane inputGrid = new GridPane();
+        inputGrid.setHgap(10);
+        inputGrid.setVgap(10);
+
+        TextField txtMaterialName = new TextField();
+        txtMaterialName.setPromptText("Material Name");
+        TextField txtPricePerKg = new TextField();
+        txtPricePerKg.setPromptText("Price per KG");
+
+        inputGrid.add(new Label("Material Name:"), 0, 0);
+        inputGrid.add(txtMaterialName, 1, 0);
+        inputGrid.add(new Label("Price/KG (LKR):"), 0, 1);
+        inputGrid.add(txtPricePerKg, 1, 1);
+
+        // Buttons
+        HBox buttonBox = new HBox(10);
+        Button btnAdd = new Button("Add New");
+        Button btnUpdate = new Button("Update");
+        Button btnDelete = new Button("Delete");
+
+        btnAdd.setStyle("-fx-background-color: #0E5930; -fx-text-fill: white;");
+        btnUpdate.setStyle("-fx-background-color: #639354; -fx-text-fill: white;");
+        btnDelete.setStyle("-fx-background-color: #CC0000; -fx-text-fill: white;");
+
+        buttonBox.getChildren().addAll(btnAdd, btnUpdate, btnDelete);
+
+        // List selection listener
+        listView.getSelectionModel().selectedItemProperty().addListener((obs, old, newVal) -> {
+            if (newVal != null) {
+                txtMaterialName.setText(newVal.getMaterialName());
+                txtPricePerKg.setText(String.valueOf(newVal.getPricePerKg()));
+            }
+        });
+
+        // Add button action
+        btnAdd.setOnAction(e -> {
+            if (txtMaterialName.getText().trim().isEmpty() || txtPricePerKg.getText().trim().isEmpty()) {
+                new Alert(Alert.AlertType.WARNING, "Please fill in all fields!").show();
+                return;
+            }
+            try {
+                MaterialDto dto = new MaterialDto(0, txtMaterialName.getText().trim(),
+                        Double.parseDouble(txtPricePerKg.getText().trim()));
+                if (materialModel.save(dto)) {
+                    new Alert(Alert.AlertType.INFORMATION, "Material Added!").show();
+                    refreshMaterialList(listView);
+                    loadMaterialsComboBox();
+                    txtMaterialName.clear();
+                    txtPricePerKg.clear();
+                }
+            } catch (NumberFormatException ex) {
+                new Alert(Alert.AlertType.ERROR, "Invalid price!").show();
+            } catch (SQLException ex) {
+                new Alert(Alert.AlertType.ERROR, "Error: " + ex.getMessage()).show();
+            }
+        });
+
+        // Update button action
+        btnUpdate.setOnAction(e -> {
+            MaterialDto selected = listView.getSelectionModel().getSelectedItem();
+            if (selected == null) {
+                new Alert(Alert.AlertType.WARNING, "Please select a material to update!").show();
+                return;
+            }
+            try {
+                MaterialDto dto = new MaterialDto(selected.getMaterialId(),
+                        txtMaterialName.getText().trim(),
+                        Double.parseDouble(txtPricePerKg.getText().trim()));
+                if (materialModel.update(dto)) {
+                    new Alert(Alert.AlertType.INFORMATION, "Material Updated!").show();
+                    refreshMaterialList(listView);
+                    loadMaterialsComboBox();
+                }
+            } catch (NumberFormatException ex) {
+                new Alert(Alert.AlertType.ERROR, "Invalid price!").show();
+            } catch (SQLException ex) {
+                new Alert(Alert.AlertType.ERROR, "Error: " + ex.getMessage()).show();
+            }
+        });
+
+        // Delete button action
+        btnDelete.setOnAction(e -> {
+            MaterialDto selected = listView.getSelectionModel().getSelectedItem();
+            if (selected == null) {
+                new Alert(Alert.AlertType.WARNING, "Please select a material to delete!").show();
+                return;
+            }
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
+                    "Are you sure you want to delete '" + selected.getMaterialName() + "'?\n" +
+                            "This will fail if items are using this material.");
+            confirm.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.OK) {
+                    try {
+                        if (materialModel.delete(selected.getMaterialId())) {
+                            new Alert(Alert.AlertType.INFORMATION, "Material Deleted!").show();
+                            refreshMaterialList(listView);
+                            loadMaterialsComboBox();
+                            txtMaterialName.clear();
+                            txtPricePerKg.clear();
+                        }
+                    } catch (SQLException ex) {
+                        new Alert(Alert.AlertType.ERROR, "Cannot delete! Material is in use.").show();
+                    }
+                }
+            });
+        });
+
+        content.getChildren().addAll(
+                new Label("Existing Materials:"),
+                listView,
+                new Separator(),
+                inputGrid,
+                buttonBox
+        );
+
+        dialog.getDialogPane().setContent(content);
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        dialog.getDialogPane().setPrefWidth(400);
+
+        dialog.showAndWait();
+    }
+
+    private void refreshMaterialList(ListView<MaterialDto> listView) {
+        try {
+            listView.setItems(FXCollections.observableArrayList(materialModel.getAll()));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void clearFields() {
+        if (cmbMaterial != null) cmbMaterial.setValue(null);
+        if (txtItem_Kg != null) txtItem_Kg.clear();
+        if (lblItem_Price != null) lblItem_Price.setText("LKR 0.00");
+        if (lblPrice_Per_Kg != null) lblPrice_Per_Kg.setText("Select material");
+        if (txtItem_Date != null) txtItem_Date.setValue(null);
+        if (tblRecycleItem != null) tblRecycleItem.getSelectionModel().clearSelection();
+        selectedItemId = -1;
+    }
+}
+
+
+
+
+

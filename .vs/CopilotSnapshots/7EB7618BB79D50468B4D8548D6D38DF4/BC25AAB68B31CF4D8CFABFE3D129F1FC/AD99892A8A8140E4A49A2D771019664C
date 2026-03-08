@@ -1,0 +1,75 @@
+﻿<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
+<jasperReport name="Order_report" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9b70ca29-abaf-4070-8a47-17928008c21c">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ecoplayerOrder"/>
+	<query language="SQL"><![CDATA[SELECT * FROM orders]]></query>
+	<field name="order_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="order_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="order_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="orders"/>
+	</field>
+	<field name="bile_id" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="bile_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="bile_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="orders"/>
+	</field>
+	<field name="product_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="product_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="product_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="orders"/>
+	</field>
+	<field name="customer_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="customer_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="customer_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="orders"/>
+	</field>
+	<background splitType="Stretch"/>
+	<title height="48" splitType="Stretch">
+		<element kind="staticText" uuid="cacd319c-d098-468c-b9ac-723ae52cccdb" x="180" y="9" width="200" height="30" forecolor="#8C8C8C" fontSize="22.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[ORDER REPORT]]></text>
+		</element>
+	</title>
+	<pageHeader height="40" splitType="Stretch">
+		<element kind="staticText" uuid="64c06b90-0ec0-48f3-966d-b72d858d5873" x="200" y="5" width="160" height="30" forecolor="#235225" fontSize="18.0" italic="true" bold="true" hTextAlign="Center">
+			<text><![CDATA[ECOPLAYER]]></text>
+		</element>
+	</pageHeader>
+	<columnHeader height="83" splitType="Stretch">
+		<element kind="staticText" uuid="6cafbfc3-be16-4813-a0cd-c9c3b54e215f" x="0" y="20" width="80" height="30" fontSize="16.0" bold="true">
+			<text><![CDATA[Order ID]]></text>
+		</element>
+		<element kind="staticText" uuid="02ce99d6-90cc-452d-8c2a-0a8494c1acab" x="100" y="20" width="100" height="30" fontSize="16.0" bold="true">
+			<text><![CDATA[Bile ID]]></text>
+		</element>
+		<element kind="staticText" uuid="b630f888-b306-4f2b-9c9b-19a6ad2c0e40" x="220" y="20" width="150" height="30" fontSize="16.0" bold="true">
+			<text><![CDATA[Product Name]]></text>
+		</element>
+		<element kind="staticText" uuid="4886a368-a46e-4435-9a4b-5accc3480d18" x="400" y="20" width="120" height="30" fontSize="16.0" bold="true">
+			<text><![CDATA[Customer ID]]></text>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="90">
+			<element kind="textField" uuid="b577cf5b-71b3-49ec-a39d-b65aa0c92054" x="0" y="30" width="80" height="30" fontSize="14.0">
+				<expression><![CDATA[$F{order_id}]]></expression>
+			</element>
+			<element kind="textField" uuid="ba0b27de-6e8e-4d7c-976e-1149b7e71e78" x="100" y="30" width="100" height="30" fontSize="14.0">
+				<expression><![CDATA[$F{bile_id}]]></expression>
+			</element>
+			<element kind="textField" uuid="ff5ef164-8f60-4d1c-87a7-d6a81025bf35" x="220" y="30" width="150" height="30" fontSize="14.0">
+				<expression><![CDATA[$F{product_name}]]></expression>
+			</element>
+			<element kind="textField" uuid="67f8d172-2a81-4359-89e4-90ae1878314b" x="400" y="30" width="120" height="30" fontSize="14.0">
+				<expression><![CDATA[$F{customer_id}]]></expression>
+			</element>
+		</band>
+	</detail>
+	<columnFooter splitType="Stretch"/>
+	<pageFooter height="125" splitType="Stretch">
+		<element kind="staticText" uuid="9dabb5a3-5e81-41cb-b0c1-4fe20dace2f6" x="10" y="20" width="524" height="70" forecolor="#1C3623" fontSize="25.0" italic="true" bold="true" hTextAlign="Center">
+			<text><![CDATA[RECYCLE FOR A GREEN TOMORROW]]></text>
+		</element>
+	</pageFooter>
+	<summary height="42" splitType="Stretch"/>
+</jasperReport>
+

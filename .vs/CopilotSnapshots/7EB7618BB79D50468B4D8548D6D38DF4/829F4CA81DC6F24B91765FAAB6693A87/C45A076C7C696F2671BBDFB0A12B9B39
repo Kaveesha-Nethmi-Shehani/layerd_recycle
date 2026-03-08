@@ -1,0 +1,412 @@
+﻿package lk.ijse.recycle.controller;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.StringConverter;
+
+import lk.ijse.recycle.dto.MaterialDto;
+import lk.ijse.recycle.dto.ProductDto;
+import lk.ijse.recycle.model.ProductModel;
+import lk.ijse.recycle.util.ReportUtil;
+
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
+
+public class ProductController implements Initializable {
+
+    @FXML private TextField txtProduct_Id;
+    @FXML private TextField txtProduct_Name;
+    @FXML private ComboBox<MaterialDto> cmbMaterial;
+    @FXML private TextField txtKg_Per_Unit;
+    @FXML private TextField txtSelling_Price;
+    @FXML private Label lblStock_Quantity;
+    @FXML private Label lblAvailable_Kg;
+
+    @FXML private TableView<ProductDto> tblProduct;
+    @FXML private TableColumn<ProductDto, String> colProduct_Id;
+    @FXML private TableColumn<ProductDto, String> colProduct_Name;
+    @FXML private TableColumn<ProductDto, String> colMaterial;
+    @FXML private TableColumn<ProductDto, Double> colKg_Per_Unit;
+    @FXML private TableColumn<ProductDto, Double> colSelling_Price;
+    @FXML private TableColumn<ProductDto, Integer> colStock;
+
+    private final ProductModel productModel = new ProductModel();
+    private String selectedProductId = null;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        setCellValueFactory();
+        loadTable();
+        loadMaterialsComboBox();
+        setupComboBoxListener();
+        
+        tblProduct.getSelectionModel().selectedItemProperty().addListener((obs, old, newVal) -> {
+            if (newVal != null) {
+                selectedProductId = newVal.getProductId();
+                txtProduct_Id.setText(newVal.getProductId());
+                txtProduct_Name.setText(newVal.getProductName());
+                txtKg_Per_Unit.setText(String.valueOf(newVal.getKgPerUnit()));
+                txtSelling_Price.setText(String.valueOf(newVal.getSellingPrice()));
+                lblStock_Quantity.setText(String.valueOf(newVal.getStockQuantity()));
+                
+                // Select the correct material in ComboBox
+                if (newVal.getMaterialId() != null) {
+                    for (MaterialDto m : cmbMaterial.getItems()) {
+                        if (m.getMaterialId() == newVal.getMaterialId()) {
+                            cmbMaterial.setValue(m);
+                            break;
+                        }
+                    }
+                } else {
+                    cmbMaterial.setValue(null);
+                }
+                updateAvailableKgLabel();
+            }
+        });
+    }
+
+    private void setCellValueFactory() {
+        if (colProduct_Id == null) return;
+        
+        colProduct_Id.setCellValueFactory(new PropertyValueFactory<>("productId"));
+        colProduct_Name.setCellValueFactory(new PropertyValueFactory<>("productName"));
+        colMaterial.setCellValueFactory(new PropertyValueFactory<>("materialName"));
+        colKg_Per_Unit.setCellValueFactory(new PropertyValueFactory<>("kgPerUnit"));
+        colSelling_Price.setCellValueFactory(new PropertyValueFactory<>("sellingPrice"));
+        colStock.setCellValueFactory(new PropertyValueFactory<>("stockQuantity"));
+    }
+
+    private void loadTable() {
+        if (tblProduct == null) return;
+        
+        try {
+            List<ProductDto> list = productModel.getAllProduct();
+            ObservableList<ProductDto> obList = FXCollections.observableArrayList(list);
+            tblProduct.setItems(obList);
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, "Table Load Error: " + e.getMessage()).show();
+        }
+    }
+
+    private void loadMaterialsComboBox() {
+        if (cmbMaterial == null) return;
+        
+        try {
+            cmbMaterial.setItems(FXCollections.observableArrayList(productModel.getAllMaterials()));
+            
+            cmbMaterial.setConverter(new StringConverter<MaterialDto>() {
+                @Override
+                public String toString(MaterialDto m) {
+                    if (m == null) return "";
+                    try {
+                        double totalStock = productModel.getMaterialTotalStock(m.getMaterialId());
+                        return m.getMaterialName() + " (" + String.format("%.2f", totalStock) + " kg available)";
+                    } catch (SQLException e) {
+                        return m.getMaterialName();
+                    }
+                }
+
+                @Override
+                public MaterialDto fromString(String string) {
+                    return null;
+                }
+            });
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, "Failed to load materials: " + e.getMessage()).show();
+        }
+    }
+
+    private void setupComboBoxListener() {
+        if (cmbMaterial != null) {
+            cmbMaterial.valueProperty().addListener((obs, oldVal, newVal) -> {
+                updateAvailableKgLabel();
+            });
+        }
+    }
+
+    private void updateAvailableKgLabel() {
+        if (lblAvailable_Kg == null) return;
+        
+        MaterialDto selected = cmbMaterial.getValue();
+        if (selected != null) {
+            try {
+                double availableKg = productModel.getMaterialTotalStock(selected.getMaterialId());
+                lblAvailable_Kg.setText(String.format("%.2f kg", availableKg));
+            } catch (SQLException e) {
+                lblAvailable_Kg.setText("N/A");
+            }
+        } else {
+            lblAvailable_Kg.setText("Select material");
+        }
+    }
+
+    @FXML
+    void btnSaveOnAction(ActionEvent event) {
+        try {
+            if (!validateFields()) return;
+
+            MaterialDto selectedMaterial = cmbMaterial.getValue();
+            
+            ProductDto dto = new ProductDto(
+                txtProduct_Id.getText().trim(),
+                txtProduct_Name.getText().trim(),
+                selectedMaterial != null ? selectedMaterial.getMaterialId() : null,
+                Double.parseDouble(txtKg_Per_Unit.getText().trim()),
+                Double.parseDouble(txtSelling_Price.getText().trim()),
+                0 // Initial stock is 0
+            );
+
+            if (productModel.save(dto)) {
+                new Alert(Alert.AlertType.INFORMATION, "Product Saved!\nUse 'Manufacture' button to create stock.").show();
+                loadTable();
+                loadMaterialsComboBox();
+                clearFields();
+            } else {
+                new Alert(Alert.AlertType.ERROR, "Save Failed!").show();
+            }
+        } catch (NumberFormatException e) {
+            new Alert(Alert.AlertType.ERROR, "Invalid number format!").show();
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, "Error: " + e.getMessage()).show();
+        }
+    }
+
+    @FXML
+    void btnUpdateOnAction(ActionEvent event) {
+        if (selectedProductId == null || selectedProductId.isEmpty()) {
+            new Alert(Alert.AlertType.WARNING, "Please select a product to update!").show();
+            return;
+        }
+
+        try {
+            if (!validateFields()) return;
+
+            MaterialDto selectedMaterial = cmbMaterial.getValue();
+            
+            ProductDto dto = new ProductDto(
+                txtProduct_Id.getText().trim(),
+                txtProduct_Name.getText().trim(),
+                selectedMaterial != null ? selectedMaterial.getMaterialId() : null,
+                Double.parseDouble(txtKg_Per_Unit.getText().trim()),
+                Double.parseDouble(txtSelling_Price.getText().trim()),
+                0
+            );
+
+            if (productModel.update(dto)) {
+                new Alert(Alert.AlertType.INFORMATION, "Product Updated!").show();
+                loadTable();
+                loadMaterialsComboBox();
+                clearFields();
+            } else {
+                new Alert(Alert.AlertType.ERROR, "Update Failed!").show();
+            }
+        } catch (NumberFormatException e) {
+            new Alert(Alert.AlertType.ERROR, "Invalid number format!").show();
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, "Error: " + e.getMessage()).show();
+        }
+    }
+
+    @FXML
+    void btnDeleteOnAction(ActionEvent event) {
+        if (selectedProductId == null || selectedProductId.isEmpty()) {
+            new Alert(Alert.AlertType.WARNING, "Please select a product to delete!").show();
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this product?");
+        confirm.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                try {
+                    if (productModel.delete(selectedProductId)) {
+                        new Alert(Alert.AlertType.INFORMATION, "Product Deleted!").show();
+                        loadTable();
+                        loadMaterialsComboBox();
+                        clearFields();
+                    } else {
+                        new Alert(Alert.AlertType.ERROR, "Delete Failed!").show();
+                    }
+                } catch (SQLException e) {
+                    new Alert(Alert.AlertType.ERROR, "Error: " + e.getMessage()).show();
+                }
+            }
+        });
+    }
+
+    @FXML
+    void btnManufactureOnAction(ActionEvent event) {
+        if (selectedProductId == null || selectedProductId.isEmpty()) {
+            new Alert(Alert.AlertType.WARNING, "Please select a product to manufacture!").show();
+            return;
+        }
+
+        try {
+            ProductDto product = productModel.search(selectedProductId);
+            if (product == null) {
+                new Alert(Alert.AlertType.ERROR, "Product not found!").show();
+                return;
+            }
+
+            if (product.getMaterialId() == null) {
+                new Alert(Alert.AlertType.ERROR, "This product has no material assigned!").show();
+                return;
+            }
+
+            double availableKg = productModel.getMaterialTotalStock(product.getMaterialId());
+            int maxUnits = (int) (availableKg / product.getKgPerUnit());
+
+            if (maxUnits <= 0) {
+                new Alert(Alert.AlertType.ERROR, 
+                    "Not enough materials!\n" +
+                    "Available: " + String.format("%.2f", availableKg) + " kg\n" +
+                    "Required per unit: " + product.getKgPerUnit() + " kg\n\n" +
+                    "Please collect more " + product.getMaterialName() + " first.").show();
+                return;
+            }
+
+            TextInputDialog dialog = new TextInputDialog("1");
+            dialog.setTitle("Manufacture Product");
+            dialog.setHeaderText("Manufacturing: " + product.getProductName());
+            dialog.setContentText(
+                "Material: " + product.getMaterialName() + "\n" +
+                "Available stock: " + String.format("%.2f", availableKg) + " kg\n" +
+                "KG per unit: " + product.getKgPerUnit() + "\n" +
+                "Max units possible: " + maxUnits + "\n\n" +
+                "Enter quantity to manufacture:"
+            );
+
+            Optional<String> result = dialog.showAndWait();
+            if (result.isPresent()) {
+                int quantity = Integer.parseInt(result.get().trim());
+                
+                if (quantity <= 0) {
+                    new Alert(Alert.AlertType.ERROR, "Quantity must be greater than 0!").show();
+                    return;
+                }
+
+                if (quantity > maxUnits) {
+                    new Alert(Alert.AlertType.ERROR, 
+                        "Cannot manufacture " + quantity + " units!\n" +
+                        "Maximum possible: " + maxUnits + " units").show();
+                    return;
+                }
+
+                double totalKgUsed = quantity * product.getKgPerUnit();
+
+                if (productModel.manufacture(selectedProductId, quantity)) {
+                    new Alert(Alert.AlertType.INFORMATION, 
+                        "Manufacturing Successful!\n\n" +
+                        "Product: " + product.getProductName() + "\n" +
+                        "Quantity: " + quantity + " units\n" +
+                        "Material used: " + String.format("%.2f", totalKgUsed) + " kg\n" +
+                        "New stock: " + (product.getStockQuantity() + quantity) + " units").show();
+                    
+                    loadTable();
+                    loadMaterialsComboBox();
+                    updateAvailableKgLabel();
+                    lblStock_Quantity.setText(String.valueOf(product.getStockQuantity() + quantity));
+                } else {
+                    new Alert(Alert.AlertType.ERROR, "Manufacturing failed!").show();
+                }
+            }
+        } catch (NumberFormatException e) {
+            new Alert(Alert.AlertType.ERROR, "Please enter a valid number!").show();
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, "Error: " + e.getMessage()).show();
+        }
+    }
+
+    @FXML
+    void btnSearchOnAction(ActionEvent event) {
+        String searchId = txtProduct_Id.getText().trim();
+        if (searchId.isEmpty()) {
+            new Alert(Alert.AlertType.WARNING, "Please enter a Product ID to search!").show();
+            return;
+        }
+
+        try {
+            ProductDto dto = productModel.search(searchId);
+            if (dto != null) {
+                selectedProductId = dto.getProductId();
+                txtProduct_Name.setText(dto.getProductName());
+                txtKg_Per_Unit.setText(String.valueOf(dto.getKgPerUnit()));
+                txtSelling_Price.setText(String.valueOf(dto.getSellingPrice()));
+                lblStock_Quantity.setText(String.valueOf(dto.getStockQuantity()));
+                
+                for (ProductDto p : tblProduct.getItems()) {
+                    if (p.getProductId().equals(searchId)) {
+                        tblProduct.getSelectionModel().select(p);
+                        break;
+                    }
+                }
+            } else {
+                new Alert(Alert.AlertType.INFORMATION, "Product not found!").show();
+            }
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, "Search Error: " + e.getMessage()).show();
+        }
+    }
+
+    @FXML
+    void btnResetOnAction(ActionEvent event) {
+        clearFields();
+    }
+
+    @FXML
+    void btnReportOnAction(ActionEvent event) {
+        ReportUtil.generateProductReport();
+    }
+
+    private boolean validateFields() {
+        if (txtProduct_Id.getText().trim().isEmpty()) {
+            new Alert(Alert.AlertType.WARNING, "Please enter Product ID!").show();
+            return false;
+        }
+        if (txtProduct_Name.getText().trim().isEmpty()) {
+            new Alert(Alert.AlertType.WARNING, "Please enter Product Name!").show();
+            return false;
+        }
+        if (cmbMaterial.getValue() == null) {
+            new Alert(Alert.AlertType.WARNING, "Please select a material!").show();
+            return false;
+        }
+        if (txtKg_Per_Unit.getText().trim().isEmpty()) {
+            new Alert(Alert.AlertType.WARNING, "Please enter KG per unit!").show();
+            return false;
+        }
+        if (txtSelling_Price.getText().trim().isEmpty()) {
+            new Alert(Alert.AlertType.WARNING, "Please enter selling price!").show();
+            return false;
+        }
+        return true;
+    }
+
+    private void clearFields() {
+        if (txtProduct_Id != null) txtProduct_Id.clear();
+        if (txtProduct_Name != null) txtProduct_Name.clear();
+        if (cmbMaterial != null) cmbMaterial.setValue(null);
+        if (txtKg_Per_Unit != null) txtKg_Per_Unit.clear();
+        if (txtSelling_Price != null) txtSelling_Price.clear();
+        if (lblStock_Quantity != null) lblStock_Quantity.setText("0");
+        if (lblAvailable_Kg != null) lblAvailable_Kg.setText("Select material");
+        if (tblProduct != null) tblProduct.getSelectionModel().clearSelection();
+        selectedProductId = null;
+    }
+}
+
+
+
+
+
+
+
+
+

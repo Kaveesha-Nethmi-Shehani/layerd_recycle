@@ -1,0 +1,59 @@
+﻿package lk.ijse.recycle.model;
+
+import lk.ijse.recycle.db.DBConnection;
+import lk.ijse.recycle.dto.ProductDto;
+import lk.ijse.recycle.util.CrudUtil;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ProductModel {
+
+    public boolean save(ProductDto dto) throws SQLException {
+        String sql = "INSERT INTO product (product_id, product_name, product_materials) VALUES (?, ?, ?)";
+        return CrudUtil.executeUpdate(sql, dto.getProductId(), dto.getProductName(), dto.getProductMaterials());
+    }
+
+    public boolean update(ProductDto dto) throws SQLException {
+        String sql = "UPDATE product SET product_name = ?, product_materials = ? WHERE product_id = ?";
+        return CrudUtil.executeUpdate(sql, dto.getProductName(), dto.getProductMaterials(), dto.getProductId());
+    }
+
+    public boolean delete(String productId) throws SQLException {
+        String sql = "DELETE FROM product WHERE product_id = ?";
+        return CrudUtil.executeUpdate(sql, productId);
+    }
+
+    public ProductDto search(String productId) throws SQLException {
+        String sql = "SELECT * FROM product WHERE product_id = ?";
+        ResultSet rs = CrudUtil.executeQuery(sql, productId);
+
+        if (rs.next()) {
+            return new ProductDto(
+                    rs.getString("product_id"),
+                    rs.getString("product_name"),
+                    rs.getString("product_materials")
+            );
+        }
+        return null;
+    }
+
+    public List<ProductDto> getAllProduct() throws SQLException {
+        String sql = "SELECT * FROM product";
+        ResultSet rs = CrudUtil.executeQuery(sql);
+
+        List<ProductDto> list = new ArrayList<>();
+
+        while (rs.next()) {
+            list.add(new ProductDto(
+                    rs.getString("product_id"),
+                    rs.getString("product_name"),
+                    rs.getString("product_materials")
+            ));
+        }
+        return list;
+    }
+}
+
+

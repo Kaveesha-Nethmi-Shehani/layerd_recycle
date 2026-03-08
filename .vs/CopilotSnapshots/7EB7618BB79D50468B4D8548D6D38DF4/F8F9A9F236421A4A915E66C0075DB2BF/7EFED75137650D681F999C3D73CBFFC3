@@ -1,0 +1,72 @@
+﻿<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
+<jasperReport name="Product_report" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="341c38ab-57e4-4b2c-93a5-f4491128677b">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ecoplayer"/>
+	<query language="SQL"><![CDATA[SELECT * FROM product;]]></query>
+	<field name="pro_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pro_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="pro_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="product"/>
+	</field>
+	<field name="pro_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="pro_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="pro_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="product"/>
+	</field>
+	<field name="pro_meterials" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pro_meterials"/>
+		<property name="com.jaspersoft.studio.field.label" value="pro_meterials"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="product"/>
+	</field>
+	<group name="pro_name">
+		<expression><![CDATA[$F{pro_name}]]></expression>
+	</group>
+	<group name="pro_id">
+		<expression><![CDATA[$F{pro_id}]]></expression>
+	</group>
+	<group name="pro_meterials">
+		<expression><![CDATA[$F{pro_meterials}]]></expression>
+	</group>
+	<background splitType="Stretch"/>
+	<title height="77" splitType="Stretch">
+		<element kind="staticText" uuid="90632206-9626-4f5a-9d9b-9bdc88537b37" x="220" y="30" width="140" height="30" forecolor="#807C7C" fontSize="22.0" bold="true">
+			<text><![CDATA[PRODUCT]]></text>
+		</element>
+	</title>
+	<pageHeader height="45" splitType="Stretch">
+		<element kind="staticText" uuid="f553bd8d-6e5c-49be-87c0-637a4cac4603" x="200" y="7" width="150" height="30" forecolor="#145E2B" fontSize="19.0" italic="true" bold="true">
+			<text><![CDATA[ECOPLAYER]]></text>
+		</element>
+	</pageHeader>
+	<columnHeader height="61" splitType="Stretch">
+		<element kind="staticText" uuid="b2bed3f7-1244-4959-bd07-d13b893c3df0" x="0" y="20" width="123" height="30" fontSize="16.0">
+			<text><![CDATA[Product Name]]></text>
+		</element>
+		<element kind="staticText" uuid="d79b0b7d-ff34-46aa-8697-9d52ead9915f" x="220" y="20" width="100" height="30" fontSize="16.0">
+			<text><![CDATA[Product ID]]></text>
+		</element>
+		<element kind="staticText" uuid="b346aafb-76b2-4b0f-b8da-73cdab83dcee" x="420" y="18" width="139" height="30" fontSize="16.0">
+			<text><![CDATA[Product Materials]]></text>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="98" splitType="Stretch">
+			<element kind="textField" uuid="9a96db07-5cdf-4027-8243-ec3b0b9e9429" x="0" y="10" width="100" height="30">
+				<expression><![CDATA[$F{pro_name}]]></expression>
+			</element>
+			<element kind="textField" uuid="968a50fd-c1b9-4756-9183-f744b4ad803a" x="220" y="10" width="100" height="30">
+				<expression><![CDATA[$F{pro_id}]]></expression>
+			</element>
+			<element kind="textField" uuid="ebb42bf3-2135-492d-817d-6c4ed5de4bcd" x="420" y="10" width="100" height="30">
+				<expression><![CDATA[$F{pro_meterials}]]></expression>
+			</element>
+		</band>
+	</detail>
+	<columnFooter splitType="Stretch"/>
+	<pageFooter height="90" splitType="Stretch">
+		<element kind="staticText" uuid="b1ce091c-086b-41f1-82ef-f640ce5235f4" x="13" y="10" width="524" height="70" forecolor="#1C3623" fontSize="25.0" italic="true" bold="true" hTextAlign="Center">
+			<text><![CDATA[RECYCLE  FOR A GREEN TOMORROW                             ]]></text>
+		</element>
+	</pageFooter>
+	<summary height="42" splitType="Stretch"/>
+</jasperReport>

@@ -1,0 +1,96 @@
+﻿-- Create database
+CREATE DATABASE IF NOT EXISTS ecoplayer;
+USE ecoplayer;
+
+-- Drop tables if they exist (in correct order to handle foreign keys)
+DROP TABLE IF EXISTS delivery;
+DROP TABLE IF EXISTS payment;
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS product;
+DROP TABLE IF EXISTS recycle_item;
+DROP TABLE IF EXISTS customer;
+
+-- Create Customer table
+CREATE TABLE customer (
+    customer_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_name VARCHAR(100) NOT NULL,
+    customer_contact VARCHAR(15) NOT NULL,
+    customer_date DATE NOT NULL
+);
+
+-- Create RecycleItem table (Raw materials inventory)
+CREATE TABLE recycle_item (
+    item_id INT PRIMARY KEY AUTO_INCREMENT,
+    item_materials VARCHAR(100) NOT NULL,
+    item_kg DOUBLE NOT NULL,
+    item_price DOUBLE NOT NULL,
+    date DATE NOT NULL
+);
+
+-- Create Product table (Now linked to recycle_item)
+CREATE TABLE product (
+    product_id VARCHAR(20) PRIMARY KEY,
+    product_name VARCHAR(100) NOT NULL,
+    item_id INT,
+    kg_per_unit DOUBLE NOT NULL DEFAULT 0,
+    selling_price DOUBLE NOT NULL DEFAULT 0,
+    stock_quantity INT NOT NULL DEFAULT 0,
+    FOREIGN KEY (item_id) REFERENCES recycle_item(item_id) ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+-- Create Orders table (links Customer and Product)
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY AUTO_INCREMENT,
+    product_id VARCHAR(20) NOT NULL,
+    customer_id INT NOT NULL,
+    quantity INT NOT NULL DEFAULT 1,
+    total_price DOUBLE NOT NULL DEFAULT 0,
+    order_date DATE NOT NULL,
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES product(product_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- Create Payment table (linked to Order)
+CREATE TABLE payment (
+    payment_id INT PRIMARY KEY AUTO_INCREMENT,
+    order_id INT NOT NULL,
+    invoice VARCHAR(100),
+    payment_value DOUBLE NOT NULL,
+    payment_date DATE NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- Create Delivery table (linked to Order)
+CREATE TABLE delivery (
+    delivery_id INT PRIMARY KEY AUTO_INCREMENT,
+    order_id INT NOT NULL,
+    details_location VARCHAR(255) NOT NULL,
+    delivery_date DATE,
+    status VARCHAR(50) DEFAULT 'PENDING',
+    FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- Insert sample data
+
+-- Sample Customers
+INSERT INTO customer (customer_name, customer_contact, customer_date) VALUES
+('John Doe', '0771234567', '2024-01-15'),
+('Jane Smith', '0772345678', '2024-01-20'),
+('Bob Wilson', '0773456789', '2024-02-01');
+
+-- Sample Recycle Items (Raw materials with weight)
+INSERT INTO recycle_item (item_materials, item_kg, item_price, date) VALUES
+('Plastic', 100.0, 5000.00, '2024-01-10'),
+('Paper', 50.0, 1500.00, '2024-01-15'),
+('Glass', 75.0, 1875.00, '2024-01-20'),
+('Metal', 30.0, 4500.00, '2024-02-01');
+
+-- Sample Products (Linked to recycle items)
+INSERT INTO product (product_id, product_name, item_id, kg_per_unit, selling_price, stock_quantity) VALUES
+('P001', 'Plastic Chair', 1, 2.0, 1500.00, 0),
+('P002', 'Paper Bag', 2, 0.5, 50.00, 0),
+('P003', 'Glass Bottle', 3, 0.3, 200.00, 0);
+
+-- Display table structures
+SHOW TABLES;
+

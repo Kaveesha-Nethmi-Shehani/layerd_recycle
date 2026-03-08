@@ -1,0 +1,63 @@
+﻿package lk.ijse.recycle.dto;
+
+public class ProductDto {
+
+    private String productId;
+    private String productName;
+    private Integer itemId;          // FK to recycle_item
+    private String itemMaterials;    // For display purposes
+    private double kgPerUnit;        // KG needed to manufacture 1 unit
+    private double sellingPrice;     // Selling price per unit
+    private int stockQuantity;       // Available stock
+
+    public ProductDto() {}
+
+    // Constructor for basic info
+    public ProductDto(String productId, String productName, Integer itemId, double kgPerUnit, double sellingPrice, int stockQuantity) {
+        this.productId = productId;
+        this.productName = productName;
+        this.itemId = itemId;
+        this.kgPerUnit = kgPerUnit;
+        this.sellingPrice = sellingPrice;
+        this.stockQuantity = stockQuantity;
+    }
+
+    // Full constructor with material name
+    public ProductDto(String productId, String productName, Integer itemId, String itemMaterials, double kgPerUnit, double sellingPrice, int stockQuantity) {
+        this.productId = productId;
+        this.productName = productName;
+        this.itemId = itemId;
+        this.itemMaterials = itemMaterials;
+        this.kgPerUnit = kgPerUnit;
+        this.sellingPrice = sellingPrice;
+        this.stockQuantity = stockQuantity;
+    }
+
+    // Getters
+    public String getProductId() { return productId; }
+    public String getProductName() { return productName; }
+    public Integer getItemId() { return itemId; }
+    public String getItemMaterials() { return itemMaterials; }
+    public double getKgPerUnit() { return kgPerUnit; }
+    public double getSellingPrice() { return sellingPrice; }
+    public int getStockQuantity() { return stockQuantity; }
+
+    // Setters
+    public void setProductId(String productId) { this.productId = productId; }
+    public void setProductName(String productName) { this.productName = productName; }
+    public void setItemId(Integer itemId) { this.itemId = itemId; }
+    public void setItemMaterials(String itemMaterials) { this.itemMaterials = itemMaterials; }
+    public void setKgPerUnit(double kgPerUnit) { this.kgPerUnit = kgPerUnit; }
+    public void setSellingPrice(double sellingPrice) { this.sellingPrice = sellingPrice; }
+    public void setStockQuantity(int stockQuantity) { this.stockQuantity = stockQuantity; }
+
+    @Override
+    public String toString() {
+        return productName + " (Stock: " + stockQuantity + ")";
+    }
+}
+
+
+
+
+

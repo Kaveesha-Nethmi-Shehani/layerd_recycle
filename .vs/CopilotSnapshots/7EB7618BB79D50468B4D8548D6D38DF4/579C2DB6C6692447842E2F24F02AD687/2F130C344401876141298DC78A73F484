@@ -1,0 +1,137 @@
+﻿package lk.ijse.recycle.model;
+
+import lk.ijse.recycle.db.DBConnection;
+//import lk.ijse.recycle.dto.CustomerDto;
+import lk.ijse.recycle.dto.OrderDto;
+import lk.ijse.recycle.dto.PaymentDto;
+import lk.ijse.recycle.util.CrudUtil;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+
+public class OrderModel {
+
+
+    public boolean saveOrders(OrderDto dto) throws SQLException {
+        return CrudUtil.executeUpdate(           //transaction 01
+                "INSERT INTO orders(order_id ,pro_id ,req_date) VALUES ( ? ,? ,?)",
+                dto.getCusId(),
+                dto.getOrderId(),
+                dto.getProId(),
+                dto.getReqDate()
+        );
+    }
+
+    public boolean placeOrders(OrderDto orderDto, PaymentDto paymentDto, int productId, int qty) throws SQLException {
+        Connection conn = DBConnection.getInstance().getConnection();
+
+        try {
+            conn.setAutoCommit(false);
+
+            //  Save the Order
+            String sql1 = "INSERT INTO orders(order_id, cus_id, pro_id, req_date) VALUES (?, ?, ?, ?)";
+            PreparedStatement pstm1 = conn.prepareStatement(sql1);
+            pstm1.setInt(1, orderDto.getOrderId());
+            pstm1.setString(2, orderDto.getCusId());
+            pstm1.setInt(3, orderDto.getProId());
+            pstm1.setDate(4, java.sql.Date.valueOf(orderDto.getReqDate()));
+
+            if (pstm1.executeUpdate() > 0) {
+
+                // Product Stock eka adu krnwa
+                String sql2 = "UPDATE product SET qty = qty - ? WHERE Pro_id = ?";
+                PreparedStatement pstm2 = conn.prepareStatement(sql2);
+                pstm2.setInt(1, qty);
+                pstm2.setInt(2, productId);
+
+                if (pstm2.executeUpdate() > 0) {
+
+                    // Save the Payment
+                    String sql3 = "INSERT INTO paymnt(order_id, pay_id, pay_value) VALUES (?, ?, ?)";
+                    PreparedStatement pstm3 = conn.prepareStatement(sql3);
+                    pstm3.setInt(1, paymentDto.getOrderId());
+                    pstm3.setInt(2, paymentDto.getPayId());
+                    pstm3.setDouble(3, paymentDto.getPayValue());
+
+                    if (pstm3.executeUpdate() > 0) {
+                        conn.commit();
+                        return true;
+                    }
+                }
+            }
+
+            conn.rollback();
+            return false;
+
+
+        } catch (SQLException e) {
+
+            if(conn != null){
+                conn.rollback();
+            }
+            throw e;
+        } finally {
+           if(conn != null){
+                conn.setAutoCommit(true);
+            }
+        }
+    }
+
+    public boolean updateOrders(OrderDto dto) throws SQLException {
+        String sql = "UPDATE orders SET cus_id = ?, pro_id = ?, req_date = ? WHERE order_id = ?";
+        return CrudUtil.executeUpdate(sql, dto.getCusId(), dto.getOrderId(), dto.getProId(), dto.getReqDate()
+        );
+    }
+
+
+    public boolean deleteOrders(int orderId) throws SQLException {
+        String sql = "DELETE FROM orders WHERE order_id = ?";
+        return CrudUtil.executeUpdate(sql, orderId);
+    }
+
+
+    public OrderDto searchOrders(int orderId) throws SQLException {
+        String sql = "SELECT * FROM orders WHERE order_id = ?";
+        ResultSet rs = CrudUtil.executeQuery(sql, orderId);
+
+        if (rs.next()) {
+            return new OrderDto(
+                    rs.getInt("order_id"),
+                    rs.getString("cus_id"),
+                    rs.getInt("pro_id"),
+                    rs.getDate("req_date").toLocalDate()
+
+            );
+        }
+        return null;
+    }
+
+
+    public List<OrderDto> getAllOrders() throws SQLException {
+        String sql = "SELECT * FROM orders";
+        ResultSet rs = CrudUtil.executeQuery(sql);
+
+        List<OrderDto> list = new ArrayList<>();
+
+        while (rs.next()) {
+            list.add(new OrderDto(
+                    rs.getInt("order_id"),
+                    rs.getString("cus_id"),
+                    rs.getInt("pro_id"),
+                    rs.getDate("req_date").toLocalDate()
+            ));
+        }
+        return list;
+    }
+
+    }
+
+
+

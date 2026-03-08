@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="750.0" style="-fx-background-color: #013220;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.recycle.controller.CustomerController">
+   <children>
+      <!-- Title -->
+      <Label layoutX="245.0" layoutY="10.0" text="CUSTOMER MANAGEMENT" textFill="white">
+         <font>
+            <Font name="System Bold Italic" size="18.0" />
+         </font>
+      </Label>
+      
+      <!-- Form Fields - Left Side -->
+      <Label layoutX="20.0" layoutY="45.0" text="Customer ID" textFill="white">
+         <font><Font name="System Bold" size="12.0" /></font>
+      </Label>
+      <TextField fx:id="txtCustomer_Id" layoutX="20.0" layoutY="63.0" prefWidth="280.0" editable="false" promptText="Auto Generated" style="-fx-background-radius: 5;" />
+      
+      <Label layoutX="20.0" layoutY="93.0" text="Customer Name" textFill="white">
+         <font><Font name="System Bold" size="12.0" /></font>
+      </Label>
+      <TextField fx:id="txtCustomer_Name" layoutX="20.0" layoutY="111.0" prefWidth="280.0" promptText="Enter Customer Name" style="-fx-background-radius: 5;" />
+      
+      <Label layoutX="20.0" layoutY="141.0" text="Customer Contact" textFill="white">
+         <font><Font name="System Bold" size="12.0" /></font>
+      </Label>
+      <TextField fx:id="txtCustomer_Contact" layoutX="20.0" layoutY="159.0" prefWidth="280.0" promptText="Enter Contact Number" style="-fx-background-radius: 5;" />
+      
+      <Label layoutX="20.0" layoutY="189.0" text="Customer Date" textFill="white">
+         <font><Font name="System Bold" size="12.0" /></font>
+      </Label>
+      <DatePicker fx:id="txtCustomer_Date" layoutX="20.0" layoutY="207.0" prefWidth="280.0" />
+      
+      <!-- Buttons - Right Side -->
+      <Button layoutX="340.0" layoutY="63.0" mnemonicParsing="false" onAction="#btnSaveOnAction" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #0E5930;" text="Save" textFill="white">
+         <font><Font name="System Bold" size="11.0" /></font>
+      </Button>
+      <Button layoutX="440.0" layoutY="63.0" mnemonicParsing="false" onAction="#btnUpdateOnAction" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #639354;" text="Update" textFill="white">
+         <font><Font name="System Bold" size="11.0" /></font>
+      </Button>
+      <Button layoutX="540.0" layoutY="63.0" mnemonicParsing="false" onAction="#btnDeleteOnAction" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #7CFC00;" text="Delete">
+         <font><Font name="System Bold" size="11.0" /></font>
+      </Button>
+      <Button layoutX="340.0" layoutY="108.0" mnemonicParsing="false" onAction="#btnResetOnAction" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #356C08;" text="Reset" textFill="white">
+         <font><Font name="System Bold" size="11.0" /></font>
+      </Button>
+      <Button layoutX="440.0" layoutY="108.0" mnemonicParsing="false" onAction="#btnSearchOnAction" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #2E5B0C;" text="Search" textFill="white">
+         <font><Font name="System Bold" size="11.0" /></font>
+      </Button>
+      <Button layoutX="540.0" layoutY="108.0" mnemonicParsing="false" onAction="#btnReportOnAction" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #2E5B0C;" text="Report" textFill="white">
+         <font><Font name="System Bold" size="11.0" /></font>
+      </Button>
+      
+      <!-- Table - Bottom -->
+      <TableView fx:id="tblCustomer" layoutX="20.0" layoutY="250.0" prefHeight="335.0" prefWidth="710.0">
+        <columns>
+          <TableColumn fx:id="colCustomer_Id" prefWidth="170.0" text="Customer ID" />
+          <TableColumn fx:id="colCustomer_Name" prefWidth="180.0" text="Customer Name" />
+          <TableColumn fx:id="colCustomer_Contact" prefWidth="180.0" text="Customer Contact" />
+          <TableColumn fx:id="colCustomer_Date" prefWidth="180.0" text="Customer Date" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>

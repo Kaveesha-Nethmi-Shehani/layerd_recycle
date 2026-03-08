@@ -1,0 +1,42 @@
+﻿package lk.ijse.recycle.dto;
+
+public class PaymentDto {
+    private int payId;
+    private int orderId;
+    private double payValue;
+
+    public PaymentDto() {
+    }
+
+    public PaymentDto(int payId, int orderId, double payValue) {
+        this.payId = payId;
+        this.orderId = orderId;
+        this.payValue = payValue;
+    }
+
+    public int getPayId() {
+        return payId;
+    }
+
+    public void setPayId(int payId) {
+        this.payId = payId;
+    }
+
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
+    }
+
+    public double getPayValue() {
+        return payValue;
+    }
+
+    public void setPayValue(double payValue) {
+        this.payValue = payValue;
+    }
+}
+
+

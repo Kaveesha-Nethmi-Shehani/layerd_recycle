@@ -1,0 +1,158 @@
+﻿/*package lk.ijse.recycle.model;
+
+import lk.ijse.recycle.dto.PaymentDto;
+import lk.ijse.recycle.util.CrudUtil;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class PaymentModel {
+
+    public boolean savePayment(PaymentDto dto) throws SQLException {
+        return CrudUtil.executeUpdate(   //Transaction 01
+                "INSERT INTO payment(order_id ,pay_id , pay_value)VALUES (?,?,?)",
+                dto.getOrderId(),
+                dto.getPayValue(),
+                dto.getPayId()
+
+        );
+        /*String sql = "INSERT INTO payment (order_id, pay_value) VALUES (?, ?)";
+        return CrudUtil.executeUpdate(
+                sql,
+                dto.getOrderId(),
+                dto.getPayValue()
+        );*/
+  /*  }
+
+    public boolean updatePayment(PaymentDto dto) throws SQLException {
+        String sql = "UPDATE payment SET pay_value=? WHERE order_id=?";
+        return CrudUtil.executeUpdate(
+                sql,
+                dto.getPayValue(),
+                dto.getOrderId()
+        );
+    }
+
+    public boolean deletePayment(int orderId) throws SQLException {
+        String sql = "DELETE FROM payment WHERE order_id=?";
+        return CrudUtil.executeUpdate(sql, orderId);
+    }
+
+    public PaymentDto searchPayment(int orderId) throws SQLException {
+        String sql = "SELECT * FROM payment WHERE order_id=?";
+        ResultSet rs = CrudUtil.executeQuery(sql ,orderId);
+
+        if (rs.next()) {
+            return new PaymentDto(
+                    rs.getInt("pay_id"),
+                    rs.getInt("order_id"),
+                    rs.getDouble("pay_value")
+            );
+        }
+        return null;
+    }
+
+    public List<PaymentDto> getAllPayments() throws SQLException {
+        String sql = "SELECT * FROM payment";
+        ResultSet rs = CrudUtil.executeQuery(sql);
+
+        List<PaymentDto> list = new ArrayList<>();
+
+        while (rs.next()) {
+            list.add(new PaymentDto(
+                    rs.getInt("pay_id"),
+                    rs.getInt("order_id"),
+                    rs.getDouble("pay_value")
+            ));
+        }
+        return list;
+    }
+}*/
+
+
+
+package lk.ijse.recycle.model;
+
+import lk.ijse.recycle.dto.PaymentDto;
+import lk.ijse.recycle.util.CrudUtil;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class PaymentModel {
+
+    public boolean savePayment(PaymentDto dto) throws SQLException {
+        return CrudUtil.executeUpdate(
+                "INSERT INTO payment(order_name, order_id, invoice, payment_value) VALUES (?, ?, ?, ?)",
+                dto.getOrderName(),
+                dto.getOrderId(),
+                dto.getInvoice(),
+                dto.getPaymentValue()
+        );
+    }
+
+    public boolean updatePayment(PaymentDto dto) throws SQLException {
+        String sql = "UPDATE payment SET order_name = ?, order_id = ?, invoice = ?, payment_value = ? WHERE payment_id = ?";
+        return CrudUtil.executeUpdate(sql,
+                dto.getOrderName(),
+                dto.getOrderId(),
+                dto.getInvoice(),
+                dto.getPaymentValue(),
+                dto.getPaymentId()
+        );
+    }
+
+    public boolean deletePayment(int paymentId) throws SQLException {
+        String sql = "DELETE FROM payment WHERE payment_id = ?";
+        return CrudUtil.executeUpdate(sql, paymentId);
+    }
+
+    public PaymentDto searchPayment(int paymentId) throws SQLException {
+        String sql = "SELECT * FROM payment WHERE payment_id = ?";
+        ResultSet rs = CrudUtil.executeQuery(sql, paymentId);
+        if (rs.next()) {
+            return new PaymentDto(
+                    rs.getInt("payment_id"),
+                    rs.getString("order_name"),
+                    rs.getInt("order_id"),
+                    rs.getString("invoice"),
+                    rs.getDouble("payment_value")
+            );
+        }
+        return null;
+    }
+
+    public List<PaymentDto> getAllPayments() throws SQLException {
+        String sql = "SELECT * FROM payment";
+        ResultSet rs = CrudUtil.executeQuery(sql);
+        List<PaymentDto> list = new ArrayList<>();
+        while (rs.next()) {
+            list.add(new PaymentDto(
+                    rs.getInt("payment_id"),
+                    rs.getString("order_name"),
+                    rs.getInt("order_id"),
+                    rs.getString("invoice"),
+                    rs.getDouble("payment_value")
+            ));
+        }
+        return list;
+    }
+
+    public int getNextPaymentId() throws SQLException {
+        String sql = "SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'payment'";
+        ResultSet rs = CrudUtil.executeQuery(sql);
+        if (rs.next()) {
+            return rs.getInt("AUTO_INCREMENT");
+        }
+        return 1;
+    }
+}
+
+
+
+
+
+

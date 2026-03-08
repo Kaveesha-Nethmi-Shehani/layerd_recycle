@@ -1,0 +1,39 @@
+﻿package lk.ijse.recycle.dto;
+
+public class OrderDto {
+    private int orderId;
+    private String proName;
+    private String bileId;
+    private int cusId;
+
+    public OrderDto() {}
+
+    public OrderDto(int orderId, String proName, String bileId, int cusId) {
+        this.orderId = orderId;
+        this.proName = proName;
+        this.bileId = bileId;
+        this.cusId = cusId;
+    }
+
+    public int getOrderId() { return orderId; }
+    public String getProName() { return proName; }
+    public String getBileId() { return bileId; }
+    public int getCusId() { return cusId; }
+
+    public void setOrderId(int orderId) { this.orderId = orderId; }
+    public void setProName(String proName) { this.proName = proName; }
+    public void setBileId(String bileId) { this.bileId = bileId; }
+    public void setCusId(int cusId) { this.cusId = cusId; }
+
+    @Override
+    public String toString() {
+        return "OrderDto{" +
+                "orderId=" + orderId +
+                ", proName='" + proName + '\'' +
+                ", bileId='" + bileId + '\'' +
+                ", cusId=" + cusId +
+                '}';
+    }
+}
+
+

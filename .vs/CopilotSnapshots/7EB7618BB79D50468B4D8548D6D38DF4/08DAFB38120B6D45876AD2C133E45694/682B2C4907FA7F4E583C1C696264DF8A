@@ -1,0 +1,332 @@
+﻿/*package lk.ijse.recycle.controller;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+
+import lk.ijse.recycle.dto.PaymentDto;
+import lk.ijse.recycle.db.DBConnection;
+import lk.ijse.recycle.model.PaymentModel;
+
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.ResourceBundle;
+
+
+public class PaymentController implements Initializable {
+
+    @FXML
+    private TextField txtPay_id;
+    @FXML
+    private TextField txtOrder_id;
+    @FXML
+    private TextField txtPay_value;
+
+    @FXML
+    private TableView<PaymentDto> tblPayment;
+    @FXML
+    private TableColumn<PaymentDto, Integer> colPay_id;
+    @FXML
+    private TableColumn<PaymentDto, Integer> colOrder_id;
+    @FXML
+    private TableColumn<PaymentDto, Double> colPay_value;
+
+    private final String PAY_ID_REGEX = "[0-9]*";
+    private final String ORDER_ID_REGEX = "[0-9]*";
+    private final String  PAY_VALUE_REGEX = "[0-9]*";
+
+    private final PaymentModel paymentModel = new PaymentModel();
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        if (colPay_id == null || colOrder_id == null || colPay_value == null) {
+            return;
+        }
+
+        colPay_id.setCellValueFactory(new PropertyValueFactory<>("payId"));
+        colOrder_id.setCellValueFactory(new PropertyValueFactory<>("orderId"));
+        colPay_value.setCellValueFactory(new PropertyValueFactory<>("payValue"));
+        loadAllPayments();
+    }
+
+    private void loadAllPayments() {
+        try {
+            tblPayment.setItems(
+                    FXCollections.observableArrayList(paymentModel.getAllPayments())
+            );
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void btnSaveOnAction(ActionEvent event) {
+        try {
+            PaymentDto dto = new PaymentDto(
+                    Integer.parseInt(txtPay_id.getText()),
+                    Integer.parseInt(txtOrder_id.getText()),
+                    Double.parseDouble(txtPay_value.getText())
+            );
+
+            if (paymentModel.savePayment(dto)) {
+                new Alert(Alert.AlertType.INFORMATION, "Payment Saved!").show();
+                loadAllPayments();
+                clearFields();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void btnUpdateOnAction(ActionEvent event) {
+        try {
+            PaymentDto dto = new PaymentDto(
+                    Integer.parseInt(txtPay_id.getText()),
+                    Integer.parseInt(txtOrder_id.getText()),
+                    Double.parseDouble(txtPay_value.getText())
+            );
+
+            if (paymentModel.updatePayment(dto)) {
+                new Alert(Alert.AlertType.INFORMATION, "Payment Updated!").show();
+                loadAllPayments();
+                clearFields();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void btnDeleteOnAction(ActionEvent event) {
+        try {
+            int orderId = Integer.parseInt(txtOrder_id.getText());
+            if (paymentModel.deletePayment(orderId)) {
+                new Alert(Alert.AlertType.INFORMATION, "Payment Deleted!").show();
+                loadAllPayments();
+                clearFields();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void btnSearchOnAction(ActionEvent event) {
+        try {
+            int orderId = Integer.parseInt(txtOrder_id.getText());
+            PaymentDto dto = paymentModel.searchPayment(orderId);
+
+            if (dto != null) {
+                txtPay_id.setText(String.valueOf(dto.getPayId()));
+                txtPay_value.setText(String.valueOf(dto.getPayValue()));
+            } else {
+                new Alert(Alert.AlertType.WARNING, "Payment Not Found").show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void clearFields() {
+        txtPay_id.clear();
+        txtOrder_id.clear();
+        txtPay_value.clear();
+    }
+    private void loadAllPaymentTables(){
+
+        try{
+
+            List<PaymentDto> loadAllPayments = PaymentModel.getAllPayments();
+            ObservableList<PaymentDto> obList  = FXCollections.observableArrayList( loadAllPayments);
+
+            for(PaymentDto paymentDto :  loadAllPayments){
+                obList.add(paymentDto);
+            }
+            tblPayment.setItems(obList);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+}
+*/
+
+
+
+
+package lk.ijse.recycle.controller;
+
+import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import lk.ijse.recycle.dto.PaymentDto;
+import lk.ijse.recycle.model.PaymentModel;
+
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.ResourceBundle;
+
+public class PaymentController implements Initializable {
+
+    @FXML private TextField txtPayment_Id;
+    @FXML private TextField txtOrder_Name;
+    @FXML private TextField txtOrder_Id;
+    @FXML private TextField txtInvoice;
+    @FXML private TextField txtPayment_Value;
+    
+    @FXML private TableView<PaymentDto> tblPayment;
+    @FXML private TableColumn<PaymentDto, Integer> colPayment_Id;
+    @FXML private TableColumn<PaymentDto, String> colOrder_Name;
+    @FXML private TableColumn<PaymentDto, Integer> colOrder_Id;
+    @FXML private TableColumn<PaymentDto, String> colInvoice;
+    @FXML private TableColumn<PaymentDto, Double> colPayment_Value;
+
+    private final PaymentModel paymentModel = new PaymentModel();
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        setCellValueFactory();
+        loadAllPayments();
+        
+        // Add table selection listener
+        tblPayment.getSelectionModel().selectedItemProperty().addListener((obs, old, newVal) -> {
+            if (newVal != null) {
+                txtPayment_Id.setText(String.valueOf(newVal.getPaymentId()));
+                txtOrder_Name.setText(newVal.getOrderName());
+                txtOrder_Id.setText(String.valueOf(newVal.getOrderId()));
+                txtInvoice.setText(newVal.getInvoice());
+                txtPayment_Value.setText(String.valueOf(newVal.getPaymentValue()));
+            }
+        });
+    }
+
+    private void setCellValueFactory() {
+        if (colPayment_Id == null || colOrder_Name == null || colOrder_Id == null || colInvoice == null || colPayment_Value == null) {
+            return;
+        }
+        colPayment_Id.setCellValueFactory(new PropertyValueFactory<>("paymentId"));
+        colOrder_Name.setCellValueFactory(new PropertyValueFactory<>("orderName"));
+        colOrder_Id.setCellValueFactory(new PropertyValueFactory<>("orderId"));
+        colInvoice.setCellValueFactory(new PropertyValueFactory<>("invoice"));
+        colPayment_Value.setCellValueFactory(new PropertyValueFactory<>("paymentValue"));
+    }
+
+    private void loadAllPayments() {
+        if (tblPayment == null) {
+            return;
+        }
+        try {
+            tblPayment.setItems(FXCollections.observableArrayList(paymentModel.getAllPayments()));
+        } catch (SQLException e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Failed to load payments: " + e.getMessage()).show();
+        }
+    }
+
+    @FXML
+    void btnSaveOnAction(ActionEvent event) {
+        try {
+            if (txtOrder_Name.getText().isEmpty() || txtOrder_Id.getText().isEmpty() || txtPayment_Value.getText().isEmpty()) {
+                new Alert(Alert.AlertType.WARNING, "Please fill in all required fields!").show();
+                return;
+            }
+            
+            PaymentDto dto = new PaymentDto(
+                    0,
+                    txtOrder_Name.getText(),
+                    Integer.parseInt(txtOrder_Id.getText()),
+                    txtInvoice.getText(),
+                    Double.parseDouble(txtPayment_Value.getText())
+            );
+            if (paymentModel.savePayment(dto)) {
+                new Alert(Alert.AlertType.INFORMATION, "Payment Saved!").show();
+                loadAllPayments();
+                clearFields();
+            } else {
+                new Alert(Alert.AlertType.ERROR, "Save Failed!").show();
+            }
+        } catch (NumberFormatException e) {
+            new Alert(Alert.AlertType.ERROR, "Invalid input! Check Order ID and Payment Value.").show();
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+        }
+    }
+
+    @FXML
+    void btnUpdateOnAction(ActionEvent event) {
+        try {
+            if (txtPayment_Id.getText().isEmpty()) {
+                new Alert(Alert.AlertType.WARNING, "Please select a payment to update!").show();
+                return;
+            }
+            
+            PaymentDto dto = new PaymentDto(
+                    Integer.parseInt(txtPayment_Id.getText()),
+                    txtOrder_Name.getText(),
+                    Integer.parseInt(txtOrder_Id.getText()),
+                    txtInvoice.getText(),
+                    Double.parseDouble(txtPayment_Value.getText())
+            );
+            if (paymentModel.updatePayment(dto)) {
+                new Alert(Alert.AlertType.INFORMATION, "Payment Updated!").show();
+                loadAllPayments();
+                clearFields();
+            } else {
+                new Alert(Alert.AlertType.ERROR, "Update Failed!").show();
+            }
+        } catch (NumberFormatException e) {
+            new Alert(Alert.AlertType.ERROR, "Invalid input!").show();
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+        }
+    }
+
+    @FXML
+    void btnDeleteOnAction(ActionEvent event) {
+        try {
+            if (txtPayment_Id.getText().isEmpty()) {
+                new Alert(Alert.AlertType.WARNING, "Please select a payment to delete!").show();
+                return;
+            }
+            
+            int paymentId = Integer.parseInt(txtPayment_Id.getText());
+            if (paymentModel.deletePayment(paymentId)) {
+                new Alert(Alert.AlertType.INFORMATION, "Payment Deleted!").show();
+                loadAllPayments();
+                clearFields();
+            } else {
+                new Alert(Alert.AlertType.ERROR, "Delete Failed!").show();
+            }
+        } catch (NumberFormatException e) {
+            new Alert(Alert.AlertType.ERROR, "Invalid Payment ID!").show();
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+        }
+    }
+
+    @FXML
+    void btnResetOnAction(ActionEvent event) {
+        clearFields();
+    }
+
+    private void clearFields() {
+        if (txtPayment_Id != null) txtPayment_Id.clear();
+        if (txtOrder_Name != null) txtOrder_Name.clear();
+        if (txtOrder_Id != null) txtOrder_Id.clear();
+        if (txtInvoice != null) txtInvoice.clear();
+        if (txtPayment_Value != null) txtPayment_Value.clear();
+        tblPayment.getSelectionModel().clearSelection();
+    }
+}

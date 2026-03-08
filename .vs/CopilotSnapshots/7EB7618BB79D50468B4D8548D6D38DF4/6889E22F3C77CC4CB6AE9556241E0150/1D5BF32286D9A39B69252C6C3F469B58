@@ -1,0 +1,226 @@
+﻿package lk.ijse.recycle.controller;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import lk.ijse.recycle.dto.RecycleItemDto;
+import lk.ijse.recycle.model.RecycleItemModel;
+
+import java.net.URL;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.ResourceBundle;
+
+public class RecycleItemController implements Initializable {
+
+    @FXML private TextField txtItem_Id;
+    @FXML private TextField txtItem_Materials;
+    @FXML private TextField txtItem_Kg;
+    @FXML private TextField txtItem_Price;
+    @FXML private DatePicker txtItem_Date;
+
+    @FXML private TableView<RecycleItemDto> tblRecycleItem;
+
+    @FXML private TableColumn<RecycleItemDto, Integer> colItem_Id;
+    @FXML private TableColumn<RecycleItemDto, String> colItem_Materials;
+    @FXML private TableColumn<RecycleItemDto, Double> colItem_Kg;
+    @FXML private TableColumn<RecycleItemDto, Double> colItem_Price;
+    @FXML private TableColumn<RecycleItemDto, String> colItem_Date;
+
+    private final RecycleItemModel model = new RecycleItemModel();
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        setCellValueFactory();
+        loadTable();
+        
+        // Add table selection listener
+        tblRecycleItem.getSelectionModel().selectedItemProperty().addListener((obs, old, newVal) -> {
+            if (newVal != null) {
+                txtItem_Id.setText(String.valueOf(newVal.getItemId()));
+                txtItem_Materials.setText(newVal.getItemMaterials());
+                txtItem_Kg.setText(String.valueOf(newVal.getItemKg()));
+                txtItem_Price.setText(String.valueOf(newVal.getItemPrice()));
+                if (newVal.getDate() != null && !newVal.getDate().isEmpty()) {
+                    try {
+                        txtItem_Date.setValue(LocalDate.parse(newVal.getDate().split(" ")[0]));
+                    } catch (Exception e) {
+                        txtItem_Date.setValue(null);
+                    }
+                }
+            }
+        });
+    }
+
+    private void setCellValueFactory() {
+        if (colItem_Id == null || colItem_Materials == null || colItem_Kg == null || colItem_Price == null || colItem_Date == null) {
+            return;
+        }
+
+        colItem_Id.setCellValueFactory(new PropertyValueFactory<>("itemId"));
+        colItem_Materials.setCellValueFactory(new PropertyValueFactory<>("itemMaterials"));
+        colItem_Kg.setCellValueFactory(new PropertyValueFactory<>("itemKg"));
+        colItem_Price.setCellValueFactory(new PropertyValueFactory<>("itemPrice"));
+        colItem_Date.setCellValueFactory(new PropertyValueFactory<>("date"));
+    }
+
+    private void loadTable() {
+        if (tblRecycleItem == null) {
+            return;
+        }
+
+        try {
+            List<RecycleItemDto> list = model.getAllItems();
+            ObservableList<RecycleItemDto> obList = FXCollections.observableArrayList(list);
+            tblRecycleItem.setItems(obList);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Failed to load recycle items: " + e.getMessage()).show();
+        }
+    }
+
+    @FXML
+    void btnSaveOnAction(ActionEvent event) {
+        try {
+            if (txtItem_Materials.getText().isEmpty() || txtItem_Kg.getText().isEmpty() || 
+                txtItem_Price.getText().isEmpty() || txtItem_Date.getValue() == null) {
+                new Alert(Alert.AlertType.WARNING, "Please fill in all fields!").show();
+                return;
+            }
+
+            String dateStr = txtItem_Date.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            
+            RecycleItemDto dto = new RecycleItemDto(
+                    0,
+                    txtItem_Materials.getText(),
+                    Double.parseDouble(txtItem_Kg.getText()),
+                    Double.parseDouble(txtItem_Price.getText()),
+                    dateStr
+            );
+
+            if (model.saveRecycleItems(dto)) {
+                new Alert(Alert.AlertType.INFORMATION, "Item Saved!").show();
+                loadTable();
+                clearFields();
+            } else {
+                new Alert(Alert.AlertType.ERROR, "Save Failed!").show();
+            }
+        } catch (NumberFormatException e) {
+            new Alert(Alert.AlertType.ERROR, "Invalid input! Kg and Price must be numbers!").show();
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+        }
+    }
+
+    @FXML
+    void btnUpdateOnAction(ActionEvent event) {
+        try {
+            if (txtItem_Id.getText().isEmpty()) {
+                new Alert(Alert.AlertType.WARNING, "Please select an item to update!").show();
+                return;
+            }
+
+            String dateStr = txtItem_Date.getValue() != null ? 
+                    txtItem_Date.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : null;
+
+            RecycleItemDto dto = new RecycleItemDto(
+                    Integer.parseInt(txtItem_Id.getText()),
+                    txtItem_Materials.getText(),
+                    Double.parseDouble(txtItem_Kg.getText()),
+                    Double.parseDouble(txtItem_Price.getText()),
+                    dateStr
+            );
+
+            if (model.updateRecycleItems(dto)) {
+                new Alert(Alert.AlertType.INFORMATION, "Item Updated!").show();
+                loadTable();
+                clearFields();
+            } else {
+                new Alert(Alert.AlertType.ERROR, "Update Failed!").show();
+            }
+        } catch (NumberFormatException e) {
+            new Alert(Alert.AlertType.ERROR, "Invalid input! ID, Kg and Price must be numbers!").show();
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+        }
+    }
+
+    @FXML
+    void btnDeleteOnAction(ActionEvent event) {
+        try {
+            if (txtItem_Id.getText().isEmpty()) {
+                new Alert(Alert.AlertType.WARNING, "Please select an item to delete!").show();
+                return;
+            }
+
+            if (model.deleteRecycleItem(Integer.parseInt(txtItem_Id.getText()))) {
+                new Alert(Alert.AlertType.INFORMATION, "Item Deleted!").show();
+                loadTable();
+                clearFields();
+            } else {
+                new Alert(Alert.AlertType.ERROR, "Delete Failed!").show();
+            }
+        } catch (NumberFormatException e) {
+            new Alert(Alert.AlertType.ERROR, "Invalid ID! Must be a number!").show();
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+        }
+    }
+
+    @FXML
+    void btnSearchOnAction(ActionEvent event) {
+        try {
+            if (txtItem_Id.getText().isEmpty()) {
+                new Alert(Alert.AlertType.WARNING, "Please enter an ID to search!").show();
+                return;
+            }
+
+            int id = Integer.parseInt(txtItem_Id.getText());
+            RecycleItemDto dto = model.searchRecycleItems(id);
+
+            if (dto != null) {
+                txtItem_Materials.setText(dto.getItemMaterials());
+                txtItem_Kg.setText(String.valueOf(dto.getItemKg()));
+                txtItem_Price.setText(String.valueOf(dto.getItemPrice()));
+                if (dto.getDate() != null && !dto.getDate().isEmpty()) {
+                    try {
+                        txtItem_Date.setValue(LocalDate.parse(dto.getDate().split(" ")[0]));
+                    } catch (Exception e) {
+                        txtItem_Date.setValue(null);
+                    }
+                }
+            } else {
+                new Alert(Alert.AlertType.WARNING, "Item not found!").show();
+            }
+        } catch (NumberFormatException e) {
+            new Alert(Alert.AlertType.ERROR, "Invalid ID! Must be a number!").show();
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+        }
+    }
+
+    @FXML
+    void btnResetOnAction(ActionEvent event) {
+        clearFields();
+    }
+
+    private void clearFields() {
+        if (txtItem_Id != null) txtItem_Id.clear();
+        if (txtItem_Materials != null) txtItem_Materials.clear();
+        if (txtItem_Kg != null) txtItem_Kg.clear();
+        if (txtItem_Price != null) txtItem_Price.clear();
+        if (txtItem_Date != null) txtItem_Date.setValue(null);
+        tblRecycleItem.getSelectionModel().clearSelection();
+    }
+}
+
+
+
+
+

@@ -1,0 +1,80 @@
+/*
+package lk.ijse.recycle.model;
+
+import lk.ijse.recycle.dto.DeliveryDto;
+import lk.ijse.recycle.util.CrudUtil;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class DeliveryModel {
+
+    public boolean saveDelivery(DeliveryDto dto) throws SQLException {
+        String sql = "INSERT INTO delivery (order_id, details_location) VALUES (?, ?)";
+        return CrudUtil.executeUpdate(
+                sql,
+                dto.getOrderId(),
+                dto.getDetailsLocation()
+        );
+    }
+
+    public boolean updateDelivery(DeliveryDto dto) throws SQLException {
+        String sql = "UPDATE delivery SET order_id = ?, details_location = ? WHERE delivery_id = ?";
+        return CrudUtil.executeUpdate(
+                sql,
+                dto.getOrderId(),
+                dto.getDetailsLocation(),
+                dto.getDeliveryId()
+        );
+    }
+
+    public boolean deleteDelivery(int deliveryId) throws SQLException {
+        String sql = "DELETE FROM delivery WHERE delivery_id = ?";
+        return CrudUtil.executeUpdate(sql, deliveryId);
+    }
+
+    public DeliveryDto searchDelivery(int deliveryId) throws SQLException {
+        String sql = "SELECT * FROM delivery WHERE delivery_id = ?";
+        ResultSet rs = CrudUtil.executeQuery(sql, deliveryId);
+
+        if (rs.next()) {
+            return new DeliveryDto(
+                    rs.getInt("delivery_id"),
+                    rs.getInt("order_id"),
+                    rs.getString("details_location")
+            );
+        }
+        return null;
+    }
+
+    public List<DeliveryDto> getAll() throws SQLException {
+        String sql = "SELECT * FROM delivery";
+        ResultSet rs = CrudUtil.executeQuery(sql);
+
+        List<DeliveryDto> list = new ArrayList<>();
+
+        while (rs.next()) {
+            list.add(new DeliveryDto(
+                    rs.getInt("delivery_id"),
+                    rs.getInt("order_id"),
+                    rs.getString("details_location")
+            ));
+        }
+        return list;
+    }
+
+    public int getNextDeliveryId() throws SQLException {
+        String sql = "SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'delivery'";
+        ResultSet rs = CrudUtil.executeQuery(sql);
+        if (rs.next()) {
+            return rs.getInt("AUTO_INCREMENT");
+        }
+        return 1;
+    }
+}
+
+
+
+*/

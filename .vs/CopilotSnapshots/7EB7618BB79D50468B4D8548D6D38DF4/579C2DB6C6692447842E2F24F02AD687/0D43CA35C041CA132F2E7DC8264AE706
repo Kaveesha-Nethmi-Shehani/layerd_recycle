@@ -1,0 +1,146 @@
+﻿// src/lk/ijse/recycle/model/CustomerModel.java
+
+// src/lk/ijse/recycle/model/CustomerModel.java
+
+package lk.ijse.recycle.model;
+
+import lk.ijse.recycle.dto.CustomerDto;
+import lk.ijse.recycle.util.CrudUtil;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class CustomerModel {
+
+    public boolean saveCustomer(CustomerDto dto) throws SQLException {
+        String sql = "INSERT INTO customer (cus_id, cus_name, cus_contact, cus_date) VALUES (?, ?, ?, ?)";
+        return CrudUtil.executeUpdate(sql, dto.getCusId(), dto.getCusName(), dto.getCusContact(), dto.getCusDate());
+    }
+
+    public boolean updateCustomer(CustomerDto dto) throws SQLException {
+        String sql = "UPDATE customer SET cus_name = ?, cus_contact = ?, cus_date = ? WHERE cus_id = ?";
+        return CrudUtil.executeUpdate(sql, dto.getCusId(), dto.getCusName(), dto.getCusContact(), dto.getCusDate());
+    }
+
+    public boolean deleteCustomer(int cus_id) throws SQLException {
+        String sql = "DELETE FROM customer WHERE cus_id = ?";
+        return CrudUtil.executeUpdate(sql, cus_id);
+    }
+
+    public CustomerDto searchCustomer(String contact) throws SQLException {
+        String sql = "SELECT * FROM customer WHERE cus_contact = ?";
+        ResultSet rs = CrudUtil.executeQuery(sql,contact );
+
+        if (rs.next()) {
+            return new CustomerDto(
+                    rs.getInt("cus_id"),
+                    rs.getString("cus_name"),
+                    rs.getString("cus_contact"),
+                    rs.getString("cus_date")
+            );
+        }
+        return null;
+    }
+
+    public List<CustomerDto> getAllCustomers() throws SQLException {
+        String sql = "SELECT * FROM customer";
+        ResultSet rs = CrudUtil.executeQuery(sql);
+        List<CustomerDto> list = new ArrayList<>();
+
+        while (rs.next()) {
+            list.add(new CustomerDto(
+                    rs.getInt("cus_id"),
+                    rs.getString("cus_name"),
+                    rs.getString("cus_contact"),
+                    rs.getString("cus_date")
+            ));
+        }
+        return list;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+package lk.ijse.recycle.model;
+
+import lk.ijse.recycle.dto.CustomerDto;
+import lk.ijse.recycle.util.CrudUtil;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class CustomerModel {
+
+    public boolean saveCustomer(CustomerDto dto) throws SQLException {
+        String sql = "INSERT INTO customer (cus_id, cus_name, cus_contact, cus_date) VALUES (?, ?, ?, ?)";
+        return CrudUtil.executeUpdate(sql, dto.getCus_id(), dto.getCus_name(), dto.getCus_contact(), dto.getCus_date());
+    }
+
+    public boolean updateCustomer(CustomerDto dto) throws SQLException {
+        String sql = "UPDATE customer SET cus_name = ?, cus_contact = ?, cus_date = ? WHERE cus_id = ?";
+        return CrudUtil.executeUpdate(sql, dto.getCus_name(), dto.getCus_contact(), dto.getCus_date(), dto.getCus_id());
+    }
+
+    public boolean deleteCustomer(int cus_id) throws SQLException {
+        String sql = "DELETE FROM customer WHERE cus_id = ?";
+        return CrudUtil.executeUpdate(sql, cus_id);
+    }
+
+    public CustomerDto searchCustomer(String name) throws SQLException {
+        String sql = "SELECT * FROM customer WHERE cus_name LIKE ?";
+        ResultSet rs = CrudUtil.executeQuery(sql, "%" + name + "%");
+
+        if (rs.next()) {
+            return new CustomerDto(
+                    rs.getInt("cus_id"),
+                    rs.getString("cus_name"),
+                    rs.getString("cus_contact"),
+                    rs.getString("cus_date")
+            );
+        }
+        return null;
+    }
+
+    public List<CustomerDto> getAllCustomers() throws SQLException {
+        String sql = "SELECT * FROM customer";
+        ResultSet rs = CrudUtil.executeQuery(sql);
+        List<CustomerDto> list = new ArrayList<>();
+
+        while (rs.next()) {
+            list.add(new CustomerDto(
+                    rs.getInt("cus_id"),
+                    rs.getString("cus_name"),
+                    rs.getString("cus_contact"),
+                    rs.getString("cus_date")
+            ));
+        }
+        return list;
+    }
+}
+*/

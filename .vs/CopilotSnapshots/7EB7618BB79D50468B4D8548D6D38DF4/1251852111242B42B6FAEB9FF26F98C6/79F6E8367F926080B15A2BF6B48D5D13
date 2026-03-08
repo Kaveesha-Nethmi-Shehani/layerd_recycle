@@ -1,0 +1,119 @@
+﻿// src/lk/ijse/recycle/dto/CustomerDto.java
+
+// src/lk/ijse/recycle/dto/CustomerDto.java
+
+package lk.ijse.recycle.dto;
+
+public class CustomerDto {
+    private int cus_id;
+    private String cus_name;
+    private String cus_contact;
+    private String cus_date;
+
+    public CustomerDto() {}
+
+    public CustomerDto(int cus_id, String cus_name, String cus_contact, String cus_date) {
+        this.cus_id = cus_id;
+        this.cus_name = cus_name;
+        this.cus_contact = cus_contact;
+        this.cus_date = cus_date;
+    }
+
+    // Getters
+    public int getCusId() { return cus_id; }
+    public String getCusName() { return cus_name; }
+    public String getCusContact() { return cus_contact; }
+    public String getCusDate() { return cus_date; }
+
+    // Setters
+    public void setCus_id(int cus_id) { this.cus_id = cus_id; }
+    public void setCus_name(String cus_name) { this.cus_name = cus_name; }
+    public void setCus_contact(String cus_contact) { this.cus_contact = cus_contact; }
+    public void setCus_date(String cus_date) { this.cus_date = cus_date; }
+
+    @Override
+    public String toString() {
+        return "CustomerDto{" +
+                "cus_id=" + cus_id +
+                ", cus_name='" + cus_name + '\'' +
+                ", cus_contact='" + cus_contact + '\'' +
+                ", cus_date='" + cus_date + '\'' +
+                '}';
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+package lk.ijse.recycle.dto;
+
+public class CustomerDto {
+    private int cus_id;
+    private String cus_name;
+    private String cus_contact;
+    private String cus_date;
+
+    public CustomerDto() {}
+
+    public CustomerDto(int cus_id, String cus_name, String cus_contact, String cus_date) {
+        this.cus_id = cus_id;
+        this.cus_name = cus_name;
+        this.cus_contact = cus_contact;
+        this.cus_date = cus_date;
+    }
+
+    // Getters
+    public int getCus_id() { return cus_id; }
+    public String getCus_name() { return cus_name; }
+    public String getCus_contact() { return cus_contact; }
+    public String getCus_date() { return cus_date; }
+
+    // Setters
+    public void setCus_id(int cus_id) { this.cus_id = cus_id; }
+    public void setCus_name(String cus_name) { this.cus_name = cus_name; }
+    public void setCus_contact(String cus_contact) { this.cus_contact = cus_contact; }
+    public void setCus_date(String cus_date) { this.cus_date = cus_date; }
+
+    @Override
+    public String toString() {
+        return "CustomerDto{" +
+                "cus_id=" + cus_id +
+                ", cus_name='" + cus_name + '\'' +
+                ", cus_contact='" + cus_contact + '\'' +
+                ", cus_date='" + cus_date + '\'' +
+                '}';
+    }
+}
+*/

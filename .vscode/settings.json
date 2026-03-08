@@ -1,0 +1,3 @@
+{
+  "java.debug.settings.vmArgs": "--module-path \"${env:USERPROFILE}\\.m2\\repository\\org\\openjfx\\javafx-base\\21.0.4\\javafx-base-21.0.4-win.jar;${env:USERPROFILE}\\.m2\\repository\\org\\openjfx\\javafx-graphics\\21.0.4\\javafx-graphics-21.0.4-win.jar;${env:USERPROFILE}\\.m2\\repository\\org\\openjfx\\javafx-controls\\21.0.4\\javafx-controls-21.0.4-win.jar;${env:USERPROFILE}\\.m2\\repository\\org\\openjfx\\javafx-fxml\\21.0.4\\javafx-fxml-21.0.4-win.jar\" --add-modules javafx.controls,javafx.fxml"
+}

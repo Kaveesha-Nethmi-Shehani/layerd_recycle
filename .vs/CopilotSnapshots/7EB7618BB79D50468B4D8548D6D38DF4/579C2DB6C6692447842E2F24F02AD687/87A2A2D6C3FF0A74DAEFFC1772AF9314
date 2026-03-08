@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: gray; -fx-background-color: #013220;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.recycle.controller.DeliveryController">
+   <children>
+      <VBox layoutX="21.0" layoutY="8.0" prefHeight="40.0" prefWidth="558.0">
+         <children>
+            <Text fill="#f7f3f3" strokeType="OUTSIDE" strokeWidth="0.0" text="                                                           DELIVERY MANAGEMENT" wrappingWidth="763.5918579101562">
+               <font>
+                  <Font name="System Bold Italic" size="18.0" />
+               </font>
+            </Text>
+         </children>
+      </VBox>
+      <VBox layoutX="21.0" layoutY="57.0" prefHeight="40.0" prefWidth="390.0">
+         <children>
+            <Text fill="#f2eeee" strokeType="OUTSIDE" strokeWidth="0.0" text="Delivery Location">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+            </Text>
+            <TextField style="-fx-background-radius: 30; -fx-border-radius: 40;" />
+         </children>
+      </VBox>
+      <VBox layoutX="21.0" layoutY="114.0" prefHeight="54.0" prefWidth="383.0">
+         <children>
+            <Text fill="#f7f1f1" strokeType="OUTSIDE" strokeWidth="0.0" text="Delivery ID">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+            </Text>
+            <TextField style="-fx-background-radius: 30; -fx-border-radius: 40;">
+               <font>
+                  <Font name="System Italic" size="12.0" />
+               </font>
+            </TextField>
+         </children>
+      </VBox>
+      <VBox layoutX="24.0" layoutY="177.0" prefHeight="62.0" prefWidth="375.0">
+         <children>
+            <Text fill="#f7f2f2" strokeType="OUTSIDE" strokeWidth="0.0" text="Order ID">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+            </Text>
+            <TextField style="-fx-background-radius: 30; -fx-border-radius: 40;" />
+         </children>
+      </VBox>
+      <HBox layoutX="466.0" layoutY="78.0" prefHeight="40.0" prefWidth="114.0">
+         <children>
+            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="102.0" style="-fx-background-color: #0E5930;" text="Save" textFill="#f4eded">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+         </children>
+      </HBox>
+      <HBox layoutX="466.0" layoutY="120.0" prefHeight="34.0" prefWidth="104.0">
+         <children>
+            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="102.0" style="-fx-background-radius: #fccc51; -fx-background-color: #639354;" text="Update" textFill="#f2ecec">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+         </children>
+      </HBox>
+      <HBox layoutX="466.0" layoutY="164.0" prefHeight="33.0" prefWidth="114.0">
+         <children>
+            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="102.0" style="-fx-background-color: #356C08;" text="Reset" textFill="#fff9f9">
+               <HBox.margin>
+                  <Insets bottom="8.0" left="1.0" right="1.0" top="8.0" />
+               </HBox.margin>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+         </children>
+      </HBox>
+      <HBox layoutX="466.0" layoutY="208.0" prefHeight="26.0" prefWidth="104.0" />
+      <TableView layoutX="14.0" layoutY="274.0" prefHeight="190.0" prefWidth="773.0">
+        <columns>
+          <TableColumn prefWidth="233.20000648498535" text="Delivery Location" />
+          <TableColumn prefWidth="237.19998168945312" text="Delivery ID" />
+            <TableColumn prefWidth="302.7999572753906" text="Order ID" />
+        </columns>
+      </TableView>
+      <Button layoutX="467.0" layoutY="226.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="102.0" style="-fx-background-color: #7CFC00;" text="Delete">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

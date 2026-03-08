@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="750.0" style="-fx-background-color: #013220;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.recycle.controller.RecycleItemController">
+   <children>
+      <!-- Title -->
+      <Label layoutX="220.0" layoutY="10.0" text="RECYCLE ITEMS MANAGEMENT" textFill="white">
+         <font>
+            <Font name="System Bold Italic" size="18.0" />
+         </font>
+      </Label>
+      
+      <!-- Form Fields - Left Side -->
+      <Label layoutX="20.0" layoutY="45.0" text="Item ID" textFill="white">
+         <font><Font name="System Bold" size="12.0" /></font>
+      </Label>
+      <Label fx:id="lblItem_Id" layoutX="20.0" layoutY="63.0" prefWidth="280.0" prefHeight="25.0" text="N/A" textFill="#7CFC00" style="-fx-background-color: #1a4a1a; -fx-background-radius: 5; -fx-padding: 5;">
+         <font><Font name="System Bold" size="14.0" /></font>
+      </Label>
+      
+      <Label layoutX="20.0" layoutY="98.0" text="Item Materials" textFill="white">
+         <font><Font name="System Bold" size="12.0" /></font>
+      </Label>
+      <TextField fx:id="txtItem_Materials" layoutX="20.0" layoutY="116.0" prefWidth="280.0" promptText="Enter Item Materials" style="-fx-background-radius: 5;" />
+      
+      <Label layoutX="20.0" layoutY="151.0" text="Item KG" textFill="white">
+         <font><Font name="System Bold" size="12.0" /></font>
+      </Label>
+      <TextField fx:id="txtItem_Kg" layoutX="20.0" layoutY="169.0" prefWidth="280.0" promptText="Enter Weight in KG" style="-fx-background-radius: 5;" />
+      
+      <Label layoutX="20.0" layoutY="204.0" text="Item Price" textFill="white">
+         <font><Font name="System Bold" size="12.0" /></font>
+      </Label>
+      <TextField fx:id="txtItem_Price" layoutX="20.0" layoutY="222.0" prefWidth="280.0" promptText="Enter Price" style="-fx-background-radius: 5;" />
+      
+      <Label layoutX="20.0" layoutY="257.0" text="Item Date" textFill="white">
+         <font><Font name="System Bold" size="12.0" /></font>
+      </Label>
+      <DatePicker fx:id="txtItem_Date" layoutX="20.0" layoutY="275.0" prefWidth="280.0" />
+      
+      <!-- Buttons - Right Side -->
+      <Button layoutX="340.0" layoutY="63.0" mnemonicParsing="false" onAction="#btnSaveOnAction" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #2E5B0C;" text="Save" textFill="white">
+         <font><Font name="System Bold" size="11.0" /></font>
+      </Button>
+      <Button layoutX="440.0" layoutY="63.0" mnemonicParsing="false" onAction="#btnUpdateOnAction" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #639354;" text="Update" textFill="white">
+         <font><Font name="System Bold" size="11.0" /></font>
+      </Button>
+      <Button layoutX="540.0" layoutY="63.0" mnemonicParsing="false" onAction="#btnDeleteOnAction" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #7CFC00;" text="Delete">
+         <font><Font name="System Bold" size="11.0" /></font>
+      </Button>
+      <Button layoutX="340.0" layoutY="108.0" mnemonicParsing="false" onAction="#btnResetOnAction" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #356C08;" text="Reset" textFill="white">
+         <font><Font name="System Bold" size="11.0" /></font>
+      </Button>
+      <Button layoutX="440.0" layoutY="108.0" mnemonicParsing="false" onAction="#btnSearchOnAction" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #0E5930;" text="Search" textFill="white">
+         <font><Font name="System Bold" size="11.0" /></font>
+      </Button>
+      
+      <!-- Table - Bottom -->
+      <TableView fx:id="tblRecycleItem" layoutX="20.0" layoutY="315.0" prefHeight="270.0" prefWidth="710.0">
+        <columns>
+          <TableColumn fx:id="colItem_Id" prefWidth="100.0" text="Item ID" />
+          <TableColumn fx:id="colItem_Materials" prefWidth="180.0" text="Item Materials" />
+          <TableColumn fx:id="colItem_Kg" prefWidth="120.0" text="Item KG" />
+          <TableColumn fx:id="colItem_Price" prefWidth="140.0" text="Item Price" />
+          <TableColumn fx:id="colItem_Date" prefWidth="170.0" text="Date" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>

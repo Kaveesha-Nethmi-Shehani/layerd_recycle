@@ -1,0 +1,66 @@
+﻿package lk.ijse.recycle.util;
+
+import javafx.scene.control.Alert;
+import lk.ijse.recycle.db.DBConnection;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.view.JasperViewer;
+
+import java.io.InputStream;
+import java.sql.Connection;
+
+public class ReportUtil {
+
+    public static void generateReport(String reportPath, Connection connection) {
+        try {
+            InputStream reportStream = ReportUtil.class.getResourceAsStream(reportPath);
+            
+            if (reportStream == null) {
+                new Alert(Alert.AlertType.ERROR, "Report file not found: " + reportPath).show();
+                return;
+            }
+
+            // Compile the report
+            JasperReport jasperReport = JasperCompileManager.compileReport(reportStream);
+            
+            // Fill the report with data from database
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, null, connection);
+            
+            // Display the report
+            JasperViewer.viewReport(jasperPrint, false);
+            
+        } catch (JRException e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Error generating report: " + e.getMessage()).show();
+        }
+    }
+
+    public static void generateCustomerReport() {
+        try {
+            Connection connection = DBConnection.getInstance().getConnection();
+            generateReport("/lk/ijse/recycle/report/Cus_report.jrxml", connection);
+        } catch (Exception e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Error: " + e.getMessage()).show();
+        }
+    }
+
+    public static void generateOrderReport() {
+        try {
+            Connection connection = DBConnection.getInstance().getConnection();
+            generateReport("/lk/ijse/recycle/report/Order_report.jrxml", connection);
+        } catch (Exception e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Error: " + e.getMessage()).show();
+        }
+    }
+
+    public static void generateProductReport() {
+        try {
+            Connection connection = DBConnection.getInstance().getConnection();
+            generateReport("/lk/ijse/recycle/report/Product_report.jrxml", connection);
+        } catch (Exception e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Error: " + e.getMessage()).show();
+        }
+    }
+}

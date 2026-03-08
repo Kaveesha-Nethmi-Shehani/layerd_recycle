@@ -1,0 +1,46 @@
+﻿package lk.ijse.recycle.dto;
+
+import java.time.LocalDate;
+
+public class OrderDto {
+    private int orderId;
+    private LocalDate orderDate;
+    private String orderType;
+    private int cusId;
+    private LocalDate reqDate;
+
+    public OrderDto() {}
+
+    public OrderDto(int orderId, LocalDate orderDate, String orderType, int cusId, LocalDate reqDate) {
+        this.orderId = orderId;
+        this.orderDate = orderDate;
+        this.orderType = orderType;
+        this.cusId = cusId;
+        this.reqDate = reqDate;
+    }
+
+    public int getOrderId() { return orderId; }
+    public LocalDate getOrderDate() { return orderDate; }
+    public String getOrderType() { return orderType; }
+    public int getCusId() { return cusId; }
+    public LocalDate getReqDate() { return reqDate; }
+
+    public void setOrderId(int orderId) { this.orderId = orderId; }
+    public void setOrderDate(LocalDate orderDate) { this.orderDate = orderDate; }
+    public void setOrderType(String orderType) { this.orderType = orderType; }
+    public void setCusId(int cusId) { this.cusId = cusId; }
+    public void setReqDate(LocalDate reqDate) { this.reqDate = reqDate; }
+
+    @Override
+    public String toString() {
+        return "OrderDto{" +
+                "orderId=" + orderId +
+                ", orderDate=" + orderDate +
+                ", orderType='" + orderType + '\'' +
+                ", cusId=" + cusId +
+                ", reqDate=" + reqDate +
+                '}';
+    }
+}
+
+

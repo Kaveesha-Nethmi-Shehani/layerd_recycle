@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="650.0" prefWidth="800.0" style="-fx-background-color: #013220;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.recycle.controller.ProductController">
+   <children>
+      <!-- Title -->
+      <Label layoutX="280.0" layoutY="10.0" text="PRODUCT MANAGEMENT" textFill="white">
+         <font><Font name="System Bold Italic" size="20.0" /></font>
+      </Label>
+      
+      <!-- Form Fields - Left Side -->
+      <Label layoutX="20.0" layoutY="50.0" text="Product ID" textFill="white">
+         <font><Font name="System Bold" size="12.0" /></font>
+      </Label>
+      <TextField fx:id="txtProduct_Id" layoutX="20.0" layoutY="68.0" prefWidth="250.0" promptText="Enter Product ID (e.g. P001)" style="-fx-background-radius: 5;" />
+      
+      <Label layoutX="20.0" layoutY="100.0" text="Product Name" textFill="white">
+         <font><Font name="System Bold" size="12.0" /></font>
+      </Label>
+      <TextField fx:id="txtProduct_Name" layoutX="20.0" layoutY="118.0" prefWidth="250.0" promptText="Enter Product Name" style="-fx-background-radius: 5;" />
+      
+      <Label layoutX="20.0" layoutY="150.0" text="Raw Material (from Recycle Items)" textFill="white">
+         <font><Font name="System Bold" size="12.0" /></font>
+      </Label>
+      <ComboBox fx:id="cmbRecycleItem" layoutX="20.0" layoutY="168.0" prefWidth="250.0" promptText="Select Material" style="-fx-background-radius: 5;" />
+      
+      <Label layoutX="20.0" layoutY="200.0" text="Available Material" textFill="white">
+         <font><Font name="System Bold" size="12.0" /></font>
+      </Label>
+      <Label fx:id="lblAvailable_Kg" layoutX="20.0" layoutY="218.0" prefWidth="250.0" prefHeight="25.0" text="Select material" textFill="#FFD700" style="-fx-background-color: #1a4a1a; -fx-background-radius: 5; -fx-padding: 5;">
+         <font><Font name="System Bold" size="12.0" /></font>
+      </Label>
+      
+      <Label layoutX="20.0" layoutY="253.0" text="KG Per Unit (material needed per product)" textFill="white">
+         <font><Font name="System Bold" size="12.0" /></font>
+      </Label>
+      <TextField fx:id="txtKg_Per_Unit" layoutX="20.0" layoutY="271.0" prefWidth="250.0" promptText="e.g. 2.5" style="-fx-background-radius: 5;" />
+      
+      <Label layoutX="20.0" layoutY="303.0" text="Selling Price (LKR per unit)" textFill="white">
+         <font><Font name="System Bold" size="12.0" /></font>
+      </Label>
+      <TextField fx:id="txtSelling_Price" layoutX="20.0" layoutY="321.0" prefWidth="250.0" promptText="e.g. 1500.00" style="-fx-background-radius: 5;" />
+      
+      <Label layoutX="20.0" layoutY="353.0" text="Current Stock" textFill="white">
+         <font><Font name="System Bold" size="12.0" /></font>
+      </Label>
+      <Label fx:id="lblStock_Quantity" layoutX="20.0" layoutY="371.0" prefWidth="250.0" prefHeight="30.0" text="0" textFill="#00FF00" style="-fx-background-color: #1a4a1a; -fx-background-radius: 5; -fx-padding: 5;">
+         <font><Font name="System Bold" size="18.0" /></font>
+      </Label>
+      
+      <!-- Buttons - Right Side -->
+      <Button layoutX="300.0" layoutY="68.0" mnemonicParsing="false" onAction="#btnSaveOnAction" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #0E5930;" text="Save" textFill="white">
+         <font><Font name="System Bold" size="11.0" /></font>
+      </Button>
+      <Button layoutX="420.0" layoutY="68.0" mnemonicParsing="false" onAction="#btnUpdateOnAction" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #639354;" text="Update" textFill="white">
+         <font><Font name="System Bold" size="11.0" /></font>
+      </Button>
+      <Button layoutX="540.0" layoutY="68.0" mnemonicParsing="false" onAction="#btnDeleteOnAction" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #7CFC00;" text="Delete">
+         <font><Font name="System Bold" size="11.0" /></font>
+      </Button>
+      <Button layoutX="660.0" layoutY="68.0" mnemonicParsing="false" onAction="#btnResetOnAction" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #356C08;" text="Reset" textFill="white">
+         <font><Font name="System Bold" size="11.0" /></font>
+      </Button>
+      
+      <Button layoutX="300.0" layoutY="118.0" mnemonicParsing="false" onAction="#btnSearchOnAction" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #2E5B0C;" text="Search" textFill="white">
+         <font><Font name="System Bold" size="11.0" /></font>
+      </Button>
+      <Button layoutX="420.0" layoutY="118.0" mnemonicParsing="false" onAction="#btnReportOnAction" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #2E5B0C;" text="Report" textFill="white">
+         <font><Font name="System Bold" size="11.0" /></font>
+      </Button>
+      
+      <!-- MANUFACTURE BUTTON - Main Action -->
+      <Button layoutX="540.0" layoutY="118.0" mnemonicParsing="false" onAction="#btnManufactureOnAction" prefHeight="50.0" prefWidth="220.0" style="-fx-background-color: #FF6600; -fx-background-radius: 10;" text="🏭 MANUFACTURE" textFill="white">
+         <font><Font name="System Bold" size="16.0" /></font>
+      </Button>
+      
+      <!-- Info Panel -->
+      <Label layoutX="300.0" layoutY="185.0" text="HOW IT WORKS:" textFill="#FFD700">
+         <font><Font name="System Bold" size="14.0" /></font>
+      </Label>
+      <Label layoutX="300.0" layoutY="210.0" text="1. Create product with material &amp; KG per unit" textFill="white">
+         <font><Font size="11.0" /></font>
+      </Label>
+      <Label layoutX="300.0" layoutY="230.0" text="2. Click MANUFACTURE to convert materials to stock" textFill="white">
+         <font><Font size="11.0" /></font>
+      </Label>
+      <Label layoutX="300.0" layoutY="250.0" text="3. Materials are deducted from Recycle Items" textFill="white">
+         <font><Font size="11.0" /></font>
+      </Label>
+      <Label layoutX="300.0" layoutY="270.0" text="4. Product stock increases for selling" textFill="white">
+         <font><Font size="11.0" /></font>
+      </Label>
+      
+      <!-- Separator -->
+      <Separator layoutX="20.0" layoutY="415.0" prefWidth="760.0" />
+      
+      <!-- Table -->
+      <TableView fx:id="tblProduct" layoutX="20.0" layoutY="425.0" prefHeight="210.0" prefWidth="760.0">
+        <columns>
+          <TableColumn fx:id="colProduct_Id" prefWidth="100.0" text="Product ID" />
+          <TableColumn fx:id="colProduct_Name" prefWidth="150.0" text="Product Name" />
+          <TableColumn fx:id="colMaterial" prefWidth="120.0" text="Material" />
+          <TableColumn fx:id="colKg_Per_Unit" prefWidth="100.0" text="KG/Unit" />
+          <TableColumn fx:id="colSelling_Price" prefWidth="120.0" text="Price (LKR)" />
+          <TableColumn fx:id="colStock" prefWidth="170.0" text="Stock Qty" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>

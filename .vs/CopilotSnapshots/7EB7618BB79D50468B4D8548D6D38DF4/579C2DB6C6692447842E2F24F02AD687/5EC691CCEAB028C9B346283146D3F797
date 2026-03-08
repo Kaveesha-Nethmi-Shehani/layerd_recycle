@@ -1,0 +1,137 @@
+﻿package lk.ijse.recycle.controller;
+
+import javafx.collections.FXCollections;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import lk.ijse.recycle.dto.DeliveryDto;
+import lk.ijse.recycle.model.DeliveryModel;
+import javafx.event.ActionEvent;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class DeliveryController implements Initializable {
+
+    @FXML
+    private TextField txtDelivery_id;
+    @FXML
+    private TextField txtOrder_id;
+    @FXML
+    private TextField txtDelivery_location;
+
+    @FXML
+    private TableView<DeliveryDto> tblDelivery;
+
+    @FXML
+    private TableColumn<DeliveryDto, Integer> colDelivery_id;
+    @FXML
+    private TableColumn<DeliveryDto, Integer> colOrder_id;
+    @FXML
+    private TableColumn<DeliveryDto, String> colDelivery_location;
+
+    private final DeliveryModel model = new DeliveryModel();
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        if (colDelivery_id == null || colDelivery_location == null || colOrder_id == null) {
+            return;
+        }
+
+        colDelivery_id.setCellValueFactory(new PropertyValueFactory<>("deliveryId"));
+        colOrder_id.setCellValueFactory(new PropertyValueFactory<>("orderId"));
+        colDelivery_location.setCellValueFactory(new PropertyValueFactory<>("deliveryLocation"));
+        loadDeliveryTable();
+    }
+
+    private void loadDeliveryTable() {
+        try {
+            tblDelivery.setItems(
+                    FXCollections.observableArrayList(model.getAll())
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @FXML
+    void btnSaveOnAction() {
+        try {
+            DeliveryDto dto = new DeliveryDto(
+                    Integer.parseInt(txtDelivery_id.getText()),
+                    Integer.parseInt(txtOrder_id.getText()),
+                    txtDelivery_location.getText()
+            );
+
+            if (model.saveDelivery(dto)) {
+                new Alert(Alert.AlertType.INFORMATION, "Delivery Saved!").show();
+                loadDeliveryTable();
+                clearFields();
+            }
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "Error: " + e.getMessage()).show();
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void btnUpdateOnAction() {
+        try {
+            DeliveryDto dto = new DeliveryDto(
+                    Integer.parseInt(txtDelivery_id.getText()),
+                    Integer.parseInt(txtOrder_id.getText()),
+                    txtDelivery_location.getText()
+            );
+
+            if (model.updateDelivery(dto)) {
+                new Alert(Alert.AlertType.INFORMATION, "Updated Successfully!").show();
+                loadDeliveryTable();
+                clearFields();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void btnDeleteOnAction() {
+        try {
+            int delivery_id = Integer.parseInt(txtDelivery_id.getText());
+            if (model.deleteDelivery(delivery_id)) {
+                new Alert(Alert.AlertType.INFORMATION, "Deleted Successfully!").show();
+                loadDeliveryTable();
+                clearFields();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void btnSearchOnAction() {
+        try {
+            int delivery_id = Integer.parseInt(txtDelivery_id.getText());
+            DeliveryDto dto = model.searchDelivery(delivery_id);
+
+            if (dto != null) {
+                txtOrder_id.setText(String.valueOf(dto.getOrderId()));
+                txtDelivery_location.setText(dto.getDeliveryLocation());
+            } else {
+                new Alert(Alert.AlertType.WARNING, "Delivery not found!").show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    void btnResetOnAction(ActionEvent event) {
+        clearFields();
+    }
+    private void clearFields() {
+        txtDelivery_id.clear();
+        txtOrder_id.clear();
+        txtDelivery_location.clear();
+    }
+}

@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="847.0" style="-fx-background-color: #013220;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.recycle.controller.ProductController">
+   <children>
+      <VBox layoutX="26.0" layoutY="3.0" prefHeight="33.0" prefWidth="566.0">
+         <children>
+            <Text fill="#f7f3f3" strokeType="OUTSIDE" strokeWidth="0.0" text="                                                            PRODUCT MANAGEMENT" wrappingWidth="769.4017333984375">
+               <font>
+                  <Font name="System Bold Italic" size="18.0" />
+               </font>
+            </Text>
+         </children>
+      </VBox>
+      <VBox layoutX="14.0" layoutY="69.0" prefHeight="54.0" prefWidth="406.0">
+         <children>
+            <Text fill="#fff9f9" strokeType="OUTSIDE" strokeWidth="0.0" text="Product Name">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+            </Text>
+            <TextField fx:id="txtPro_name" onAction="#btnProductName" prefHeight="26.0" prefWidth="446.0" style="-fx-background-radius: 30; -fx-border-radius: 40;" />
+         </children>
+      </VBox>
+      <VBox layoutX="13.0" layoutY="123.0" prefHeight="54.0" prefWidth="400.0">
+         <children>
+            <BorderPane prefHeight="200.0" prefWidth="200.0">
+               <left>
+                  <Text fill="#f4f1f1" strokeType="OUTSIDE" strokeWidth="0.0" text="Product ID" wrappingWidth="100.0660400390625" BorderPane.alignment="CENTER">
+                     <font>
+                        <Font name="System Bold Italic" size="14.0" />
+                     </font>
+                  </Text>
+               </left>
+            </BorderPane>
+            <TextField fx:id="txtPro_id" onAction="#btnproductId" style="-fx-background-radius: 30; -fx-border-radius: 40;" />
+         </children>
+      </VBox>
+      <VBox layoutX="14.0" layoutY="177.0" prefHeight="54.0" prefWidth="400.0">
+         <children>
+            <Text fill="#fff9f9" strokeType="OUTSIDE" strokeWidth="0.0" text="Product Materials" wrappingWidth="129.7239990234375">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+            </Text>
+            <VBox prefHeight="200.0" prefWidth="100.0" />
+            <TextField fx:id="txtPro_materials" onAction="#btnProductMaterials" style="-fx-background-radius: 30; -fx-border-radius: 40;" />
+         </children>
+      </VBox>
+      <HBox layoutX="466.0" layoutY="70.0" prefHeight="54.0" prefWidth="111.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#btnSaveOnAction" prefHeight="26.0" prefWidth="102.0" style="-fx-background-color: #0E5930;" text="Save" textFill="#f7f4f4">
+               <HBox.margin>
+                  <Insets bottom="8.0" left="1.0" right="1.0" top="8.0" />
+               </HBox.margin>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </Button>
+         </children>
+      </HBox>
+      <HBox layoutX="592.0" layoutY="77.0" prefHeight="26.0" prefWidth="102.0">
+         <children>
+            <HBox prefHeight="43.0" prefWidth="100.0">
+               <children>
+                  <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="102.0" style="-fx-background-color: #356C08;" text="Reset" textFill="#faf2f2">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+         </children></HBox>
+      <HBox layoutX="470.0" layoutY="144.0" prefHeight="19.0" prefWidth="102.0">
+         <children>
+            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="102.0" style="-fx-background-color: #639354;" text="Update" textFill="#fcf7f7">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+               <HBox.margin>
+                  <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+      <HBox layoutX="592.0" layoutY="144.0" prefHeight="27.0" prefWidth="111.0">
+         <children>
+            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="112.0" style="-fx-background-color: #2E5B0C;" text="Report" textFill="#f7f1f1">
+               <HBox.margin>
+                  <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+               </HBox.margin>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+         </children>
+      </HBox>
+      <HBox layoutX="532.0" layoutY="204.0" prefHeight="26.0" prefWidth="110.0">
+         <children>
+            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="114.0" style="-fx-background-color: #7CFC00;" text="Delete">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+               <HBox.margin>
+                  <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+      <TableView layoutX="13.0" layoutY="308.0" prefHeight="271.0" prefWidth="818.0">
+        <columns>
+          <TableColumn prefWidth="243.20001220703125" text="Product Name" />
+          <TableColumn prefWidth="246.4000244140625" text="Product ID" />
+            <TableColumn prefWidth="310.20001220703125" text="Product Materials" />
+        </columns>
+      </TableView>
+      <VBox layoutX="8.0" layoutY="243.0" prefHeight="54.0" prefWidth="406.0" />
+   </children>
+</AnchorPane>
