@@ -3,6 +3,7 @@ package lk.ijse.recycle.dao.custom.impl;
 import lk.ijse.recycle.dao.CrudUtil;
 import lk.ijse.recycle.dao.custom.QueryDAO;
 import lk.ijse.recycle.dto.OrderDto;
+import lk.ijse.recycle.dto.MaterialDto;
 import lk.ijse.recycle.dto.ProductDto;
 import lk.ijse.recycle.entity.Material;
 import lk.ijse.recycle.entity.Order;
@@ -28,8 +29,7 @@ public class QueryDAOImpl implements QueryDAO {
             Material dto = new Material(
                     rs.getInt("material_id"),
                     rs.getString("material_name"),
-                    rs.getDouble("price_per_kg")
-            );
+                    rs.getDouble("price_per_kg"));
             list.add(dto);
         }
         return (Material) list;
@@ -51,12 +51,71 @@ public class QueryDAOImpl implements QueryDAO {
                     rs.getString("customer_name"),
                     rs.getInt("quantity"),
                     rs.getDouble("total_price"),
-                    rs.getString("order_date")
-            );
+                    rs.getString("order_date"));
         }
         return null;
     }
 
+    // public List<Order> getAll() throws SQLException, ClassNotFoundException {
+    // ResultSet rs = CrudUtil.execute("SELECT o.*, p.product_name, c.customer_name
+    // FROM orders o " +
+    // "LEFT JOIN product p ON o.product_id = p.product_id " +
+    // "LEFT JOIN customer c ON o.customer_id = c.customer_id " +
+    // "ORDER BY o.order_id DESC");
+    //
+    // List<Order> list = new ArrayList<>();
+    //
+    // while (rs.next()) {
+    // list.add(new Order(
+    // rs.getInt("order_id"),
+    // rs.getString("product_id"),
+    // rs.getString("product_name"),
+    // rs.getInt("customer_id"),
+    // rs.getString("customer_name"),
+    // rs.getInt("quantity"),
+    // rs.getDouble("total_price"),
+    // rs.getString("order_date")
+    // ));
+    // }
+    // return list;
+    // }
+
+    public List<ProductDto> getAvailableProducts() throws SQLException, ClassNotFoundException {
+        ResultSet rs = CrudUtil.execute("SELECT p.*, m.material_name FROM product p " +
+                "LEFT JOIN materials m ON p.material_id = m.material_id");
+
+        List<ProductDto> list = new ArrayList<>();
+        while (rs.next()) {
+            list.add(new ProductDto(
+                    rs.getString("product_id"),
+                    rs.getString("product_name"),
+                    rs.getObject("material_id") != null ? rs.getInt("material_id") : null,
+                    rs.getString("material_name"),
+                    rs.getDouble("kg_per_unit"),
+                    rs.getDouble("selling_price"),
+                    rs.getInt("stock_quantity")));
+        }
+        return list;
+    }
+
+    public List<Product> getAllProducts() throws SQLException, ClassNotFoundException {
+        ResultSet rs = CrudUtil.execute("SELECT p.*, m.material_name FROM product p " +
+                "LEFT JOIN materials m ON p.material_id = m.material_id");
+
+        List<Product> list = new ArrayList<>();
+
+        while (rs.next()) {
+            list.add(new Product(
+                    rs.getString("product_id"),
+                    rs.getString("product_name"),
+                    rs.getObject("material_id") != null ? rs.getInt("material_id") : null,
+                    rs.getString("material_name"),
+                    rs.getDouble("kg_per_unit"),
+                    rs.getDouble("selling_price"),
+                    rs.getInt("stock_quantity")));
+        }
+        return list;
+    }
 
     public RecycleItem search(String id) throws SQLException, ClassNotFoundException {
 
@@ -71,12 +130,10 @@ public class QueryDAOImpl implements QueryDAO {
                     rs.getString("material_name"),
                     rs.getDouble("item_kg"),
                     rs.getDouble("item_price"),
-                    rs.getString("date")
-            );
+                    rs.getString("date"));
         }
         return null;
     }
-
 
     public List<RecycleItem> getAll() throws SQLException, ClassNotFoundException {
         ResultSet rs = CrudUtil.execute("SELECT r.*, m.material_name FROM recycle_item r " +
@@ -92,15 +149,22 @@ public class QueryDAOImpl implements QueryDAO {
                     rs.getString("material_name"),
                     rs.getDouble("item_kg"),
                     rs.getDouble("item_price"),
-                    rs.getString("date")
-            ));
+                    rs.getString("date")));
         }
         return list;
     }
 
+    public List<MaterialDto> getAllMaterials() throws SQLException, ClassNotFoundException {
+        ResultSet rs = CrudUtil.execute("SELECT * FROM materials ORDER BY material_name");
 
-
-
+        List<MaterialDto> list = new ArrayList<>();
+        while (rs.next()) {
+            list.add(new MaterialDto(
+                    rs.getInt("material_id"),
+                    rs.getString("material_name"),
+                    rs.getDouble("price_per_kg")));
+        }
+        return list;
+    }
 
 }
-

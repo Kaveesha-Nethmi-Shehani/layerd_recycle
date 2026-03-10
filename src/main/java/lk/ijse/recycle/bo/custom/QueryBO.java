@@ -2,8 +2,10 @@ package lk.ijse.recycle.bo.custom;
 
 import java.sql.SQLException;
 
-public interface QueryBO {
+import lk.ijse.recycle.bo.SuperBO;
 
-    public double getTotalStockMaterial(int materialId) throws SQLException, ClassNotFoundException ;
+public interface QueryBO extends SuperBO {
+
+    public double getTotalStockMaterial(int materialId) throws SQLException, ClassNotFoundException;
 
 }

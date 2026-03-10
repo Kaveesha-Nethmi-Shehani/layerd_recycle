@@ -11,7 +11,7 @@ public class App extends Application {
 
         Navigation.setStage(stage);
 
-        Navigation.navigate("dashbord");
+        Navigation.navigate("dashboard");
     }
     public static void main(String[] args) {
         launch(args);

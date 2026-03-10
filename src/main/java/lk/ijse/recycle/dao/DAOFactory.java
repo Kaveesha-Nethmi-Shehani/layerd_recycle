@@ -5,14 +5,13 @@ import lk.ijse.recycle.dao.custom.impl.*;
 
 public class DAOFactory {
 
-      private static DAOFactory instance;
+    private static DAOFactory instance;
 
     private DAOFactory() {}
 
     public static DAOFactory getInstance() {
         return instance == null ? instance = new DAOFactory() : instance;
     }
-
 
     public enum DAOTypes {
         Customer,

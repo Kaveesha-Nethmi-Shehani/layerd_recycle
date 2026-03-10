@@ -16,7 +16,7 @@ import java.util.List;
 
 public interface QueryDAO extends SuperDAO {
 
-//    public Material getAllWithStockMaterial() throws SQLException, ClassNotFoundException ;
+    public Material getAllWithStockMaterial() throws SQLException, ClassNotFoundException ;
 
     public OrderDto search(int orderId) throws SQLException, ClassNotFoundException ;
 
@@ -28,13 +28,11 @@ public interface QueryDAO extends SuperDAO {
 
     public List<RecycleItem> getAll() throws SQLException, ClassNotFoundException ;
 
-    double getTotalStockMaterial(int materialId)throws SQLException, ClassNotFoundException;
+
+
 
 
 //    public List<Order> getAll() throws SQLException, ClassNotFoundException ;
-
-
-    //Product eke & Prder eke QueryDAO ekato OrderDAO , ProductDAO ekatai samana methoda name na
 
 
 

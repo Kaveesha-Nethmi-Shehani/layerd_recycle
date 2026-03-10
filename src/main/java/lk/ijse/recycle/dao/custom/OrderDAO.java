@@ -14,16 +14,12 @@ import java.util.List;
 
 public interface OrderDAO extends CrudDAO<Order> {
 
+    public List<ProductDto> getAvailableProducts() throws SQLException, ClassNotFoundException;
 
-//    public List<ProductDto> getAvailableProducts() throws SQLException, ClassNotFoundException;
+    public List<CustomerDto> getAllCustomers() throws SQLException, ClassNotFoundException;
 
-     public List<CustomerDto> getAllCustomers() throws SQLException, ClassNotFoundException;
+    // public OrderDto search(int orderId) throws SQLException,
+    // ClassNotFoundException;
 
-
-
-
-//   public  OrderDto search(int orderId) throws SQLException, ClassNotFoundException;
-
-    //public List<Order> getAll() throws SQLException, ClassNotFoundException ;
+    // public List<Order> getAll() throws SQLException, ClassNotFoundException ;
 }
-

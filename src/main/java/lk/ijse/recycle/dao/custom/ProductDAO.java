@@ -4,7 +4,7 @@ import lk.ijse.recycle.dao.CrudDAO;
 import lk.ijse.recycle.db.DBConnection;
 import lk.ijse.recycle.dto.MaterialDto;
 import lk.ijse.recycle.dto.ProductDto;
-import lk.ijse.recycle.dao.CrudUtil ;
+import lk.ijse.recycle.dao.CrudUtil;
 import lk.ijse.recycle.entity.Product;
 
 import java.sql.Connection;
@@ -15,8 +15,7 @@ import java.util.List;
 
 public interface ProductDAO extends CrudDAO<Product> {
 
-
-//    public List<MaterialDto> getAllMaterials() throws SQLException, ClassNotFoundException;
+    public List<MaterialDto> getAllMaterials() throws SQLException, ClassNotFoundException;
 
     public boolean manufacture(String productId, int quantity) throws SQLException, ClassNotFoundException;
 
@@ -28,6 +27,3 @@ public interface ProductDAO extends CrudDAO<Product> {
 
     public boolean delete(String productId) throws SQLException, ClassNotFoundException;
 }
-
-
-

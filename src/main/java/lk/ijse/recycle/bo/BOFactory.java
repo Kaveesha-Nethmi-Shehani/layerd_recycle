@@ -1,4 +1,5 @@
 package lk.ijse.recycle.bo;
+
 import lk.ijse.recycle.bo.custom.impl.*;
 
 public class BOFactory {
@@ -12,9 +13,6 @@ public class BOFactory {
         return instance == null ? instance = new BOFactory() : instance;
     }
 
-
-
-
     public enum BOTypes {
         Customer,
         Delivery,
@@ -23,7 +21,7 @@ public class BOFactory {
         Product,
         RecycleItem,
         Material,
-        QUERY, Query
+        Query
     }
 
     public SuperBO getBOFactory(BOTypes boType) {
@@ -40,10 +38,10 @@ public class BOFactory {
                 return new ProductBOImpl();
             case RecycleItem:
                 return new RecycleItemBOImpl();
-             case Material:
-                 return new MaterialBOImpl();
-             case Query:
-
+            case Material:
+                return new MaterialBOImpl();
+            case Query:
+                return new QueryBOImpl();
             default:
                 return null;
         }
