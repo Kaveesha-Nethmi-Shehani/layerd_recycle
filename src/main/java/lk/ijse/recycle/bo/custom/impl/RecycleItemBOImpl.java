@@ -22,20 +22,19 @@ public class RecycleItemBOImpl implements RecycleItemBO {
     RecycleItemDAO recycleItemDAO = (RecycleItemDAO) DAOFactory.getInstance().getDAO(DAOFactory.DAOTypes.RecycleItems);
 
     public boolean saveRecycleItem(RecycleItemDto dto) throws SQLException, ClassNotFoundException {
-        return  recycleItemDAO.save(
+        return recycleItemDAO.save(
                 new RecycleItem(
                         dto.getMaterialId(),
                         dto.getItemKg(),
                         dto.getItemPrice(),
                         dto.getDate(),
-                        dto.getItemId()
-                )
+                        dto.getItemId())
 
         );
     }
 
     public boolean updateRecycleItem(RecycleItemDto dto) throws SQLException, ClassNotFoundException {
-        return  recycleItemDAO.update(
+        return recycleItemDAO.update(
                 new RecycleItem(
                         dto.getMaterialId(),
                         dto.getItemKg(),
@@ -43,13 +42,11 @@ public class RecycleItemBOImpl implements RecycleItemBO {
                         dto.getDate(),
                         dto.getItemId()
 
-
-                )
-        );
+                ));
     }
 
     public boolean deleteRecycleItem(int id) throws SQLException, ClassNotFoundException {
-        //String sql = "DELETE FROM recycle_item WHERE item_id = ?";
+        // String sql = "DELETE FROM recycle_item WHERE item_id = ?";
         return CrudUtil.execute("DELETE FROM recycle_item WHERE item_id = ?", id);
     }
 
@@ -63,8 +60,7 @@ public class RecycleItemBOImpl implements RecycleItemBO {
                     recycleItem.getItemKg(),
                     recycleItem.getItemPrice(),
                     recycleItem.getDate(),
-                    recycleItem.getItemId()
-            );
+                    recycleItem.getItemId());
         }
 
         return null;
@@ -84,16 +80,14 @@ public class RecycleItemBOImpl implements RecycleItemBO {
                             recycleItem.getItemKg(),
                             recycleItem.getItemPrice(),
                             recycleItem.getDate(),
-                            recycleItem.getItemId()
-                    )
-            );
+                            recycleItem.getItemId()));
         }
 
         return dtoList;
     }
 
     public int getNextRecycleItemId() throws SQLException, ClassNotFoundException {
-      return recycleItemDAO.getNextId();
+        return recycleItemDAO.getNextId();
     }
 
     public List<MaterialDto> getAllRecycleItemMaterials() throws SQLException, ClassNotFoundException {
@@ -106,9 +100,7 @@ public class RecycleItemBOImpl implements RecycleItemBO {
                     new MaterialDto(
                             material.getMaterialId(),
                             material.getMaterialName(),
-                            material.getUnitPrice()
-                    )
-            );
+                            material.getPricePerKg()));
         }
 
         return dtoList;
@@ -118,4 +110,3 @@ public class RecycleItemBOImpl implements RecycleItemBO {
         return recycleItemDAO.getMaterialTotalStock(materialId);
     }
 }
-

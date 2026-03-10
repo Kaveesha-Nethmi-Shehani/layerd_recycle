@@ -93,7 +93,8 @@ public class RecycleItemDAOImpl implements RecycleItemDAO {
             list.add(
                     new Material(
                             rs.getInt("material_id"),
-                            rs.getString("material_name")));
+                            rs.getString("material_name"),
+                            rs.getDouble("price_per_kg")));
         }
 
         return list;
