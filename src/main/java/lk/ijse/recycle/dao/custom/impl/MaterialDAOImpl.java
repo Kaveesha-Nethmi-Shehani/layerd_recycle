@@ -80,24 +80,24 @@ public class MaterialDAOImpl implements MaterialDAO {
         }
         return 0;
     }
-    public Material getAllWithStockMaterial() throws SQLException, ClassNotFoundException {
-        ResultSet rs = CrudUtil.execute("SELECT m.*, COALESCE(SUM(r.item_kg), 0) as total_kg " +
-                "FROM materials m " +
-                "LEFT JOIN recycle_item r ON m.material_id = r.material_id " +
-                "GROUP BY m.material_id, m.material_name, m.price_per_kg " +
-                "ORDER BY m.material_name");
-
-        List<Material> list = new ArrayList<>();
-        while (rs.next()) {
-            Material dto = new Material(
-                    rs.getInt("material_id"),
-                    rs.getString("material_name"),
-                    rs.getDouble("price_per_kg")
-            );
-            list.add(dto);
-        }
-        return (Material) list;
-    }
+//    public Material getAllWithStockMaterial() throws SQLException, ClassNotFoundException {
+//        ResultSet rs = CrudUtil.execute("SELECT m.*, COALESCE(SUM(r.item_kg), 0) as total_kg " +
+//                "FROM materials m " +
+//                "LEFT JOIN recycle_item r ON m.material_id = r.material_id " +
+//                "GROUP BY m.material_id, m.material_name, m.price_per_kg " +
+//                "ORDER BY m.material_name");
+//
+//        List<Material> list = new ArrayList<>();
+//        while (rs.next()) {
+//            Material dto = new Material(
+//                    rs.getInt("material_id"),
+//                    rs.getString("material_name"),
+//                    rs.getDouble("price_per_kg")
+//            );
+//            list.add(dto);
+//        }
+//        return (Material) list;
+//    }
 }
 
 

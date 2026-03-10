@@ -47,49 +47,49 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
 
-    public Product search(String productId) throws SQLException, ClassNotFoundException {
-        ResultSet rs = CrudUtil.execute("SELECT p.*, m.material_name FROM product p " +
-                "LEFT JOIN materials m ON p.material_id = m.material_id " +
-                "WHERE p.product_id = ?", productId);
+//    public Product search(String productId) throws SQLException, ClassNotFoundException {
+//        ResultSet rs = CrudUtil.execute("SELECT p.*, m.material_name FROM product p " +
+//                "LEFT JOIN materials m ON p.material_id = m.material_id " +
+//                "WHERE p.product_id = ?", productId);
+//
+//        if (rs.next()) {
+//            return new Product(
+//                    rs.getString("product_id"),
+//                    rs.getString("product_name"),
+//                    rs.getObject("material_id") != null ? rs.getInt("material_id") : null,
+//                    rs.getString("material_name"),
+//                    rs.getDouble("kg_per_unit"),
+//                    rs.getDouble("selling_price"),
+//                    rs.getInt("stock_quantity")
+//            );
+//        }
+//        return null;
+//    }
 
-        if (rs.next()) {
-            return new Product(
-                    rs.getString("product_id"),
-                    rs.getString("product_name"),
-                    rs.getObject("material_id") != null ? rs.getInt("material_id") : null,
-                    rs.getString("material_name"),
-                    rs.getDouble("kg_per_unit"),
-                    rs.getDouble("selling_price"),
-                    rs.getInt("stock_quantity")
-            );
-        }
-        return null;
-    }
-
-    public List<Product> getAll() throws SQLException, ClassNotFoundException {
-        ResultSet rs = CrudUtil.execute("SELECT p.*, m.material_name FROM product p " +
-                "LEFT JOIN materials m ON p.material_id = m.material_id");
-
-        List<Product> list = new ArrayList<>();
-
-        while (rs.next()) {
-            list.add(new Product(
-                    rs.getString("product_id"),
-                    rs.getString("product_name"),
-                    rs.getObject("material_id") != null ? rs.getInt("material_id") : null,
-                    rs.getString("material_name"),
-                    rs.getDouble("kg_per_unit"),
-                    rs.getDouble("selling_price"),
-                    rs.getInt("stock_quantity")
-            ));
-        }
-        return list;
-    }
-
-    @Override
-    public int getNextId() throws SQLException {
-        return 0;
-    }
+//    public List<Product> getAll() throws SQLException, ClassNotFoundException {
+//        ResultSet rs = CrudUtil.execute("SELECT p.*, m.material_name FROM product p " +
+//                "LEFT JOIN materials m ON p.material_id = m.material_id");
+//
+//        List<Product> list = new ArrayList<>();
+//
+//        while (rs.next()) {
+//            list.add(new Product(
+//                    rs.getString("product_id"),
+//                    rs.getString("product_name"),
+//                    rs.getObject("material_id") != null ? rs.getInt("material_id") : null,
+//                    rs.getString("material_name"),
+//                    rs.getDouble("kg_per_unit"),
+//                    rs.getDouble("selling_price"),
+//                    rs.getInt("stock_quantity")
+//            ));
+//        }
+//        return list;
+//    }
+//
+//    @Override
+//    public int getNextId() throws SQLException {
+//        return 0;
+//    }
 
 
     public List<MaterialDto> getAllMaterials() throws SQLException, ClassNotFoundException {

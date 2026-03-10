@@ -22,9 +22,9 @@ public interface RecycleItemDAO extends CrudDAO<RecycleItem> {
 
     public boolean delete(int id) throws SQLException, ClassNotFoundException ;
 
-    public RecycleItem search(String id) throws SQLException, ClassNotFoundException ;
+//    public RecycleItem search(String id) throws SQLException, ClassNotFoundException ;
 
-    public List<RecycleItem> getAll() throws SQLException, ClassNotFoundException ;
+//    public List<RecycleItem> getAll() throws SQLException, ClassNotFoundException ;
 
     public int getNextId() throws SQLException, ClassNotFoundException ;
 

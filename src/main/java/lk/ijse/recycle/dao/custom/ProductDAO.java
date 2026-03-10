@@ -16,7 +16,7 @@ import java.util.List;
 public interface ProductDAO extends CrudDAO<Product> {
 
 
-   public List<MaterialDto> getAllMaterials() throws SQLException, ClassNotFoundException;
+//    public List<MaterialDto> getAllMaterials() throws SQLException, ClassNotFoundException;
 
     public boolean manufacture(String productId, int quantity) throws SQLException, ClassNotFoundException;
 

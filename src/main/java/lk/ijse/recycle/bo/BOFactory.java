@@ -23,7 +23,7 @@ public class BOFactory {
         Product,
         RecycleItem,
         Material,
-        Query
+        QUERY, Query
     }
 
     public SuperBO getBOFactory(BOTypes boType) {

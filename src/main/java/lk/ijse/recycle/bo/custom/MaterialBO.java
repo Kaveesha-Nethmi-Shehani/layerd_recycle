@@ -19,7 +19,7 @@ public interface MaterialBO extends SuperBO {
 
     public List<MaterialDto> getAllMaterial() throws SQLException, ClassNotFoundException ;
 
-  //  public double getTotalStockMaterial(int materialId) throws SQLException, ClassNotFoundException ;
+//    public double getTotalStockMaterial(int materialId) throws SQLException, ClassNotFoundException ;
 
 }
 

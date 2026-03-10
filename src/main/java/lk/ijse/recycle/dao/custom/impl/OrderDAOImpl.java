@@ -93,27 +93,27 @@ public class OrderDAOImpl implements OrderDAO {
     }
 
 
-    public OrderDto search(int orderId) throws SQLException, ClassNotFoundException {
-
-        ResultSet rs = CrudUtil.execute("SELECT o.*, p.product_name, c.customer_name FROM orders o " +
-                "LEFT JOIN product p ON o.product_id = p.product_id " +
-                "LEFT JOIN customer c ON o.customer_id = c.customer_id " +
-                "WHERE o.order_id = ?", orderId);
-
-        if (rs.next()) {
-            return new OrderDto(
-                    rs.getInt("order_id"),
-                    rs.getString("product_id"),
-                    rs.getString("product_name"),
-                    rs.getInt("customer_id"),
-                    rs.getString("customer_name"),
-                    rs.getInt("quantity"),
-                    rs.getDouble("total_price"),
-                    rs.getString("order_date")
-            );
-        }
-        return null;
-    }
+//    public OrderDto search(int orderId) throws SQLException, ClassNotFoundException {
+//
+//        ResultSet rs = CrudUtil.execute("SELECT o.*, p.product_name, c.customer_name FROM orders o " +
+//                "LEFT JOIN product p ON o.product_id = p.product_id " +
+//                "LEFT JOIN customer c ON o.customer_id = c.customer_id " +
+//                "WHERE o.order_id = ?", orderId);
+//
+//        if (rs.next()) {
+//            return new OrderDto(
+//                    rs.getInt("order_id"),
+//                    rs.getString("product_id"),
+//                    rs.getString("product_name"),
+//                    rs.getInt("customer_id"),
+//                    rs.getString("customer_name"),
+//                    rs.getInt("quantity"),
+//                    rs.getDouble("total_price"),
+//                    rs.getString("order_date")
+//            );
+//        }
+//        return null;
+//    }
 
     public List<Order> getAll() throws SQLException, ClassNotFoundException {
         ResultSet rs = CrudUtil.execute("SELECT o.*, p.product_name, c.customer_name FROM orders o " +
@@ -146,24 +146,24 @@ public class OrderDAOImpl implements OrderDAO {
         return 1;
     }
 
-    public List<ProductDto> getAvailableProducts() throws SQLException, ClassNotFoundException {
-        ResultSet rs = CrudUtil.execute("SELECT p.*, m.material_name FROM product p " +
-                "LEFT JOIN materials m ON p.material_id = m.material_id");
-
-        List<ProductDto> list = new ArrayList<>();
-        while (rs.next()) {
-            list.add(new ProductDto(
-                    rs.getString("product_id"),
-                    rs.getString("product_name"),
-                    rs.getObject("material_id") != null ? rs.getInt("material_id") : null,
-                    rs.getString("material_name"),
-                    rs.getDouble("kg_per_unit"),
-                    rs.getDouble("selling_price"),
-                    rs.getInt("stock_quantity")
-            ));
-        }
-        return list;
-    }
+//    public List<ProductDto> getAvailableProducts() throws SQLException, ClassNotFoundException {
+//        ResultSet rs = CrudUtil.execute("SELECT p.*, m.material_name FROM product p " +
+//                "LEFT JOIN materials m ON p.material_id = m.material_id");
+//
+//        List<ProductDto> list = new ArrayList<>();
+//        while (rs.next()) {
+//            list.add(new ProductDto(
+//                    rs.getString("product_id"),
+//                    rs.getString("product_name"),
+//                    rs.getObject("material_id") != null ? rs.getInt("material_id") : null,
+//                    rs.getString("material_name"),
+//                    rs.getDouble("kg_per_unit"),
+//                    rs.getDouble("selling_price"),
+//                    rs.getInt("stock_quantity")
+//            ));
+//        }
+//        return list;
+//    }
 
     public List<CustomerDto> getAllCustomers() throws SQLException, ClassNotFoundException {
         ResultSet rs = CrudUtil.execute("SELECT * FROM customer");

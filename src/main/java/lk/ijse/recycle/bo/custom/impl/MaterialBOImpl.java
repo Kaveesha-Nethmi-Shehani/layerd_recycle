@@ -65,9 +65,9 @@ public class MaterialBOImpl implements MaterialBO {
         return dtoList;
     }
 
-    public double getTotalStockMaterial(int materialId) throws SQLException, ClassNotFoundException {
-        return materialDAO.getTotalStockMaterial(materialId);
-    }
+//    public double getTotalStockMaterial(int materialId) throws SQLException, ClassNotFoundException {
+//       return materialDAO.getTotalStockMaterial(materialId);
+//  }
 
 
     public int getNextMaterialId() throws SQLException, ClassNotFoundException {

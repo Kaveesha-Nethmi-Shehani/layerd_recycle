@@ -39,44 +39,44 @@ public class RecycleItemDAOImpl implements RecycleItemDAO {
          return CrudUtil.execute("DELETE FROM recycle_item WHERE item_id = ?", id);
     }
 
-    public RecycleItem search(String id) throws SQLException, ClassNotFoundException {
-
-        ResultSet rs = CrudUtil.execute("SELECT r.*, m.material_name FROM recycle_item r " +
-                "LEFT JOIN materials m ON r.material_id = m.material_id " +
-                "WHERE r.item_id = ?", id);
-
-        if (rs.next()) {
-            return new RecycleItem(
-                    rs.getInt("item_id"),
-                    rs.getInt("material_id"),
-                    rs.getString("material_name"),
-                    rs.getDouble("item_kg"),
-                    rs.getDouble("item_price"),
-                    rs.getString("date")
-            );
-        }
-        return null;
-    }
-
-    public List<RecycleItem> getAll() throws SQLException, ClassNotFoundException {
-        ResultSet rs = CrudUtil.execute("SELECT r.*, m.material_name FROM recycle_item r " +
-                "LEFT JOIN materials m ON r.material_id = m.material_id " +
-                "ORDER BY r.item_id DESC");
-
-        List<RecycleItem> list = new ArrayList<>();
-
-        while (rs.next()) {
-            list.add(new RecycleItem(
-                    rs.getInt("item_id"),
-                    rs.getInt("material_id"),
-                    rs.getString("material_name"),
-                    rs.getDouble("item_kg"),
-                    rs.getDouble("item_price"),
-                    rs.getString("date")
-            ));
-        }
-        return list;
-    }
+//    public RecycleItem search(String id) throws SQLException, ClassNotFoundException {
+//
+//        ResultSet rs = CrudUtil.execute("SELECT r.*, m.material_name FROM recycle_item r " +
+//                "LEFT JOIN materials m ON r.material_id = m.material_id " +
+//                "WHERE r.item_id = ?", id);
+//
+//        if (rs.next()) {
+//            return new RecycleItem(
+//                    rs.getInt("item_id"),
+//                    rs.getInt("material_id"),
+//                    rs.getString("material_name"),
+//                    rs.getDouble("item_kg"),
+//                    rs.getDouble("item_price"),
+//                    rs.getString("date")
+//            );
+//        }
+//        return null;
+//    }
+//
+//    public List<RecycleItem> getAll() throws SQLException, ClassNotFoundException {
+//        ResultSet rs = CrudUtil.execute("SELECT r.*, m.material_name FROM recycle_item r " +
+//                "LEFT JOIN materials m ON r.material_id = m.material_id " +
+//                "ORDER BY r.item_id DESC");
+//
+//        List<RecycleItem> list = new ArrayList<>();
+//
+//        while (rs.next()) {
+//            list.add(new RecycleItem(
+//                    rs.getInt("item_id"),
+//                    rs.getInt("material_id"),
+//                    rs.getString("material_name"),
+//                    rs.getDouble("item_kg"),
+//                    rs.getDouble("item_price"),
+//                    rs.getString("date")
+//            ));
+//        }
+//        return list;
+//    }
 
     public int getNextId() throws SQLException, ClassNotFoundException {
          ResultSet rs = CrudUtil.execute("SELECT COALESCE(MAX(item_id), 0) + 1 AS next_id FROM recycle_item");
